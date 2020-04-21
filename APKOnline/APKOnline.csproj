@@ -1,4 +1,5 @@
-﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
@@ -184,6 +185,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\src\App\app.js" />
     <Content Include="Scripts\src\Login\Login.js" />
+    <Content Include="Scripts\src\ManageStaff\PermissionRole.js" />
     <Content Include="Scripts\src\ManageStaff\ManageStaff.js" />
     <Content Include="Scripts\src\ManageStaff\ManageRole.js" />
     <Content Include="Scripts\src\ManageStaff\PermissionStaff.js" />
@@ -7323,6 +7325,7 @@
     <Content Include="Views\PurchaseRequest\ApprovePR.cshtml" />
     <Content Include="Views\PurchaseOrder\ListPurchaseOrderApprove.cshtml" />
     <Content Include="Views\PurchaseOrder\ApprovePO.cshtml" />
+    <Content Include="Views\ManageStaff\PermissionRole.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

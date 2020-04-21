@@ -14,6 +14,9 @@ namespace APKOnline.DBHelper
         DataTable GetPermissionData(ref string errMsg);
 
         DataTable GetDepartmentData(ref string errMsg);
+
+        DataTable GetStaffAuthorizeData(ref string errMsg);
+        
     }
 
     public class StaffData : IStaffData
@@ -108,6 +111,28 @@ namespace APKOnline.DBHelper
             }
 
             dt.TableName = "DepartmentData";
+            return dt;
+        }
+
+        public DataTable GetStaffAuthorizeData(ref string errMsg)
+        {
+            string strSQL = null;
+            DataTable dt = new DataTable();
+
+            try
+            {
+                //strSQL = "\r\n SELECT * FROM PermissionGroup ";
+                strSQL = "\r\n SELECT * FROM StaffAuthorize order by StaffCode,DEPid ";
+                dt = DBHelper.List(strSQL);
+
+
+            }
+            catch (Exception e)
+            {
+                errMsg = e.Message;
+            }
+
+            dt.TableName = "StaffAuthorizeData";
             return dt;
         }
         #endregion

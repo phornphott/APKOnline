@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 This file is used by the publish/package process of your Web project. You can customize the behavior of this process
 by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
@@ -6,11 +6,11 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>E:\Job\เมย์\APK\APKonline\Publish</_PublishTargetUrl>
+    <_PublishTargetUrl>D:\Project\APK\APKonline\Publish</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="bin/APKOnline.dll">
-      <publishTime>10/15/2019 14:16:30</publishTime>
+      <publishTime>04/21/2020 07:21:31</publishTime>
     </File>
     <File Include="bin/APKOnline.pdb">
       <publishTime>10/15/2019 14:16:30</publishTime>
@@ -376,13 +376,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/08/2018 16:56:02</publishTime>
     </File>
     <File Include="Scripts/src/ManageStaff/ManageRole.js">
-      <publishTime>11/19/2018 12:19:02</publishTime>
+      <publishTime>11/28/2019 11:58:24</publishTime>
     </File>
     <File Include="Scripts/src/ManageStaff/ManageStaff.js">
       <publishTime>02/06/2019 16:07:19</publishTime>
     </File>
+    <File Include="Scripts/src/ManageStaff/PermissionRole.js">
+      <publishTime>04/21/2020 07:18:53</publishTime>
+    </File>
     <File Include="Scripts/src/ManageStaff/PermissionStaff.js">
-      <publishTime>11/08/2018 16:56:02</publishTime>
+      <publishTime>04/21/2020 06:28:53</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseOrder/ApprovePO.js">
       <publishTime>11/28/2018 02:58:38</publishTime>
@@ -409,7 +412,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/28/2018 03:22:21</publishTime>
     </File>
     <File Include="Scripts/src/router/AllRouter.js">
-      <publishTime>11/28/2018 10:26:20</publishTime>
+      <publishTime>04/21/2020 06:54:03</publishTime>
     </File>
     <File Include="Scripts/Template/bower_components/bootstrap-colorpicker/.bower.json">
       <publishTime>11/08/2018 16:55:57</publishTime>
@@ -21631,10 +21634,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/08/2018 16:56:02</publishTime>
     </File>
     <File Include="Views/Home/Dashboard.cshtml">
-      <publishTime>11/28/2018 10:26:20</publishTime>
+      <publishTime>04/20/2020 12:35:36</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>11/28/2018 03:22:21</publishTime>
+      <publishTime>04/21/2020 06:42:54</publishTime>
     </File>
     <File Include="Views/Home/Login.cshtml">
       <publishTime>11/28/2018 10:58:15</publishTime>
@@ -21645,23 +21648,26 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/ManageStaff/ManageStaff.cshtml">
       <publishTime>11/18/2018 16:18:33</publishTime>
     </File>
+    <File Include="Views/ManageStaff/PermissionRole.cshtml">
+      <publishTime>04/21/2020 06:52:15</publishTime>
+    </File>
     <File Include="Views/ManageStaff/PermissionStaff.cshtml">
-      <publishTime>11/27/2018 21:11:48</publishTime>
+      <publishTime>11/28/2019 11:32:03</publishTime>
     </File>
     <File Include="Views/PurchaseOrder/ApprovePO.cshtml">
-      <publishTime>11/28/2018 02:47:21</publishTime>
+      <publishTime>04/21/2020 05:27:43</publishTime>
     </File>
     <File Include="Views/PurchaseOrder/ListPurchaseOrder.cshtml">
       <publishTime>11/28/2018 00:03:03</publishTime>
     </File>
     <File Include="Views/PurchaseOrder/ListPurchaseOrderApprove.cshtml">
-      <publishTime>11/28/2018 02:18:11</publishTime>
+      <publishTime>04/21/2020 05:38:27</publishTime>
     </File>
     <File Include="Views/PurchaseOrder/ViewPurchaseOrder.cshtml">
       <publishTime>11/28/2018 01:43:47</publishTime>
     </File>
     <File Include="Views/PurchaseRequest/ApprovePR.cshtml">
-      <publishTime>11/27/2018 23:58:45</publishTime>
+      <publishTime>04/21/2020 04:42:47</publishTime>
     </File>
     <File Include="Views/PurchaseRequest/ApprovePurchaseRequest.cshtml">
       <publishTime>11/28/2018 02:01:49</publishTime>
@@ -21688,7 +21694,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/08/2018 16:56:02</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>10/15/2019 14:16:35</publishTime>
+      <publishTime>04/21/2020 07:22:47</publishTime>
     </File>
   </ItemGroup>
 </Project>

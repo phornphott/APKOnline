@@ -13,6 +13,10 @@ namespace APKOnline.Controllers
         {
             return View();
         }
+        public ActionResult PermissionRole()
+        {
+            return View();
+        }
         public ActionResult ManageStaff()
         {
             return View();

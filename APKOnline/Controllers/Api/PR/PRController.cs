@@ -38,7 +38,7 @@ namespace APKOnline
             dtDocumentGroup.Columns.Add("ID",typeof(int));
             dtDocumentGroup.Columns.Add("Name", typeof(string));
 
-            for (int i = 0; i <= 4; i++)
+            for (int i = 0; i <= 6; i++)
             {
                 DataRow nrow = dtDocumentGroup.NewRow();
                 nrow[0] = i;
@@ -49,15 +49,21 @@ namespace APKOnline
                         name = "- กรุณาเลือก -";
                         break;
                     case 1:
-                        name = "สินค้าทั่วไป";
+                        name = "สินค้าทั่วไป-คลังสินค้า";
                         break;
                     case 2:
-                        name = "เชื่อเพลิง";
+                        name = "สินค้าทั่วไป-อื่นๆ";
                         break;
                     case 3:
-                        name = "ค่าใช้จ่ายทั่วไป";
+                        name = "สินทรัพย์ถาวร";
                         break;
                     case 4:
+                        name = "เชื้อเพลิง-วัตถุดิบ";
+                        break;
+                    case 5:
+                        name = "ค่าใช้จ่ายทั่วไป";
+                        break;
+                    case 6:
                         name = "ค่าใช้จ่ายเงินสดย่อย";
                         break;
                     default:

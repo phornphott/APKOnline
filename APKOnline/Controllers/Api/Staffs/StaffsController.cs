@@ -128,7 +128,34 @@ namespace APKOnline.Controllers
             resData.Records = ds.Tables[0].Rows.Count;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
+        [HttpGet]
+        [ActionName("PermissionRoleData")]
+        public HttpResponseMessage GETPermissionRoleData()
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
 
+            dt = repository.GetStaffAuthorizeData(ref errMsg);
+
+            ds.Tables.Add(dt);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            resData.Records = ds.Tables[0].Rows.Count;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
 
     }
 }

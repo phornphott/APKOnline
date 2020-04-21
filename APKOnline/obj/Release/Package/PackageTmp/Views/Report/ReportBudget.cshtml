@@ -1,0 +1,92 @@
+﻿<section class="content-header">
+    <h1>
+        รายงานงบประมาณ
+    </h1>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <button class="btn btn-default pull-right" ng-click="OpenSearch()"><i class="fa fa-search"></i>  ค้นหา</button>
+                </div>
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="sjs-table" ng-show="ListReportBudgets.length > 0">
+                            <tr>
+                                <th class="text-center">No</th>
+                                <th class="text-center">แผนก</th>
+                                <th class="text-center">พนักงาน</th>
+                                <th class="text-center">งบประมาณทั้งหมด</th>
+                                <th class="text-center">งบประมาณที่ใช้</th>
+                            </tr>
+                            <tr ng-repeat="Budgets in ListReportBudgets">
+                                <td align="center">{{$index+1}}</td>
+                                <td align="left">{{Budgets.Dep}}</td>
+                                <td align="left">{{Budgets.StaffFirstName}} {{Budgets.StaffLastName}}</td>
+                                <td align="right">{{Budgets.SumMonth | number: 2}}</td>
+                                <td align="right">{{Budgets.Document_NetSUM | number: 2}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <h3 style="text-align:center;" ng-show="ListReportBudgets.length == 0">ไม่มีข้อมูล</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">
+                    ค้นหา
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" name="FormModifyReport" role="form">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label for="STARTDATE" class="col-sm-4 control-label">เดือน : </label>
+                                <div class="col-sm-7">
+                                    <p class="input-group pull-right">
+                                        <input type="text" class="form-control" name="MONTHDATE" uib-datepicker-popup="MMMM yyyy" ng-model="MONTHDATE" ng-change="ChangeMonthDate(MONTHDATE)" is-open="popupMonth.opened" datepicker-options="dateOptionsMonth" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="openMonth()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="StaffCode" class="col-sm-4 control-label">รหัสพนักงาน : </label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="StaffCode" name="StaffCode" ng-model="StaffCode">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group" style="margin-top: 59px;">
+                                <label for="DEPcode" class="col-sm-4 control-label">รหัสแผนก : </label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="DEPcode" name="DEPcode" ng-model="DEPcode">
+                                </div>
+                            </div>
+                        </div>
+                    </div><hr />
+                    <div class="form-group">
+                        <div class="col-sm-offset-5 col-sm-7">
+                            <div class="checkbox">
+                                <button type="submit" class="btn btn-success" ng-disabled="FormModifyReport.$invalid" ng-click="ListReportBudget()"><i class="fa fa-search"></i> ค้นหา</button>
+                                <a class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> ยกเลิก</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

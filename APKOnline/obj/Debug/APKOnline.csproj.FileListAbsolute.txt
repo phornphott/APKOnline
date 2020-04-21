@@ -1,0 +1,169 @@
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\System.Collections.Immutable.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\System.Reflection.Metadata.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\VBCSCompiler.exe
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\csc.exe
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\csc.exe.config
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\csc.rsp
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\csi.exe
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\csi.rsp
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\System.AppContext.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\System.Diagnostics.StackTrace.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\System.IO.FileSystem.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\System.IO.FileSystem.Primitives.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\vbc.exe
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\vbc.exe.config
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\vbc.rsp
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\roslyn\VBCSCompiler.exe.config
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\APKOnline.dll.config
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\APKOnline.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\APKOnline.pdb
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\Microsoft.Web.Infrastructure.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\Newtonsoft.Json.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Net.Http.Formatting.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Helpers.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Http.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Http.WebHost.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Mvc.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Razor.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Webpages.Deployment.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Webpages.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Webpages.Razor.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Razor.xml
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Webpages.xml
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Webpages.Deployment.xml
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Webpages.Razor.xml
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Helpers.xml
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Mvc.xml
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\Newtonsoft.Json.xml
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Net.Http.Formatting.xml
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Http.xml
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\bin\System.Web.Http.WebHost.xml
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\obj\Debug\APKOnline.csproj.CoreCompileInputs.cache
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\obj\Debug\APKOnline.csproj.CopyComplete
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\obj\Debug\APKOnline.dll
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\obj\Debug\APKOnline.pdb
+D:\Data\Chrollo Data\APK\APKOnline\APKOnline\obj\Debug\APKOnline.csprojAssemblyReference.cache
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\csc.exe
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\csc.exe.config
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\csc.rsp
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\csi.exe
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\csi.rsp
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\System.AppContext.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\System.Collections.Immutable.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\System.Diagnostics.StackTrace.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\System.IO.FileSystem.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\System.IO.FileSystem.Primitives.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\System.Reflection.Metadata.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\vbc.exe
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\vbc.exe.config
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\vbc.rsp
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\VBCSCompiler.exe
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\roslyn\VBCSCompiler.exe.config
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\APKOnline.dll.config
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\APKOnline.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\APKOnline.pdb
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\Microsoft.Web.Infrastructure.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\Newtonsoft.Json.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Net.Http.Formatting.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Helpers.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Http.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Http.WebHost.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Mvc.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Razor.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Webpages.Deployment.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Webpages.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Webpages.Razor.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Razor.xml
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Webpages.xml
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Webpages.Deployment.xml
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Webpages.Razor.xml
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Helpers.xml
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Mvc.xml
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\Newtonsoft.Json.xml
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Net.Http.Formatting.xml
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Http.xml
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\bin\System.Web.Http.WebHost.xml
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\obj\Debug\APKOnline.csprojAssemblyReference.cache
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\obj\Debug\APKOnline.csproj.CoreCompileInputs.cache
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\obj\Debug\APKOnline.csproj.CopyComplete
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\obj\Debug\APKOnline.dll
+C:\JOB\เมย์\APKOnline\APKOnline\APKOnline\obj\Debug\APKOnline.pdb
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\csc.exe
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\csc.exe.config
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\csc.rsp
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\csi.exe
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\csi.rsp
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\System.AppContext.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\System.Collections.Immutable.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\System.Diagnostics.StackTrace.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\System.IO.FileSystem.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\System.IO.FileSystem.Primitives.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\System.Reflection.Metadata.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\vbc.exe
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\vbc.exe.config
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\vbc.rsp
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\VBCSCompiler.exe
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\roslyn\VBCSCompiler.exe.config
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\APKOnline.dll.config
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\APKOnline.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\APKOnline.pdb
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\Microsoft.Web.Infrastructure.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\Newtonsoft.Json.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Net.Http.Formatting.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Helpers.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Http.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Http.WebHost.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Mvc.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Razor.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Webpages.Deployment.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Webpages.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Webpages.Razor.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Razor.xml
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Webpages.xml
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Webpages.Deployment.xml
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Webpages.Razor.xml
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Helpers.xml
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Mvc.xml
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\Newtonsoft.Json.xml
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Net.Http.Formatting.xml
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Http.xml
+D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Http.WebHost.xml
+D:\Project\APK\APKonline\APKOnline\APKOnline\obj\Debug\APKOnline.csprojResolveAssemblyReference.cache
+D:\Project\APK\APKonline\APKOnline\APKOnline\obj\Debug\APKOnline.dll
+D:\Project\APK\APKonline\APKOnline\APKOnline\obj\Debug\APKOnline.pdb

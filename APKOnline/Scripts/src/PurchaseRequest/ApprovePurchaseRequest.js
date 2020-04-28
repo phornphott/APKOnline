@@ -1,6 +1,7 @@
 ﻿angular.module('ApkApp').controller('ApprovePurchaseRequestController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
     function ($scope, $stateParams, $http, $rootScope, $filter) {
 
+        $scope.TextSaveButon="บันทึก";
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
         $scope.showBorders = true;

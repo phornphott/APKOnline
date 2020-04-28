@@ -18,13 +18,15 @@ namespace APKOnline.DBHelper
         DataTable GetJobData(ref string errMsg);
         DataTable GetAccountData(ref string errMsg);
         DataTable GetDetailData(int Document_Detail_Hid, int tmp, ref string errMsg);
-        DataTable GetHeaderData(int Document_id, int tmp, ref string errMsg);
+        DataTable GetHeaderData(int Document_id, int staffid, ref string errMsg);
         int InsertHeader(PRHeaderModels Header, ref string errMsg);
         int InserttmpDetail(PRDetailModels detail, ref string errMsg);
         int DeleteTmpDetail(int Hid, ref string errMsg);
-        DataTable GetPRData(int DeptID, ref string errMsg);
-        DataTable GetPRDataForApprove(int DeptID, ref string errMsg);
+        DataTable GetPRData(int staffID, ref string errMsg);
+        DataTable GetPRDataForApprove(int StaffID, int DeptID, ref string errMsg);
         int ApprovePR(int Document_Id, int StaffID, ref string errMsg);
+        DataTable GetPROverDataForApprove(int id, int DeptID, ref string errMsg);
+        int ApprovePROverBudget(int Document_Id, int StaffID, ref string errMsg);
     }
 
     public class PRData : IPRData
@@ -201,18 +203,27 @@ namespace APKOnline.DBHelper
 
             return dt;
         }
-        public DataTable GetHeaderData(int Document_id,int tmp, ref string errMsg)
+        public DataTable GetHeaderData( int Document_id,int staffid, ref string errMsg)
         {
             DataTable dt = new DataTable();
             string tablename = "DocumentPR_Header";
-            if (tmp == 0)
-            { tablename = "DocumentPR_Header_tmp"; }
+            decimal budget = 0;
            
             try
             {
                 string strSQL = "\r\n  " +
+                     " SELECT * " +
+                     " FROM StaffAuthorize WHERE StaffID = " +staffid;
+                DataTable staffauth = DBHelper.List(strSQL);
+                foreach (DataRow dr in staffauth.Rows)
+                {
+                    budget = Convert.ToDecimal(dr["PositionLimit"]);
+                }
+
+
+                 strSQL = "\r\n  " +
                       " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,d.DEPdescT AS Dep,j.JOBdescT As Job ,g.GroupName AS 'Group'" +
-                      " , Objective_Name AS Objective,Category_Name AS Category" +
+                      " , Objective_Name AS Objective,Category_Name AS Category ,CASE WHEN p.Document_Cog > "+ budget + " THEN 'รับทราบ'ELSE 'อนุมัติ' END AS SaveText" +
                       " FROM "+ tablename + " p LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job" +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
@@ -239,7 +250,7 @@ namespace APKOnline.DBHelper
 
             return dt;
         }
-        public DataTable GetPRData(int DeptID, ref string errMsg)
+        public DataTable GetPRData(int staffID, ref string errMsg)
         {
             DataTable dt = new DataTable();
             string tablename = "DocumentPR_Header";
@@ -254,6 +265,10 @@ namespace APKOnline.DBHelper
                       " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
                       " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
                       " where Document_Delete=0 ";
+                if (staffID > 0 && staffID != 99)
+                {
+                    strSQL += " AND p.Document_CreateUser="+ staffID;
+                }
                 dt = DBHelper.List(strSQL);
             }
             catch (Exception e)
@@ -265,22 +280,126 @@ namespace APKOnline.DBHelper
 
             return dt;
         }
-        public DataTable GetPRDataForApprove(int DeptID, ref string errMsg)
+        public DataTable GetPRDataForApprove(int StaffID,int DeptID, ref string errMsg)
+        {
+            DataTable dt = new DataTable();
+            string tablename = "DocumentPR_Header";
+            int staffLevel = 0;
+            try
+            {
+
+                string sql = "Select * from Staffs WHERE StaffID = " + StaffID;
+                DataTable staff = DBHelper.List(sql);
+                if (staff.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in staff.Rows)
+                    {
+                        staffLevel = Convert.ToInt32(dr["StaffLevelID"]) - 1;
+                    }
+                }
+
+
+                    sql = "Select * from BudgetOfYearByDepartment WHERE DEPid = " + DeptID;
+                DataTable depbudget = DBHelper.List(sql);
+
+                if (depbudget.Rows.Count > 0)
+                {
+                    decimal Dep_Budget = 0;
+                    string monthcol = "DEPmonth"+DateTime.Now.Month.ToString();
+                    foreach (DataRow dr in depbudget.Rows)
+                    {
+                        Dep_Budget = Convert.ToDecimal(dr[monthcol]);
+
+
+                        string strSQL = "\r\n  SELECT * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevelID ELSE a.Current_Level END AS Document_Level FROM  (" +
+                          "(SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,d.DEPdescT,j.JOBdescT" +
+                          " FROM " + tablename + " p " +
+                          " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                          " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                          " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+                          " where Document_Delete=0 AND Document_Status<2 " +
+                          " AND Document_Cog <=" + Dep_Budget + " And p.Document_Dep= " + DeptID +
+                          ") UNION ALL (" +
+                          " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,d.DEPdescT,j.JOBdescT" +
+                          " FROM " + tablename + " p " +
+                          " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                          " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                          " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+                          " LEFT JOIN ApprovePROverBudget a on a.Approve_Documen_Id=p.Document_Id " +
+                          " where Document_Delete=0 AND Document_Status < 2 AND a.Approve_Status = 2" +
+                          " AND Document_Cog > " + Dep_Budget + " And p.Document_Dep= " + DeptID+ ")) aa  " +
+                          " left join (SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
+                          " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level ="+ staffLevel;
+
+
+
+
+                        dt = DBHelper.List(strSQL);
+                    }
+                }
+                 else
+                    {
+                    errMsg = "ไม่สารมารถดูข้อมูลการอนุมัติเอกสารได้เนื่องจากไม่มีการตั้งค่างบประมาณของแผนก.";
+                }
+
+                
+            }
+            catch (Exception e)
+            {
+                errMsg = e.Message;
+            }
+
+            dt.TableName = "ListPRData";
+
+            return dt;
+        }
+        public DataTable GetPROverDataForApprove(int id,int DeptID, ref string errMsg)
         {
             DataTable dt = new DataTable();
             string tablename = "DocumentPR_Header";
 
             try
             {
-                string strSQL = "\r\n  " +
-                      " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                      ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,d.DEPdescT,j.JOBdescT" +
-                      " FROM " + tablename + " p " +
-                      " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
-                      " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
-                      " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
-                      " where Document_Delete=0 AND Document_Status<2 ";
-                dt = DBHelper.List(strSQL);
+
+                string sql = "Select * from BudgetOfYearByDepartment WHERE DEPid = " + DeptID;
+                DataTable depbudget = DBHelper.List(sql);
+                sql = "Select * from OverBudgetSetting WHERE StaffID = " + id;
+                DataTable BudgetSetting = DBHelper.List(sql);
+                if (BudgetSetting.Rows.Count > 0)
+                {
+                    if (depbudget.Rows.Count > 0)
+                    {
+                        decimal Dep_Budget = 0;
+                        string monthcol = "DEPmonth" + DateTime.Now.Month.ToString();
+                        foreach (DataRow dr in depbudget.Rows)
+                        {
+                            Dep_Budget = Convert.ToDecimal(dr[monthcol]);
+
+
+                            string strSQL = "\r\n  " +
+                              " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                              ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,d.DEPdescT,j.JOBdescT" +
+                              " FROM " + tablename + " p " +
+                              " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                              " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                              " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+                              " LEFT JOIN ApprovePROverBudget a on a.Approve_Documen_Id=p.Document_Id " +
+                              " where Document_Delete=0 AND Document_Status<2 AND (a.Approve_Status < 2 OR a.Approve_Status IS NULL)" +
+                              " AND p.Document_Cog >" + Dep_Budget + " And p.Document_Dep= " + DeptID;
+                            dt = DBHelper.List(strSQL);
+                        }
+                    }
+                    else
+                    {
+                        errMsg = "ไม่สารมารถดูข้อมูลการอนุมัติเอกสารได้เนื่องจากไม่มีการตั้งค่างบประมาณของแผนก.";
+                    }
+                }
+                else
+                { errMsg = "คุณไม่มีสิทธิ์ในการอนุมัติเอกสารเกินงบประมาณ"; }
+
+
             }
             catch (Exception e)
             {
@@ -291,7 +410,6 @@ namespace APKOnline.DBHelper
 
             return dt;
         }
-
         public int InsertHeader(PRHeaderModels Header, ref string errMsg)
         {
             int document_id = 0;
@@ -511,26 +629,78 @@ namespace APKOnline.DBHelper
             string sqlQuery = "";
             SqlCommand cmd = new SqlCommand();
             SqlParameter shipperIdParam = null;
-            SqlConnection conn = DBHelper.sqlConnection();
-            if (conn.State == ConnectionState.Closed)
-                conn.Open();
-            cmd = conn.CreateCommand();
-            //myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
-            cmd.Connection = conn;
 
+            decimal budget = 0;
+            decimal doc_cog = 0;
+            int docLevel = 0;
+            int ApproveLevel = 0;
             try
             {
+                string strSQL = "\r\n  " +
+              " SELECT * " +
+              " FROM StaffAuthorize WHERE StaffID = " + StaffID;
+                DataTable staffauth = DBHelper.List(strSQL);
+                foreach (DataRow dr in staffauth.Rows)
+                {
+                    budget = Convert.ToDecimal(dr["PositionLimit"]);
+                    ApproveLevel = Convert.ToInt32(dr["PositionPermissionId"]);
+                }
 
-                 sqlQuery = "Update DocumentPR_Header SET " +
-                            "Document_EditUser = @Document_EditUser,Document_EditDate=GETDATE(),Document_Status =2 WHERE Document_Id = @Document_Id";
-                cmd.CommandText = sqlQuery;
-                cmd.CommandTimeout = 30;
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@Document_Id", Document_Id);
-                cmd.Parameters.AddWithValue("@Document_EditUser", StaffID);
-                cmd.ExecuteNonQuery();
+                strSQL = "\r\n  " +
+              " SELECT * " +
+              " FROM DocumentPR_Header h left join Staffs s on s.StaffID=h.Document_CreateUser  WHERE h.Document_Id = " + Document_Id;
+                DataTable docHeader = DBHelper.List(strSQL);
+                foreach (DataRow dr in docHeader.Rows)
+                {
+                    doc_cog = Convert.ToDecimal(dr["Document_Cog"]);
+                    docLevel = Convert.ToInt32(dr["StaffLevelID"]);
+                }
+                SqlConnection conn = DBHelper.sqlConnection();
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                cmd = conn.CreateCommand();
+                //myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
+                cmd.Connection = conn;
+                if (doc_cog > budget)
+                {
 
+                    sqlQuery = "INSERT INTO ApprovePR (Approve_Documen_Id,Approve_Create_Level,Approve_Current_Level,Approve_Status,Approve_Order,Approve_By) VALUES" +
+                     " (@Approve_Documen_Id,@Approve_Create_Level,@Approve_Current_Level,1,0,@Approve_By  )";
+                    cmd.CommandText = sqlQuery;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@Approve_Documen_Id", Document_Id);
+                    cmd.Parameters.AddWithValue("@Approve_Create_Level", docLevel);
+                    cmd.Parameters.AddWithValue("@Approve_Current_Level", ApproveLevel);
+                    cmd.Parameters.AddWithValue("@Approve_By", StaffID);
+                    cmd.ExecuteNonQuery();
+
+                }
+                else
+                {
+                    sqlQuery = "INSERT INTO ApprovePR (Approve_Documen_Id,Approve_Create_Level,Approve_Current_Level,Approve_Status,Approve_Order,Approve_By) VALUES" +
+                " (@Approve_Documen_Id,@Approve_Create_Level,@Approve_Current_Level,2,0,@Approve_By  )";
+                    cmd.CommandText = sqlQuery;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@Approve_Documen_Id", Document_Id);
+                    cmd.Parameters.AddWithValue("@Approve_Create_Level", docLevel);
+                    cmd.Parameters.AddWithValue("@Approve_Current_Level", ApproveLevel);
+                    cmd.Parameters.AddWithValue("@Approve_By", StaffID);
+                    cmd.ExecuteNonQuery();
+
+                    sqlQuery = "Update DocumentPR_Header SET " +
+                                "Document_EditUser = @Document_EditUser,Document_EditDate=GETDATE(),Document_Status =2 WHERE Document_Id = @Document_Id";
+                    cmd.CommandText = sqlQuery;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@Document_Id", Document_Id);
+                    cmd.Parameters.AddWithValue("@Document_EditUser", StaffID);
+                    cmd.ExecuteNonQuery();
+                }
                 //document_id = (int)shipperIdParam.Value;
 
             }
@@ -562,6 +732,55 @@ namespace APKOnline.DBHelper
 
             dt.TableName = "Document_Vnos";
             return dt;
+        }
+        public int ApprovePROverBudget(int Document_Id, int StaffID, ref string errMsg)
+        {
+            int document_id = 0;
+            string sqlQuery = "";
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter shipperIdParam = null;
+            SqlConnection conn = DBHelper.sqlConnection();
+            if (conn.State == ConnectionState.Closed)
+                conn.Open();
+            cmd = conn.CreateCommand();
+            //myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
+            cmd.Connection = conn;
+
+            try
+            {
+                sqlQuery = "SELECT * FROM ApprovePROverBudget WHERE Approve_Documen_Id = " + Document_Id;
+                DataTable dt = DBHelper.List(sqlQuery);
+
+          
+
+                if (dt.Rows.Count == 0)
+                {
+                    sqlQuery = "INSERT INTO ApprovePROverBudget (Approve_Id,Approve_Documen_Id,Approve_Status,Approve_Order,Approve_By) " +
+                        " SELECT isnull(max(Approve_Id),0) +1  ,@Approve_Documen_Id,2,0,@Approve_By  FROM ApprovePROverBudget";
+                }
+                else
+                {
+                    sqlQuery = "Update ApprovePROverBudget SET " +
+                         "Approve_Status = 2,Approve_By=@Approve_By WHERE Approve_Documen_Id = @Approve_Documen_Id";
+                }
+               
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@Approve_Documen_Id", Document_Id);
+                cmd.Parameters.AddWithValue("@Approve_By", StaffID);
+                cmd.ExecuteNonQuery();
+
+                //document_id = (int)shipperIdParam.Value;
+
+            }
+            catch (Exception ex)
+            {
+                errMsg = ex.Message;
+            }
+
+            return document_id;
         }
 
         #endregion

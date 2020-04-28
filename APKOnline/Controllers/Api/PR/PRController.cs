@@ -136,7 +136,7 @@ namespace APKOnline
        
         [HttpGet]
         [ActionName("ViewPRData")]
-        public HttpResponseMessage GETViewPRData(int id)
+        public HttpResponseMessage GETViewPRData(int id,int staffid)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
@@ -144,7 +144,7 @@ namespace APKOnline
             Result resData = new Result();
 
             DataTable dtAccount = repository.GetAccountData(ref errMsg);
-            DataTable dtHeaderData = repository.GetHeaderData(id, 1, ref errMsg);
+            DataTable dtHeaderData = repository.GetHeaderData(id, staffid, ref errMsg);
             DataTable dtDetail = repository.GetDetailData(id, 1, ref errMsg);
             ds.Tables.Add(dtAccount);
             ds.Tables.Add(dtHeaderData);
@@ -194,14 +194,42 @@ namespace APKOnline
         }
         [HttpGet]
         [ActionName("ListPRForApprove")]
-        public HttpResponseMessage GETListPRForApprove(int id)
+        public HttpResponseMessage GETListPRForApprove(int id,int deptid)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             Result resData = new Result();
 
-            dt = repository.GetPRDataForApprove(id, ref errMsg);
+            dt = repository.GetPRDataForApprove(id,deptid, ref errMsg);
+
+
+            ds.Tables.Add(dt);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+        [HttpGet]
+        [ActionName("ListPROverForApprove")]
+        public HttpResponseMessage GETListPROverForApprove(int id,int depid)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+            dt = repository.GetPROverDataForApprove(id, depid, ref errMsg);
 
 
             ds.Tables.Add(dt);
@@ -369,6 +397,33 @@ namespace APKOnline
 
 
             int id = repository.ApprovePR(Header.Document_Id,Header.Document_CreateUser, ref errMsg);
+
+            //ds.Tables.Add(dtDocumentVnos);
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+        [HttpPost]
+        [ActionName("ApprovePROverBudget")]
+        public HttpResponseMessage ApprovePROverBudget(PRHeaderModels Header)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+
+            int id = repository.ApprovePROverBudget(Header.Document_Id, Header.Document_CreateUser, ref errMsg);
 
             //ds.Tables.Add(dtDocumentVnos);
             if (errMsg != "")

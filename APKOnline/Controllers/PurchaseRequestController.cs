@@ -30,5 +30,13 @@ namespace APKOnline.Controllers
         {
             return View();
         }
+        public ActionResult ListOverBGPurchaseRequest()
+        {
+            return View();
+        }
+        public ActionResult ApprovePROver()
+        {
+            return View();
+        }
     }
 }

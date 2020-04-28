@@ -1,6 +1,7 @@
 ﻿angular.module('ApkApp').controller('ApprovePRController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
     function ($scope, $stateParams, $http, $rootScope, $filter) {
         console.log($stateParams);
+        $scope.SaveText = "อนุมัติ";
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
         $scope.showBorders = true;
@@ -14,9 +15,10 @@
         $scope.Document_Vnos = "";
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
-        $http.get("api/PR/ViewPRData/" + $scope.Document_ID).then(function (data) {
+        $http.get("api/PR/ViewPRData/" + $scope.Document_ID + "?staffid=" + localStorage.getItem('StaffID') ).then(function (data) {
             console.log(data);
             $scope.Header = data.data.Results.Header[0];
+            $scope.SaveText = data.data.Results.Header[0].SaveText;
             var Detail = data.data.Results.Detail;
             $rootScope.Account = data.data.Results.Account;
             $scope.dataGridOptions = {
@@ -205,7 +207,20 @@
                 };
                 $http.post("api/PR/ApprovePRData?", Header).then(function successCallback(response) {
                     console.log(response);
-                    window.location = '#/PurchaseRequest/ListPRApprove';
+                    if (response.data.StatusCode > 1) {
+                        swal({
+                            title: $translate.instant("info"),
+                            text: response.data.Messages,
+                            type: "info",
+                            showCancelButton: false,
+                            confirmButtonColor: "#6EAA6F",
+                            confirmButtonText: $translate.instant("ok")
+                        }, function () {
+                        })
+
+                    }
+                    else { window.location = '#/PurchaseRequest/ListPRApprove'; }
+                    //
                 });
             
 

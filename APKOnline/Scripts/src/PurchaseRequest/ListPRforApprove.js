@@ -7,7 +7,7 @@
         $scope.rowAlternationEnabled = true;
 
 
-        $http.get("api/PR/ListPRForApprove/0").then(function (data) {
+        $http.get("api/PR/ListPRForApprove/" + localStorage.getItem('StaffID') + "?deptid=" + localStorage.getItem('StaffDepartmentID')).then(function (data) {
             console.log(data);
             $scope.dataGridOptions = {
                 dataSource: data.data.Results.ListPRData,
@@ -58,8 +58,9 @@
                         dataField: "Approve",
                     caption: "อนุมัติ",
                     cellTemplate: function (container, item) {
+                    
                         var data = item.data,
-                            markup = "<a>อนุมัติ</a>";
+                            markup = "<a>อนุมัติ/รับทราบ</a>";
                         container.append(markup);
                     }
                 //}, {

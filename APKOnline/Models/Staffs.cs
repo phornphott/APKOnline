@@ -10,4 +10,12 @@ namespace APKOnline.Models
         public string StaffLogin { get; set; }
         public string StaffPassword { get; set; }
     }
+    public class Department
+    {
+        public int DEPid { get; set; }
+        public string DEPcode { get; set; }
+        public string DEPdescT { get; set; }
+        public string DEPdescE { get; set; }
+
+    }
 }

@@ -3,9 +3,11 @@ using APKOnline.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Deployment.Internal;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace APKOnline.Controllers
@@ -155,6 +157,79 @@ namespace APKOnline.Controllers
             resData.Results = ds;
             resData.Records = ds.Tables[0].Rows.Count;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+
+        [HttpPost]
+        [ActionName("SetDepartmentData")]
+        public async Task<HttpResponseMessage> SetDepartment(Department item)
+        {
+            Result response = new Result();
+            bool ret = false;
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+
+            try
+            {
+                ret = await repository.SetDepartmentData(item);
+
+                if (ret)
+                {
+                    response.StatusCode = (int)StatusCodes.Succuss;
+                    response.Messages = "";
+                }
+                else
+                {
+                    response.StatusCode = (int)StatusCodes.Error;
+                    response.Messages = "";
+
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = (int)StatusCodes.Error;
+                response.Messages = e.Message;
+            }
+
+
+            //response.Results = ds;
+            //response.Records = ds.Tables[0].Rows.Count;
+            return Request.CreateResponse(HttpStatusCode.OK, response);
+        }
+        [HttpPost]
+        [ActionName("DeleteDepartment")]
+        public async Task<HttpResponseMessage> DeleteDepartment(int id)
+        {
+            Result response = new Result();
+            bool ret = false;
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+
+            try
+            {                                 
+                ret = await repository.DeleteDepartment(id);
+
+                if (ret)
+                {
+                    response.StatusCode = (int)StatusCodes.Succuss;
+                    response.Messages = "";
+                }
+                else
+                {
+                    response.StatusCode = (int)StatusCodes.Error;
+                    response.Messages = "";
+
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = (int)StatusCodes.Error;
+                response.Messages = e.Message;
+            }
+
+
+            //response.Results = ds;
+            //response.Records = ds.Tables[0].Rows.Count;
+            return Request.CreateResponse(HttpStatusCode.OK, response);
         }
 
     }

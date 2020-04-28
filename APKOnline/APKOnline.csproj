@@ -108,6 +108,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="CSS\sweetalert.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\angular-ui-router.js" />
@@ -193,11 +194,16 @@
     <Content Include="Scripts\src\PurchaseOrder\PurchaseOrder.js" />
     <Content Include="Scripts\src\PurchaseOrder\ApprovePO.js" />
     <Content Include="Scripts\src\PurchaseOrder\ViewPurchaseOrder.js" />
+    <Content Include="Scripts\src\PurchaseRequest\ApprovePROverBudget.js" />
+    <Content Include="Scripts\src\PurchaseRequest\ApprovePR.js" />
+    <Content Include="Scripts\src\PurchaseRequest\ListPROverforApprove.js" />
+    <Content Include="Scripts\src\PurchaseRequest\ListPRforApprove.js" />
     <Content Include="Scripts\src\PurchaseRequest\ViewPurchaseRequest.js" />
     <Content Include="Scripts\src\PurchaseRequest\ApprovePurchaseRequest.js" />
     <Content Include="Scripts\src\PurchaseRequest\ListPurchaseRequest.js" />
     <Content Include="Scripts\src\Report\ReportBudget.js" />
     <Content Include="Scripts\src\router\AllRouter.js" />
+    <Content Include="Scripts\sweetalert.min.js" />
     <Content Include="Scripts\Template\bower_components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.css" />
     <Content Include="Scripts\Template\bower_components\bootstrap-colorpicker\dist\css\bootstrap-colorpicker.min.css" />
     <Content Include="Scripts\Template\bower_components\bootstrap-colorpicker\dist\img\bootstrap-colorpicker\alpha-horizontal.png" />
@@ -7326,6 +7332,8 @@
     <Content Include="Views\PurchaseOrder\ListPurchaseOrderApprove.cshtml" />
     <Content Include="Views\PurchaseOrder\ApprovePO.cshtml" />
     <Content Include="Views\ManageStaff\PermissionRole.cshtml" />
+    <Content Include="Views\PurchaseRequest\ListOverBGPurchaseRequest.cshtml" />
+    <Content Include="Views\PurchaseRequest\ApprovePROver.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

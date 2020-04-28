@@ -1,6 +1,8 @@
-﻿using System;
+﻿using APKOnline.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +18,9 @@ namespace APKOnline.DBHelper
         DataTable GetDepartmentData(ref string errMsg);
 
         DataTable GetStaffAuthorizeData(ref string errMsg);
-        
+
+        Task<bool> SetDepartmentData(Department item);
+        Task<bool> DeleteDepartment(int id);
     }
 
     public class StaffData : IStaffData
@@ -137,6 +141,54 @@ namespace APKOnline.DBHelper
         }
         #endregion
 
+
+        #region Set Staff
+        public async Task<bool> SetDepartmentData(Department item)
+        {
+            bool result = false;
+            string strSQL = null;
+            DataTable dt = new DataTable();
+
+            if (item.DEPid == 0)
+            {
+                strSQL = "Insert Into Department (DEPid,DEPCode,DEPdescT,DEPdescE,FLG_DEL,DEPeditDT) select isnull(max(DEPid),0) +1 ,@DEPCode,@DEPdescT,@DEPdescE,0 ,GETDATE() from Department";
+                List<SqlParameter> sp = new List<SqlParameter>()
+                {
+                    new SqlParameter() {ParameterName = "@DEPCode", SqlDbType = SqlDbType.VarChar, Value= item.DEPcode},
+                    new SqlParameter() {ParameterName = "@DEPdescT", SqlDbType = SqlDbType.NVarChar, Value = item.DEPdescT},
+                    new SqlParameter() {ParameterName = "@DEPdescE", SqlDbType = SqlDbType.NVarChar, Value = item.DEPdescE}
+                };
+                DBHelper.Execute(strSQL, sp);
+            }
+            else
+            {
+                strSQL = "UPDATE Department SET DEPCode=@DEPCode,DEPdescT=@DEPdescT,DEPdescE=@DEPdescE,DEPeditDT=GETDATE() WHERE DEPid=@DEPid";
+
+                List<SqlParameter> sp = new List<SqlParameter>()
+                {
+                    new SqlParameter() {ParameterName = "@DEPid", SqlDbType = SqlDbType.VarChar, Value= item.DEPid},
+                    new SqlParameter() {ParameterName = "@DEPCode", SqlDbType = SqlDbType.VarChar, Value= item.DEPcode},
+                    new SqlParameter() {ParameterName = "@DEPdescT", SqlDbType = SqlDbType.NVarChar, Value = item.DEPdescT},
+                    new SqlParameter() {ParameterName = "@DEPdescE", SqlDbType = SqlDbType.NVarChar, Value = item.DEPdescE}
+                };
+                DBHelper.Execute(strSQL, sp);
+            }
+            return true;
+        }
+        public async Task<bool> DeleteDepartment(int id)
+        {
+            bool result = false;
+            string strSQL = null;
+
+
+            strSQL = "UPDATE Department SET [FLG_DEL1 WHERE DEPid="+id;
+
+            DBHelper.Execute(strSQL);
+
+            return true;
+        }
+
+        #endregion
         public static string Base64Decode(string base64EncodedData)
         {
             var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);

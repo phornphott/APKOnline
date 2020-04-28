@@ -73,6 +73,17 @@ namespace APKOnline.DBHelper
 
             return (i > 0) ? i : 0;
         }
+        public static int Execute(string query, List<SqlParameter> sp)
+        {
+            int i = 0;
+            SqlConnection conn = DBHelper.SqlConnectionDb();
+            var sqlCommand = new SqlCommand(query, conn);
+            sqlCommand.Parameters.AddRange(sp.ToArray());
+           i = sqlCommand.ExecuteNonQuery();
+            conn.Close();
+
+            return (i > 0) ? i : 0;
+        }
         /// <summary>
         /// Get max id function for insert data.
         /// </summary>

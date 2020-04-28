@@ -237,5 +237,37 @@
                 }]
             }
         })
+        .state('/PurchaseRequest/ListPROverBudgetApprove', {
+            url: "/PurchaseRequest/ListPROverBudgetApprove",
+            templateUrl: '\PurchaseRequest/ListOverBGPurchaseRequest',
+            controller: 'ListPROverforApproveController',
+            resolve: {
+                lazyLoad: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'AceApp',
+                            files: [
+                                'Scripts/src/PurchaseRequest/ListPROverforApprove.js'
+                            ]
+                        }])
+                }]
+            }
+        })
+        .state('/PurchaseRequest/ApprovePROverBudget/:id', {
+            url: "/PurchaseRequest/ApprovePROverBudget/:id",
+            templateUrl: '\PurchaseRequest/ApprovePROver',
+            controller: 'ApprovePROverController',
+            resolve: {
+                lazyLoad: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'AceApp',
+                            files: [
+                                'Scripts/src/PurchaseRequest/ApprovePROverBudget.js'
+                            ]
+                        }])
+                }]
+            }
+        })
 
 });

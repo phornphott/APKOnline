@@ -7,7 +7,7 @@
         $scope.rowAlternationEnabled = true;
 
 
-        $http.get("api/PR/ListPRByStaff/" + localStorage.getItem('StaffDepartmentID')+"?").then(function (data) {
+        $http.get("api/PR/ListPRByStaff/" + localStorage.getItem('StaffID')+"?").then(function (data) {
             console.log(data);
             $scope.dataGridOptions = {
                 dataSource: data.data.Results.ListPRData,

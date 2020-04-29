@@ -30,7 +30,8 @@ namespace APKOnline.DBHelper
                     Addition += " AND d.DEPcode=" + DEPcode;
                 }
 
-                string strSQL = "\r\n SELECT p.*, b.SumMonth" + MONTHS + " as SumMonth, s.StaffCode, s.StaffFirstName, s.StaffLastName, d.DEPcode, d.DEPdescT AS Dep,j.JOBdescT As Job, Objective_Name AS Objective, Category_Name AS Category FROM DocumentPR_Header p " +
+                string strSQL = "\r\n SELECT distinct p.*, b.SumMonth" + MONTHS + " as SumMonth, s.StaffCode, s.StaffFirstName, s.StaffLastName" +
+                    " , d.DEPcode, CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job, Objective_Name AS Objective, Category_Name AS Category FROM DocumentPR_Header p " +
                       "\r\n LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job " +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep " +

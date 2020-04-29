@@ -4,7 +4,7 @@
         $scope.showRowLines = true;
         $scope.showBorders = true;
         $scope.rowAlternationEnabled = true;
-        $http.get("api/PO/ListPOApprove").then(function (data) {
+        $http.get("api/PO/ListPOApprove/" + localStorage.getItem("StaffID") + "?").then(function (data) {
             var ListPRData = data.data.Results.ListPRData;
             $scope.dataGridOptions = {
                 dataSource: ListPRData,
@@ -61,7 +61,7 @@
                     caption: "อนุมัติ",
                     cellTemplate: function (container, item) {
                         var data = item.data,
-                            markup = "<a>อนุมัติ</a>";
+                            markup = "<a>อนุมัติ/รับทราบ</a>";
                         container.append(markup);
                     }
                 }]

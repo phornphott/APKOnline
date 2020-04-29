@@ -23,11 +23,11 @@ namespace APKOnline.DBHelper
         int InserttmpDetail(int PRID, int tmpHID, ref string errMsg);
         int UpdatetmpDetail(PRDetailModels detail, ref string errMsg);
         int DeleteTmpDetail(int Hid, ref string errMsg);
-        DataTable GetListPO(ref string errMsg);
+        DataTable GetListPO(int id,ref string errMsg);
         DataTable GetPRDataForCreatePO(int DeptID, ref string errMsg);
         int ApprovePO(int Document_Id, int StaffID, ref string errMsg);
-        DataTable GetListPOForApprove(ref string errMsg);
-        DataTable GetPOHeaderData(int Document_id, ref string errMsg);
+        DataTable GetListPOForApprove(int id, ref string errMsg);
+        DataTable GetPOHeaderData(int Document_id, int staffid, ref string errMsg);
         DataTable GetDetailData(int Document_Detail_Hid, ref string errMsg);
     }
 
@@ -239,7 +239,7 @@ namespace APKOnline.DBHelper
             try
             {
                 string strSQL = "\r\n  " +
-                      " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,d.DEPdescT AS Dep,j.JOBdescT As Job ,g.GroupName AS 'Group'" +
+                      " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job ,g.GroupName AS 'Group'" +
                       " , Objective_Name AS Objective,Category_Name AS Category" +
                       " FROM "+ tablename + " p LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job" +
@@ -267,17 +267,26 @@ namespace APKOnline.DBHelper
 
             return dt;
         }
-        public DataTable GetPOHeaderData(int Document_id, ref string errMsg)
+        public DataTable GetPOHeaderData(int Document_id, int staffid, ref string errMsg)
         {
             DataTable dt = new DataTable();
             string tablename = "DocumentPO_Header";
-           
+            decimal budget = 0;
 
             try
             {
                 string strSQL = "\r\n  " +
-                      " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,d.DEPdescT AS Dep,j.JOBdescT As Job ,g.GroupName AS 'Group'" +
-                      " , Objective_Name AS Objective,Category_Name AS Category" +
+                    " SELECT * " +
+                    " FROM StaffAuthorize WHERE StaffID = " + staffid;
+                DataTable staffauth = DBHelper.List(strSQL);
+                foreach (DataRow dr in staffauth.Rows)
+                {
+                    budget = Convert.ToDecimal(dr["PositionLimit"]);
+                }
+
+                 strSQL = "\r\n  " +
+                      " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job,g.GroupName AS 'Group'" +
+                      " , Objective_Name AS Objective,Category_Name AS Category ,CASE WHEN p.Document_Cog > " + budget + " THEN 'รับทราบ'ELSE 'อนุมัติ' END AS SaveText " +
                       " FROM " + tablename + " p LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job" +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
@@ -305,7 +314,7 @@ namespace APKOnline.DBHelper
             return dt;
         }
 
-        public DataTable GetListPO( ref string errMsg)
+        public DataTable GetListPO( int id,ref string errMsg)
         {
             DataTable dt = new DataTable();
             string tablename = "DocumentPO_Header";
@@ -313,8 +322,8 @@ namespace APKOnline.DBHelper
             try
             {
                 string strSQL = "\r\n  " +
-                      " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                      ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,d.DEPdescT AS Dep,j.JOBdescT As Job " +
+                      " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                      ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff " +
                       " ,g.GroupName AS 'Group', Objective_Name AS Objective,Category_Name AS Category" +
                       " FROM " + tablename + " p " +
                       " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
@@ -323,7 +332,7 @@ namespace APKOnline.DBHelper
                       " LEFT JOIN Category c on c.Category_Id = p.Document_Category" +
                       " LEFT JOIN Objective o on o.Objective_Id = p.Document_Objective" +
                       " LEFT JOIN Document_Group g on g.id=p.Document_Group" +
-                      " where Document_Delete=0 ";
+                      " where Document_Delete=0 and p.Document_CreateUser=" + id;
                 dt = DBHelper.List(strSQL);
             }
             catch (Exception e)
@@ -335,16 +344,26 @@ namespace APKOnline.DBHelper
 
             return dt;
         }
-        public DataTable GetListPOForApprove(ref string errMsg)
+        public DataTable GetListPOForApprove(int id,ref string errMsg)
         {
             DataTable dt = new DataTable();
             string tablename = "DocumentPO_Header";
-
+            int staffLevel = 0;
             try
             {
-                string strSQL = "\r\n  " +
-                      " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                      ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,d.DEPdescT AS Dep,j.JOBdescT As Job " +
+
+                string sql = "Select * from Staffs WHERE StaffID = " + id;
+                DataTable staff = DBHelper.List(sql);
+                if (staff.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in staff.Rows)
+                    {
+                        staffLevel = Convert.ToInt32(dr["StaffLevelID"]) - 1;
+                    }
+                }
+                string strSQL = "\r\n   SELECT * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevelID ELSE a.Current_Level END AS Document_Level FROM " +
+                      " (SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,s.StaffLevelID" +
+                      ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff" +
                       " ,g.GroupName AS 'Group', Objective_Name AS Objective,Category_Name AS Category" +
                       " FROM " + tablename + " p " +
                       " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
@@ -353,7 +372,9 @@ namespace APKOnline.DBHelper
                       " LEFT JOIN Category c on c.Category_Id = p.Document_Category" +
                       " LEFT JOIN Objective o on o.Objective_Id = p.Document_Objective" +
                       " LEFT JOIN Document_Group g on g.id=p.Document_Group" +
-                      " where Document_Delete=0 AND Document_Status < 2";
+                      " where Document_Delete=0 AND Document_Status < 2) aa " +
+                      " left join(SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
+                          " FROM ApprovePO GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel; 
                 dt = DBHelper.List(strSQL);
             }
             catch (Exception e)
@@ -374,14 +395,14 @@ namespace APKOnline.DBHelper
             try
             {
                 string strSQL = "\r\n  " +
-                      " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                      " SELECT p.*,convert(nvarchar(MAX), p.Document_Date, 105) AS DocDate" +
                       ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff" +
-                      ",(SELECT Count (*) FROM DocumentPR_Detail WHERE Document_Detail_Hid = Document_Id) AS Qty" +
-                      " FROM " + tablename + " p " +
+                      ",(SELECT Count (*) FROM DocumentPR_Detail WHERE Document_Detail_Hid = p.Document_Id) AS Qty" +
+                      " FROM " + tablename + " p LEFT JOIN DocumentPO_Header po on po.Document_PRID = p.Document_Id" +
                       " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
                       " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
-                      " where Document_Delete=0 AND Document_Status=2 ";
+                      " where p.Document_Delete=0 AND p.Document_Status=2 AND po.Document_PRID IS NULL";
                 dt = DBHelper.List(strSQL);
             }
             catch (Exception e)
@@ -423,11 +444,11 @@ namespace APKOnline.DBHelper
                 string sqlQuery = "INSERT INTO DocumentPO_Header(Document_Group,Document_Category,Document_Objective " +
                                       ",Document_Vnos,Document_Date ,Document_Means,Document_Expect,Document_Cus,Document_Job,Document_Dep,Document_Per" +
                                       ",Document_Doc,Document_Mec,Document_Desc,Document_Nolist,Document_Cog,Document_VatSUM,Document_VatPer" +
-                                      " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete) VALUES " +
+                                      " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete,Document_PRID) VALUES " +
                                       " (@Document_Group,@Document_Category,@Document_Objective " +
                                       ",dbo.GeneratePOID(),GETDATE() ,@Document_Means,@Document_Expect,@Document_Cus,@Document_Job,@Document_Dep,@Document_Per" +
                                       ",@Document_Doc,@Document_Mec,@Document_Desc,@Document_Nolist,@Document_Cog,@Document_VatSUM,@Document_VatPer" +
-                                      " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0) SET @Document_Id=SCOPE_IDENTITY()";
+                                      " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0,@Document_PRID) SET @Document_Id=SCOPE_IDENTITY()";
                 cmd.CommandText = sqlQuery;
                 cmd.CommandTimeout = 30;
                 cmd.CommandType = CommandType.Text;
@@ -456,6 +477,7 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_NetSUM", amount * (decimal)1.07);//
                 cmd.Parameters.AddWithValue("@Document_Status", 0);
                 cmd.Parameters.AddWithValue("@Document_Tel", Header.Document_Tel == null ? "" : Header.Document_Tel);
+                cmd.Parameters.AddWithValue("@Document_PRID", prid);
                 cmd.Parameters.AddWithValue("@Document_CreateUser", Header.Document_CreateUser);
                 cmd.Transaction = myTran;
                 cmd.ExecuteNonQuery();
@@ -641,26 +663,78 @@ namespace APKOnline.DBHelper
             string sqlQuery = "";
             SqlCommand cmd = new SqlCommand();
             SqlParameter shipperIdParam = null;
-            SqlConnection conn = DBHelper.sqlConnection();
-            if (conn.State == ConnectionState.Closed)
-                conn.Open();
-            cmd = conn.CreateCommand();
-            //myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
-            cmd.Connection = conn;
 
+            decimal budget = 0;
+            decimal doc_cog = 0;
+            int docLevel = 0;
+            int ApproveLevel = 0;
             try
             {
+                string strSQL = "\r\n  " +
+              " SELECT * " +
+              " FROM StaffAuthorize WHERE StaffID = " + StaffID;
+                DataTable staffauth = DBHelper.List(strSQL);
+                foreach (DataRow dr in staffauth.Rows)
+                {
+                    budget = Convert.ToDecimal(dr["PositionLimit"]);
+                    ApproveLevel = Convert.ToInt32(dr["PositionPermissionId"]);
+                }
 
-                 sqlQuery = "Update DocumentPO_Header SET " +
-                            "Document_EditUser = @Document_EditUser,Document_EditDate=GETDATE(),Document_Status =2 WHERE Document_Id = @Document_Id";
-                cmd.CommandText = sqlQuery;
-                cmd.CommandTimeout = 30;
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@Document_Id", Document_Id);
-                cmd.Parameters.AddWithValue("@Document_EditUser", StaffID);
-                cmd.ExecuteNonQuery();
+                strSQL = "\r\n  " +
+              " SELECT * " +
+              " FROM DocumentPO_Header h left join Staffs s on s.StaffID=h.Document_CreateUser  WHERE h.Document_Id = " + Document_Id;
+                DataTable docHeader = DBHelper.List(strSQL);
+                foreach (DataRow dr in docHeader.Rows)
+                {
+                    doc_cog = Convert.ToDecimal(dr["Document_Cog"]);
+                    docLevel = Convert.ToInt32(dr["StaffLevelID"]);
+                }
+                SqlConnection conn = DBHelper.sqlConnection();
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                cmd = conn.CreateCommand();
+                //myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
+                cmd.Connection = conn;
+                if (doc_cog > budget)
+                {
 
+                    sqlQuery = "INSERT INTO ApprovePO (Approve_Documen_Id,Approve_Create_Level,Approve_Current_Level,Approve_Status,Approve_Order,Approve_By) VALUES" +
+                     " (@Approve_Documen_Id,@Approve_Create_Level,@Approve_Current_Level,1,0,@Approve_By  )";
+                    cmd.CommandText = sqlQuery;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@Approve_Documen_Id", Document_Id);
+                    cmd.Parameters.AddWithValue("@Approve_Create_Level", docLevel);
+                    cmd.Parameters.AddWithValue("@Approve_Current_Level", ApproveLevel);
+                    cmd.Parameters.AddWithValue("@Approve_By", StaffID);
+                    cmd.ExecuteNonQuery();
+
+                }
+                else
+                {
+                    sqlQuery = "INSERT INTO ApprovePO (Approve_Documen_Id,Approve_Create_Level,Approve_Current_Level,Approve_Status,Approve_Order,Approve_By) VALUES" +
+                " (@Approve_Documen_Id,@Approve_Create_Level,@Approve_Current_Level,2,0,@Approve_By  )";
+                    cmd.CommandText = sqlQuery;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@Approve_Documen_Id", Document_Id);
+                    cmd.Parameters.AddWithValue("@Approve_Create_Level", docLevel);
+                    cmd.Parameters.AddWithValue("@Approve_Current_Level", ApproveLevel);
+                    cmd.Parameters.AddWithValue("@Approve_By", StaffID);
+                    cmd.ExecuteNonQuery();
+
+                    sqlQuery = "Update DocumentPO_Header SET " +
+                                "Document_EditUser = @Document_EditUser,Document_EditDate=GETDATE(),Document_Status =2 WHERE Document_Id = @Document_Id";
+                    cmd.CommandText = sqlQuery;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@Document_Id", Document_Id);
+                    cmd.Parameters.AddWithValue("@Document_EditUser", StaffID);
+                    cmd.ExecuteNonQuery();
+                }
                 //document_id = (int)shipperIdParam.Value;
 
             }
@@ -670,6 +744,7 @@ namespace APKOnline.DBHelper
             }
 
             return document_id;
+
         }
         public DataTable GeneratePONo(int id, ref string errMsg)
         {

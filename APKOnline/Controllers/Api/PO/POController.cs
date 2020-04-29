@@ -168,7 +168,7 @@ namespace APKOnline
         }
         [HttpGet]
         [ActionName("GETApprovePO")]
-        public HttpResponseMessage GETApprovePO(int id)
+        public HttpResponseMessage GETApprovePO(int id,int StaffID)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
@@ -176,7 +176,7 @@ namespace APKOnline
             Result resData = new Result();
 
 
-            DataTable dtHeaderData = repository.GetPOHeaderData(id, ref errMsg);
+            DataTable dtHeaderData = repository.GetPOHeaderData(id, StaffID, ref errMsg);
 
 
             DataTable dtDetail = repository.GetDetailData(id, ref errMsg);
@@ -202,14 +202,14 @@ namespace APKOnline
 
         [HttpGet]
         [ActionName("ListPO")]
-        public HttpResponseMessage ListPO()
+        public HttpResponseMessage ListPO(int id)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             Result resData = new Result();
 
-            dt = repository.GetListPO( ref errMsg);
+            dt = repository.GetListPO(id,ref errMsg);
 
 
             ds.Tables.Add(dt);
@@ -230,14 +230,14 @@ namespace APKOnline
         }
         [HttpGet]
         [ActionName("ListPOApprove")]
-        public HttpResponseMessage ListPOApprove()
+        public HttpResponseMessage ListPOApprove(int  id)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             Result resData = new Result();
 
-            dt = repository.GetListPOForApprove(ref errMsg);
+            dt = repository.GetListPOForApprove(id,ref errMsg);
 
 
             ds.Tables.Add(dt);

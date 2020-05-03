@@ -4,12 +4,15 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using System.Web.UI.WebControls;
 
 namespace APKOnline.DBHelper
 {
     interface IReportData
     {
         DataTable GetReportBudget(string STARTDATE, string ENDDATE, string MONTHS, string StaffCode, string DEPcode, ref string errMsg);
+        Task<DataSet> GetDashBroadData();
     }
 
     public class ReportData: IReportData
@@ -49,5 +52,29 @@ namespace APKOnline.DBHelper
             dt.TableName = "ReportBudget";
             return dt;
         }
+        public async Task<DataSet> GetDashBroadData()
+        {
+            string Addition = null;
+            DataSet ds = new DataSet();
+            string date = new DateTime(DateTime.Today.Year, DateTime.Today.Month,1).ToString("yyyy-MM-dd");
+            int LastdayofMonth = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month);
+            string todate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, LastdayofMonth).ToString("yyyy-MM-dd");
+
+            date = "2020-04-01";
+             todate = "2020-04-30";
+
+            string sql = "";
+
+            sql = " select SUM(Document_NetSUM) AS Amount,Document_Dep  ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,CAST(DEPdescT as NVARCHAR(max)) As DEP " +
+                  " from DocumentPO_Header h " +
+                  " left join Department d on h.Document_Dep = d.DEPid " +
+                  " where Document_Date between  '"+ date + "'  and '"+ todate + "' group by Document_Dep,CAST(DEPcode as NVARCHAR(max)),CAST(DEPdescT as NVARCHAR(max))";
+            
+            DataTable poDepAmount  = DBHelper.List(sql);
+            poDepAmount.TableName = "DepAmount";
+            ds.Tables.Add(poDepAmount);
+            return ds;
+        }
+
     }
 }

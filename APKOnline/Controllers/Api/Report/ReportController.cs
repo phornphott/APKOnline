@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace APKOnline.Controllers.Api.Report
@@ -17,7 +18,7 @@ namespace APKOnline.Controllers.Api.Report
         [HttpGet]
         [ActionName("ListReportBudget")]
         public HttpResponseMessage GETListReportBudget(string STARTDATE, string ENDDATE, string MONTHS, string StaffCode, string DEPcode)
-        {
+         {
             string errMsg = "";
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
@@ -42,5 +43,33 @@ namespace APKOnline.Controllers.Api.Report
             resData.Results = ds;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
+        [HttpGet]
+        [ActionName("DashBroad")]
+        public async Task<HttpResponseMessage>  GETDashBroad()
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+
+            ds = await Reportrepository.GetDashBroadData();
+
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+
     }
 }

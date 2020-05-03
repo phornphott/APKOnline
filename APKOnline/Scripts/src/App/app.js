@@ -36,31 +36,40 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
         $scope.ENDDATE = new Date($scope.MONTHDATE.getFullYear(), $scope.MONTHDATE.getMonth(), getDaysInMonth(($scope.MONTHDATE.getMonth() + 1), $scope.MONTHDATE.getFullYear()));
         $scope.MONTHS = String($scope.MONTHDATE.getMonth() + 1);
 
-        $http.get("api/Report/ListReportBudget?STARTDATE=" + moment($scope.STARTDATE).format("YYYY-MM-DD") + "&ENDDATE=" + moment($scope.ENDDATE).format("YYYY-MM-DD") + "&MONTHS=" + $scope.MONTHS + "&StaffCode=" + $scope.StaffCode + "&DEPcode=" + $scope.DEPcode).then(function (data) {
-            $scope.ListReportBudgets = data.data.Results.ReportBudget;
-            $scope.chartOptions = {
+        $http.get("api/Report/DashBroad").then(function (data) {
+            console.log(data);
+            $scope.ListReportBudgets = data.data.Results.DepAmount;
+            $scope.piechartOptions = {
                 size: {
                     width: 500
                 },
+                AutoWidth: true,
                 palette: "bright",
                 dataSource: $scope.ListReportBudgets,
                 series: [
                     {
-                        argumentField: "SumMonth",
-                        valueField: "Document_NetSUM",
+                        argumentField: "DEP",
+                        valueField: "Amount",
                         label: {
                             visible: true,
                             connector: {
                                 visible: true,
-                                width: 1
+                                width: 1,
+                                format: {
+                                    type: 'currency'
+                                }
                             }
                         }
                     }
                 ],
+                title: "Sum Amount by Department",
+                "export": {
+                    enabled: true
+                },
                 onPointClick: function (e) {
                     var point = e.target;
 
-                    toggleVisibility(point);
+                    console.log(e);
                 },
                 onLegendClick: function (e) {
                     var arg = e.target;

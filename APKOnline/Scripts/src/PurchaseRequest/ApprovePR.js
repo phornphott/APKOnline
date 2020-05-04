@@ -101,12 +101,12 @@
                        
                         if (response.data.StatusCode > 1) {
                             swal({
-                                title: "info",
+                                title: $translate.instant("info"),
                                 text: data.Messages,
                                 type: "info",
                                 showCancelButton: false,
                                 confirmButtonColor: "#6EAA6F",
-                                confirmButtonText: "OK"
+                                confirmButtonText: $translate.instant("ok")
                             }, function () {
                             })
                            
@@ -115,12 +115,12 @@
                             console.log(data);
                             if (data.data.StatusCode > 1) {
                                 swal({
-                                    title: 'info',
+                                    title: $translate.instant("info"),
                                     text: data.Messages,
                                     type: "info",
                                     showCancelButton: false,
                                     confirmButtonColor: "#6EAA6F",
-                                    confirmButtonText: 'OK'
+                                    confirmButtonText: $translate.instant("ok")
                                 }, function () {
                                 })
                                 
@@ -209,12 +209,12 @@
                     console.log(response);
                     if (response.data.StatusCode > 1) {
                         swal({
-                            title: "info",
+                            title: $translate.instant("info"),
                             text: response.data.Messages,
                             type: "info",
                             showCancelButton: false,
                             confirmButtonColor: "#6EAA6F",
-                            confirmButtonText: "OK"
+                            confirmButtonText: $translate.instant("ok")
                         }, function () {
                         })
 

@@ -241,12 +241,12 @@
                        
                         if (response.data.StatusCode > 1) {
                             swal({
-                                title: "info",
+                                title: $translate.instant("info"),
                                 text: data.Messages,
                                 type: "info",
                                 showCancelButton: false,
                                 confirmButtonColor: "#6EAA6F",
-                                confirmButtonText: "OK"
+                                confirmButtonText: $translate.instant("ok")
                             }, function () {
                             })
                            
@@ -255,12 +255,12 @@
                             console.log(data);
                             if (data.data.StatusCode > 1) {
                                 swal({
-                                    title: "info",
+                                    title: $translate.instant("info"),
                                     text: data.Messages,
                                     type: "info",
                                     showCancelButton: false,
                                     confirmButtonColor: "#6EAA6F",
-                                    confirmButtonText: "OK"
+                                    confirmButtonText: $translate.instant("ok")
                                 }, function () {
                                 })
                                 
@@ -436,19 +436,8 @@
             //if ($scope.Objective == 0) {
             //    checkselectValue = 1;
             //}
+
            
-            if ($scope.Document_Dep == 0) {
-                swal({
-                    title: 'info',
-                    text: "กรุณาเลือกแผนกก่อนบันทึก",
-                    type: "info",
-                    showCancelButton: false,
-                    confirmButtonColor: "#6EAA6F",
-                    confirmButtonText: 'OK'
-                }, function () {
-                })
-            }
-            else {
                 var Header = {
                     "Document_Id": $scope.Document_ID,
                     "Document_Group": $scope.Document_Group,
@@ -473,8 +462,8 @@
                     console.log(response);
                     window.location = '#/PurchaseRequest/ListPurchaseRequest';
                 });
+            
 
-            }
 
 
 

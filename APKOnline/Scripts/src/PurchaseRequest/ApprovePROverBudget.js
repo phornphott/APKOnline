@@ -99,12 +99,12 @@
                        
                         if (response.data.StatusCode > 1) {
                             swal({
-                                title: $translate.instant("info"),
+                                title: "info",
                                 text: data.Messages,
                                 type: "info",
                                 showCancelButton: false,
                                 confirmButtonColor: "#6EAA6F",
-                                confirmButtonText: $translate.instant("ok")
+                                confirmButtonText: "OK"
                             }, function () {
                             })
                            
@@ -113,12 +113,12 @@
                             console.log(data);
                             if (data.data.StatusCode > 1) {
                                 swal({
-                                    title: $translate.instant("info"),
+                                    title: "info",
                                     text: data.Messages,
                                     type: "info",
                                     showCancelButton: false,
                                     confirmButtonColor: "#6EAA6F",
-                                    confirmButtonText: $translate.instant("ok")
+                                    confirmButtonText:"OK"
                                 }, function () {
                                 })
                                 

@@ -224,3 +224,9 @@ D:\Repository\APK Online\APKOnline\obj\Debug\APKOnline.pdb
 D:\Repository\APK Online\APKOnline\bin\APKOnline.dll.config
 D:\Repository\APK Online\APKOnline\bin\APKOnline.dll
 D:\Repository\APK Online\APKOnline\bin\APKOnline.pdb
+D:\Repository\APK Online\APKOnline\bin\Microsoft.ReportViewer.Common.dll
+D:\Repository\APK Online\APKOnline\bin\Microsoft.ReportViewer.DataVisualization.dll
+D:\Repository\APK Online\APKOnline\bin\Microsoft.ReportViewer.ProcessingObjectModel.dll
+D:\Repository\APK Online\APKOnline\bin\Microsoft.ReportViewer.WebForms.dll
+D:\Repository\APK Online\APKOnline\obj\Debug\RdlCompile.cache
+D:\Repository\APK Online\APKOnline\obj\Debug\RdlCompile.compiled

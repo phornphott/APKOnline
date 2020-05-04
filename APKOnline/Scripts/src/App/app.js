@@ -30,18 +30,18 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
     let getDaysInMonth = function (month, year) {
         return new Date(year, month, 0).getDate();
     };
-
+    $scope.ShowSumdept = 1;
     $scope.ListReportBudget = function () {
         $scope.STARTDATE = new Date($scope.MONTHDATE.getFullYear(), $scope.MONTHDATE.getMonth(), 1);
         $scope.ENDDATE = new Date($scope.MONTHDATE.getFullYear(), $scope.MONTHDATE.getMonth(), getDaysInMonth(($scope.MONTHDATE.getMonth() + 1), $scope.MONTHDATE.getFullYear()));
         $scope.MONTHS = String($scope.MONTHDATE.getMonth() + 1);
 
         $http.get("api/Report/DashBroad").then(function (data) {
-            console.log(data);
+
             $scope.ListReportBudgets = data.data.Results.DepAmount;
             $scope.piechartOptions = {
                 size: {
-                    width: 500
+                    width: 100 + '%'
                 },
                 AutoWidth: true,
                 palette: "bright",
@@ -67,9 +67,85 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
                     enabled: true
                 },
                 onPointClick: function (e) {
-                    var point = e.target;
 
-                    console.log(e);
+                    $scope.ShowSumdept = 0;
+                    //var point = e.target;
+                    console.log(e.target.argument);
+
+
+                    $http.get("api/Report/DashBroadByDepartment?Dep=" + e.target.argument).then(function (data) {
+
+                        $scope.ListReportBudgets = data.data.Results.DepAmount;
+                        $scope.ListReportPOPR = data.data.Results.PRPOData;
+                        var SeriesName = data.data.Results.Department[0].Name;
+                        $scope.chartOptions = {
+                            size: {
+                                width: 100 + '%'
+                            },
+
+                            palette: "soft",
+                            dataSource: $scope.ListReportBudgets,
+
+                            displayMode: 'stagger',
+                            series: {
+                                argumentField: "date",
+                                valueField: "Amount",
+                                name: SeriesName,
+                                type: "bar",
+                                ignoreEmptyPoints: true,
+
+                            },
+                            title: "Sum Amount Department by Date",
+                            "export": {
+                                enabled: true
+                            },
+                            legend: {
+                                verticalAlignment: "bottom",
+                                horizontalAlignment: "center"
+                            },
+                            onPointClick: function (e) {
+
+
+                            },
+
+                        };
+                        $scope.chart1Options = {
+                            size: {
+                                width: 100 + '%'
+                            },
+
+                            palette: "soft",
+                            dataSource: $scope.ListReportPOPR,
+                            commonSeriesSettings: {
+                                argumentField: "Document_Vnos",
+                                type: "bar",
+                                hoverMode: "allArgumentPoints",
+                                selectionMode: "allArgumentPoints",
+                                label: {
+                                    visible: true,
+                                    format: {
+                                        type: "fixedPoint",
+                                        precision: 2
+                                    }
+                                }
+                            },
+                            series: [
+                                { valueField: "POAmount", name: "PO Amount" },
+                                { valueField: "PRAmount", name: "PR Amount" },
+
+                            ],
+                            title: "Sum Amount Department by Date",
+                            "export": {
+                                enabled: true
+                            },
+                            legend: {
+                                verticalAlignment: "bottom",
+                                horizontalAlignment: "center"
+                            },
+
+                        };
+                    });
+
                 },
                 onLegendClick: function (e) {
                     var arg = e.target;
@@ -79,8 +155,8 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
             };
         });
     };
-    
-    
+
+
 
     function toggleVisibility(item) {
         if (item.isVisible()) {

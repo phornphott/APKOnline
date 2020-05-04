@@ -241,12 +241,12 @@
                        
                         if (response.data.StatusCode > 1) {
                             swal({
-                                title: $translate.instant("info"),
+                                title: 'Information',
                                 text: data.Messages,
                                 type: "info",
                                 showCancelButton: false,
                                 confirmButtonColor: "#6EAA6F",
-                                confirmButtonText: $translate.instant("ok")
+                                confirmButtonText: 'OK'
                             }, function () {
                             })
                            
@@ -255,12 +255,12 @@
                             console.log(data);
                             if (data.data.StatusCode > 1) {
                                 swal({
-                                    title: $translate.instant("info"),
+                                    title: 'Information',
                                     text: data.Messages,
                                     type: "info",
                                     showCancelButton: false,
                                     confirmButtonColor: "#6EAA6F",
-                                    confirmButtonText: $translate.instant("ok")
+                                    confirmButtonText: 'OK'
                                 }, function () {
                                 })
                                 
@@ -336,12 +336,12 @@
                 //    //    $rootScope.MaterialDocAll = data.Results;
                 //    //    if (data.StatusCode > 1) {
                 //    //        swal({
-                //    //            title: $translate.instant("info"),
+                //    //            title: 'Information',
                 //    //            text: data.Messages,
                 //    //            type: "info",
                 //    //            showCancelButton: false,
                 //    //            confirmButtonColor: "#6EAA6F",
-                //    //            confirmButtonText: $translate.instant("ok")
+                //    //            confirmButtonText: 'OK'
                 //    //        }, function () {
                 //    //        })
                 //    //        checkStatusAdd = 1;
@@ -350,12 +350,12 @@
 
                 //    //        if (data.StatusCode > 1) {
                 //    //            swal({
-                //    //                title: $translate.instant("info"),
+                //    //                title: 'Information',
                 //    //                text: data.Messages,
                 //    //                type: "info",
                 //    //                showCancelButton: false,
                 //    //                confirmButtonColor: "#6EAA6F",
-                //    //                confirmButtonText: $translate.instant("ok")
+                //    //                confirmButtonText: 'OK'
                 //    //            }, function () {
                 //    //            })
                 //    //            checkStatusAdd = 1;
@@ -437,7 +437,17 @@
             //    checkselectValue = 1;
             //}
 
-           
+            if ($scope.Document_Dep == 0) {
+                swal({
+                    title: 'info',
+                    text: "กรุณาเลือกแผนกก่อนบันทึก",
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                }, function () {
+                })
+            } else {
                 var Header = {
                     "Document_Id": $scope.Document_ID,
                     "Document_Group": $scope.Document_Group,
@@ -462,9 +472,9 @@
                     console.log(response);
                     window.location = '#/PurchaseRequest/ListPurchaseRequest';
                 });
-            
 
 
+            }
 
 
         };

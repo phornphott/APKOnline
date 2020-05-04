@@ -81,12 +81,12 @@
 
                         if (response.data.StatusCode > 1) {
                             swal({
-                                title: $translate.instant("info"),
+                                title: 'Information',
                                 text: data.Messages,
                                 type: "info",
                                 showCancelButton: false,
                                 confirmButtonColor: "#6EAA6F",
-                                confirmButtonText: $translate.instant("ok")
+                                confirmButtonText: 'OK'
                             }, function () {
                             })
 
@@ -105,12 +105,12 @@
 
                         if (response.data.StatusCode > 1) {
                             swal({
-                                title: $translate.instant("info"),
+                                title: 'Information',
                                 text: data.Messages,
                                 type: "info",
                                 showCancelButton: false,
                                 confirmButtonColor: "#6EAA6F",
-                                confirmButtonText: $translate.instant("ok")
+                                confirmButtonText: 'OK'
                             }, function () {
                             })
 
@@ -122,12 +122,12 @@
 
                         if (response.data.StatusCode > 1) {
                             swal({
-                                title: $translate.instant("info"),
+                                title: 'Information',
                                 text: data.Messages,
                                 type: "info",
                                 showCancelButton: false,
                                 confirmButtonColor: "#6EAA6F",
-                                confirmButtonText: $translate.instant("ok")
+                                confirmButtonText: 'OK'
                             }, function () {
                             })
 

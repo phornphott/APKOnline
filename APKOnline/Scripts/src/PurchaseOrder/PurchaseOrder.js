@@ -3,8 +3,9 @@
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
         $scope.showBorders = true;
+        $scope.visiblePopup = false;
         $scope.rowAlternationEnabled = true;
-        $http.get("api/PO/ListPO/" + localStorage.getItem("StaffID")+"?").then(function (data) {
+        $http.get("api/PO/ListPO/" + localStorage.getItem("StaffID") + "?").then(function (data) {
             var ListPRData = data.data.Results.ListPRData;
             $scope.dataGridOptions = {
                 dataSource: ListPRData,
@@ -33,26 +34,26 @@
                 },
                 columnAutoWidth: true,
                 columns: [{
-                   
+
                     dataField: "Document_Vnos",
                     caption: "เลขที่ใบสำคัญ"
                 }, {
-                        dataField: "DocDate",
+                    dataField: "DocDate",
                     caption: "วันที่"
                 }, {
-                        dataField: "Group",
+                    dataField: "Group",
                     caption: "ลักษณะค่าใช้จ่าย"
                 }, {
-                        dataField: "Category",
+                    dataField: "Category",
                     caption: "ประเภทการจัดซื้อ"
                 }, {
                     dataField: "Document_Desc",
                     caption: "คำอธิบาย"
                 }, {
-                        dataField: "Document_NetSUM",
+                    dataField: "Document_NetSUM",
                     caption: "ยอดรวม"
                 }, {
-                        dataField: "Dep",
+                    dataField: "Dep",
                     caption: "แผนก"
                 }, {
                     dataField: "Staff",
@@ -60,69 +61,97 @@
                 }]
             };
         });
-        $http.get("api/PO/ListPRForCreatePO/0").then(function (data) {
-            var ListPRData = data.data.Results.ListPRData;
-            $scope.dataPurchaseRequestOptions = {
-                dataSource: ListPRData, 
-                loadPanel: {
-                    enabled: false
-                },
-                scrolling: {
-                    mode: "infinite"
-                },
-                sorting: {
-                    mode: "multiple"
-                },
-                //selection: {
-                //    mode: "multiple"
-                //},
-                searchPanel: {
-                    visible: true,
-                    width: 200,
-                    placeholder: "Search..."
-                },
-                bindingOptions: {
-                    showColumnLines: "showColumnLines",
-                    showRowLines: "showRowLines",
-                    showBorders: "showBorders",
-                    rowAlternationEnabled: "rowAlternationEnabled"
-                },
-                onCellClick: onCellClickViewPR,
-                columnAutoWidth: true,
-                columns: [{
-                    dataField: "Document_Vnos",
-                    caption: "เลขที่"
-                }, {
+        $scope.goToViewPurchaseOrder = function () {
+
+        };
+        $scope.popupOptions = {
+            width: 900,
+            height: 350,
+          
+            showTitle: true,
+            title: "โหลดข้อมูลใบขอซื้อภายใน",
+            dragEnabled: false,
+            closeOnOutsideClick: true,
+            bindingOptions: {
+                visible: "visiblePopup",
+            }
+        };
+
+        $scope.showInfo = function (data) {
+            $http.get("api/PO/ListPRForCreatePO/0").then(function (data) {
+                var ListPRData = data.data.Results.ListPRData;
+                $scope.dataPurchaseRequestOptions = {
+                    dataSource: ListPRData,
+                    loadPanel: {
+                        enabled: false
+                    },
+                    scrolling: {
+                        mode: "infinite"
+                    },
+                    sorting: {
+                        mode: "multiple"
+                    },
+                    //selection: {
+                    //    mode: "multiple"
+                    //},
+                    searchPanel: {
+                        visible: true,
+                        width: 200,
+                        placeholder: "Search..."
+                    },
+                    bindingOptions: {
+                        showColumnLines: "showColumnLines",
+                        showRowLines: "showRowLines",
+                        showBorders: "showBorders",
+                        rowAlternationEnabled: "rowAlternationEnabled"
+                    },
+                    onCellClick: onCellClickViewPR,
+                    columnAutoWidth: true,
+                    columns: [{
+                        dataField: "Document_Vnos",
+                        caption: "เลขที่",
+                        cellTemplate: function (container, item) {
+                            var data = item.data,
+                                markup = "<a >" + data.Document_Vnos + "</a>";
+                            container.append(markup);
+                        },
+                    }, {
                         dataField: "DocDate",
-                    caption: "วันที่"
-                }, {
+                        caption: "วันที่"
+                    }, {
                         dataField: "Document_Desc",
-                    caption: "รายละเอียด"
-                }, {
+                        caption: "รายละเอียด"
+                    }, {
                         dataField: "Qty",
-                    caption: "จำนวน"
-                }, {
+                        caption: "จำนวน"
+                    }, {
                         dataField: "Document_NetSUM",
                         caption: "ราคา"
-                }, {
-                    dataField: "POCreate",
+                    }, {
+                        dataField: "POCreate",
                         caption: "สร้างเอกสารสั่งซื้อ",
                         cellTemplate: function (container, item) {
                             var data = item.data,
                                 markup = "<a>สร้างเอกสารสั่งซื้อ</a>";
                             container.append(markup);
                         }
-                }]
-            };
-        });
-        $scope.goToViewPurchaseOrder = function () {
-            
-        };
+                    }]
+                };
+            });
+            $scope.visiblePopup = true;
+        };     
         var onCellClickViewPR = function (e) {
             console.log(e);
-           
-            if (e.column.dataField === "POCreate") {
-                $('#ImportPRModal').modal('hide');
+
+            if (e.column.dataField === "Document_Vnos") {
+                $scope.visiblePopup = false;
+                setTimeout(function () {
+                    window.location = '#/PurchaseRequest/ViewPurchaseRequest/' + e.data.Document_Id;
+                    //window.location = "#/PurchaseRequest/ViewPurchaseOrder/" + e.data.Document_Id;
+                }, 700);
+            }
+            else if (e.column.dataField === "POCreate") {
+                $scope.visiblePopup = false;
                 setTimeout(function () {
                     window.location = "#/PurchaseRequest/ViewPurchaseOrder/" + e.data.Document_Id;
                 }, 700);

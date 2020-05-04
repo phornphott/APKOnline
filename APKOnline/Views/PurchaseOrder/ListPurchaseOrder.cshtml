@@ -5,8 +5,13 @@
             <div class="box box-success">
                 <div class="box-header with-border">
                     <div class="pull-right">
-                            <button type="button" class="btn btn-block btn-success btn-sm" data-toggle="modal" data-target="#ImportPRModal"><i class="glyphicon glyphicon-save"></i> โหลดข้อมูลใบขอซื้อ</button>
-                        </div>
+                        @*<button type="button" class="btn btn-block btn-success btn-sm" data-toggle="modal" data-target="#ImportPRModal"><i class="glyphicon glyphicon-save"></i> โหลดข้อมูลใบขอซื้อ</button>*@
+                        <div class="button-info" dx-button="{
+                        text: 'โหลดข้อมูลใบขอซื้อ',
+                        onClick: showInfo
+                    }"></div>
+                    </div>
+
                     <h3 class="box-title">รายการใบสั่งซื้อ</h3>
                 </div>
                 <!-- /.box-header -->
@@ -18,23 +23,13 @@
     </div>
 </section>
 
-<div class="modal fade bs-example-modal-lg" id="ImportPRModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close"><i class="fa fa-close"></i></button>
-                <h3 class="modal-title" id="myModalLabel">โหลดข้อมูลใบขอซื้อภายใน</h3>
-            </div>
-            <div class="modal-body">
-                <div id="gridContainer" dx-data-grid="dataPurchaseRequestOptions"></div>
-            </div>
-            @*<div class="modal-footer">
-                <center>
-                    <button type="submit" class="btn btn-success" ng-click="goToViewPurchaseOrder()"><i class="fa fa-save"></i> บันทึก</button>
-                    <button type="submit" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fa fa-close"></i> ยกเลิก</button>
-                </center>
-            </div>*@
+<div dx-popup="popupOptions">
+    <div class="modal-content">
+
+        <div class="modal-body">
+            <div id="gridContainer" dx-data-grid="dataPurchaseRequestOptions"></div>
         </div>
+
     </div>
 </div>
 

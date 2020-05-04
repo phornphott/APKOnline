@@ -76,6 +76,7 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
                     $http.get("api/Report/DashBroadByDepartment/" + e.target.data.Document_Dep).then(function (data) {
 
                         $scope.ListReportBudgets = data.data.Results.DepAmount;
+                        $scope.ListReportPOPR = data.data.Results.PRPOData;
                         var SeriesName = data.data.Results.Department[0].Name;
                         $scope.chartOptions = {
                             size: {
@@ -107,6 +108,41 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
 
                             },
                            
+                        };
+                        $scope.chart1Options = {
+                            size: {
+                                width: 100 + '%'
+                            },
+
+                            palette: "soft",
+                            dataSource: $scope.ListReportPOPR,
+                            commonSeriesSettings: {
+                                argumentField: "Document_Vnos",
+                                type: "bar",
+                                hoverMode: "allArgumentPoints",
+                                selectionMode: "allArgumentPoints",
+                                label: {
+                                    visible: true,
+                                    format: {
+                                        type: "fixedPoint",
+                                        precision: 2
+                                    }
+                                }
+                            },
+                            series: [
+                                { valueField: "POAmount", name: "PO Amount" },
+                                { valueField: "PRAmount", name: "PR Amount" },
+                               
+                            ],
+                            title: "Sum Amount Department by Date",
+                            "export": {
+                                enabled: true
+                            },
+                            legend: {
+                                verticalAlignment: "bottom",
+                                horizontalAlignment: "center"
+                            },
+
                         };
                     });
                    

@@ -5,11 +5,27 @@
                 <div class="box-header with-border">
                     @*<h3 class="box-title">รายงานงบประมาณ</h3>*@
                 </div>
-                <div class="box-body">
+                <div class="box-body" ng-hide="ShowSumdept==0">
                     <div class="row">
                         <div class="col-md-12">
                             <center>
                                 <div id="pie" dx-pie-chart="piechartOptions"></div>
+                            </center>
+                        </div>
+                    </div>
+                    @*<div class="row">
+                        <div class="col-md-12">
+                            <center>
+                                <div id="chart1" dx-chart="chartOptions"></div>
+                            </center>
+                        </div>
+                    </div>*@
+                </div>
+                <div class="box-body" ng-hide="ShowSumdept==1">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <center>
+                                <div id="chart" dx-chart="chartOptions"></div>
                             </center>
                         </div>
                     </div>
@@ -18,3 +34,11 @@
         </div>
     </div>
 </section>
+
+<style>
+    #chart {
+        height: 600px;
+        /*width:100+'%';*/
+    }
+  
+</style>

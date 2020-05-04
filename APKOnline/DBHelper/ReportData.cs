@@ -13,6 +13,7 @@ namespace APKOnline.DBHelper
     {
         DataTable GetReportBudget(string STARTDATE, string ENDDATE, string MONTHS, string StaffCode, string DEPcode, ref string errMsg);
         Task<DataSet> GetDashBroadData();
+        Task<DataSet> GetDashBroadByDepartment(int id);
     }
 
     public class ReportData: IReportData
@@ -75,6 +76,51 @@ namespace APKOnline.DBHelper
             ds.Tables.Add(poDepAmount);
             return ds;
         }
+        public async Task<DataSet> GetDashBroadByDepartment(int id)
+        {
+            string Addition = null;
+            DataSet ds = new DataSet();
+            int startdate = 1;
+            string month = DateTime.Today.Month.ToString("00");
+            month = "04";
+            int LastdayofMonth = DateTime.DaysInMonth(DateTime.Today.Year, Convert.ToInt32(month));
+            
+            
 
+            string sql = "";
+            for (int i = startdate; i <= LastdayofMonth; i++) {
+
+                string selectdate = "'" + DateTime.Today.Year.ToString() + "-" + month + "-" + i.ToString("00") + "'";
+                string todate = "'" + DateTime.Today.Year.ToString() + "-" + month + "-" + (i+1).ToString("00") + "'";
+                if (i == LastdayofMonth)
+                {
+                    todate = "'" + DateTime.Today.Year.ToString() + "-" + (DateTime.Today.Month + 1).ToString("00") + "-" + "01'";
+                }
+                else if (i == 1)
+                {
+                    sql += " SELECT * FROM (";
+                }
+                sql += "\r\n (select " + i + " as date,ISNULL(SUM(Document_NetSUM),0) AS Amount from DocumentPO_Header h  " +
+                       " where Document_Dep = " + id + " and Document_Date BETWEEN " + selectdate + " AND " + todate + ")";
+                if (i < LastdayofMonth)
+                    sql += " UNION ";
+                else if (i == LastdayofMonth)
+                    sql += " ) aa Order By date";
+            }
+
+           
+
+            DataTable poDepAmount = DBHelper.List(sql);
+            poDepAmount.TableName = "DepAmount";
+            ds.Tables.Add(poDepAmount);
+
+
+            sql = "Select DEPdescT as Name from Department Where DEPid = " + id;
+            DataTable dt = DBHelper.List(sql);
+            dt.TableName = "Department";
+            ds.Tables.Add(dt);
+
+            return ds;
+        }
     }
 }

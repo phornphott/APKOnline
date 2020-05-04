@@ -70,6 +70,33 @@ namespace APKOnline.Controllers.Api.Report
             resData.Results = ds;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
+        [HttpGet]
+        [ActionName("DashBroadByDepartment")]
+        public async Task<HttpResponseMessage> GETDashBroadByDepartment(int id)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+
+            ds = await Reportrepository.GetDashBroadByDepartment(id);
+
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
 
     }
 }

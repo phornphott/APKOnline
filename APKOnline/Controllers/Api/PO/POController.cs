@@ -151,6 +151,10 @@ namespace APKOnline
             ds.Tables.Add(dtDocumentVnos);
             ds.Tables.Add(dtHeaderData);
             ds.Tables.Add(dtDetail);
+            DataTable dtCus = repository.GetCustomer(0, ref errMsg);
+            ds.Tables.Add(dtCus);
+
+
 
             if (errMsg != "")
             {

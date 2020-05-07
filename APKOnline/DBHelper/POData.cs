@@ -29,6 +29,7 @@ namespace APKOnline.DBHelper
         DataTable GetListPOForApprove(int id, ref string errMsg);
         DataTable GetPOHeaderData(int Document_id, int staffid, ref string errMsg);
         DataTable GetDetailData(int Document_Detail_Hid, ref string errMsg);
+        DataTable GetCustomer(int id, ref string errMsg);
     }
 
     public class POData : IPOData
@@ -313,7 +314,25 @@ namespace APKOnline.DBHelper
 
             return dt;
         }
+        public DataTable GetCustomer(int id, ref string errMsg)
+        {
+            DataTable dt = new DataTable();
 
+            try
+            {
+                string strSQL = "\r\n  " +
+                      " SELECT CREcode AS ID, CONCAT(CREcode,' : ',CREnameT ) AS Name FROM CRE ";
+                dt = DBHelper.List(strSQL);
+            }
+            catch (Exception e)
+            {
+                errMsg = e.Message;
+            }
+
+            dt.TableName = "Customer";
+
+            return dt;
+        }
         public DataTable GetListPO( int id,ref string errMsg)
         {
             DataTable dt = new DataTable();
@@ -463,7 +482,7 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_Means", Header.Document_Means == null ? "" : Header.Document_Means);
                 cmd.Parameters.AddWithValue("@Document_Expect", Header.Document_Expect == null ? "" : Header.Document_Expect);
 
-                cmd.Parameters.AddWithValue("@Document_Cus", "");
+                cmd.Parameters.AddWithValue("@Document_Cus", Header.Document_Cus);
                 cmd.Parameters.AddWithValue("@Document_Job", Header.Document_Job);
                 cmd.Parameters.AddWithValue("@Document_Dep", Header.Document_Dep);
                 cmd.Parameters.AddWithValue("@Document_Per", "");

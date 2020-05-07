@@ -4,6 +4,7 @@
         $scope.showRowLines = true;
         $scope.showBorders = true;
         $scope.rowAlternationEnabled = true;
+        $scope.Document_Cus = 0;
         $scope.Document_ID = Math.floor(Math.random() * 10000); 
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
@@ -13,6 +14,28 @@
             //$scope.Header = data.data.Results.Document_Vnos[0].Column1
             $scope.Header = data.data.Results.Header[0]
             $scope.Document_Vnos = data.data.Results.Document_Vnos[0].Column1
+            $rootScope.Customer = data.data.Results.Customer;
+            $rootScope.Customer.splice(0, 0, {
+                "ID": 0,
+                "Name": '- กรุณาเลือก -',
+            });
+            $("#Customer").dxLookup({
+                dataSource: $rootScope.Customer,
+                displayExpr: 'Name',
+                valueExpr: 'ID',
+                showPopupTitle: false,
+                showCancelButton: false,
+                placeholder: 'เลือก',
+                closeOnOutsideClick: true,
+                searchEnabled: true,
+                searchPlaceholder: 'ค้นหา',
+                value: $scope.Document_Cus,
+                onSelectionChanged: function (data) {
+                    console.log(data);
+                    $scope.Document_Cus = data.selectedItem.ID;
+
+                }
+            });
             var Detail = data.data.Results.Detail;
             $scope.dataGridOptions = {
                 dataSource: Detail,
@@ -135,8 +158,20 @@
         });
 
         $scope.SaveDocuments = function () {
-            
-       
+
+            if ($scope.Document_Cus == 0)
+            {
+                swal({
+                    title: 'Information',
+                    text: "กรุณาเลือกรหัสเจ้าหนี้ก่อนบันทึกข้อมูล",
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                }, function () {
+                })}
+            else {
+
                 var Header = {
                     "Document_Id": $scope.Document_ID,
                     "Document_Group": $scope.Header.Document_Group,
@@ -145,7 +180,7 @@
                     "Document_Vnos": '',
                     "Document_Means": $scope.Header.Document_Means,
                     "Document_Expect": $scope.Header.Document_Expect,
-                    "Document_Cus": '',
+                    "Document_Cus": $scope.Document_Cus,
                     "Document_Job": $scope.Header.Document_Job,
                     "Document_Dep": $scope.Header.Document_Dep,
                     "Document_Per": '',
@@ -160,9 +195,9 @@
                     console.log(response);
                     window.location = '#/PurchaseOrder/ListPurchaseOrder';
                 });
-            
 
 
+            }
 
 
         };

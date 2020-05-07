@@ -24,7 +24,7 @@ namespace APKOnline.Reports
                 m_id = Convert.ToInt32(id);
             }
             catch
-            { m_id = 2; }
+            { m_id = 1002; }
             if (!IsPostBack)
             {
 

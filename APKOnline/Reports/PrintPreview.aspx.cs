@@ -99,10 +99,11 @@ namespace APKOnline.Reports
 
                     da = new SqlDataAdapter(com2);
                     da.Fill(List);
+                    int i = 1;
                     foreach (DataRow row in List.Rows)
                     {
                         DataRow drow = m_ds.Tables["List"].NewRow();
-                        drow["No"] = row["Document_Detail_ListNo"].ToString();
+                        drow["No"] = i;
                         drow["Dept"] = dr["Document_Dep"].ToString();
                         drow["Desc"] = row["Document_Detail_Acc"].ToString() + "  " + row["Document_Detail_Acc_Desc"].ToString();
                         int qty = Convert.ToInt32(row["Document_Detail_Quan"]);
@@ -113,6 +114,8 @@ namespace APKOnline.Reports
                         drow["Disc"] = "0.00";
                         drow["Total"] = total_.ToString("#,###.00");
                         m_ds.Tables["List"].Rows.Add(drow);
+
+                        i++;
                     }
 
                     PR_ = dr["PR"].ToString();

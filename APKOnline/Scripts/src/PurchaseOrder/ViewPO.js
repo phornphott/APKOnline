@@ -98,11 +98,7 @@
 
         };
         $scope.CancelDocuments = function () {
-
-            $http.get("api/PO/CancelPOTmpDetail/" + $stateParams.id).then(function (data) {
-                console.log(data);
-                window.location = '#/PurchaseOrder/ListPOApprove';
-            });
+                window.location = '#/PurchaseOrder/ListPurchaseOrder';
         };
 
     }

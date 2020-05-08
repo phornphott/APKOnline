@@ -107,11 +107,11 @@ namespace APKOnline.Reports
                         drow["Desc"] = row["Document_Detail_Acc"].ToString() + "  " + row["Document_Detail_Acc_Desc"].ToString();
                         int qty = Convert.ToInt32(row["Document_Detail_Quan"]);
                         double total_ = Convert.ToDouble(row["Document_Detail_Cog"]);
-                        drow["Qty"] = row["Document_Detail_Quan"].ToString();
-                        drow["Unit"] = (total_ / qty).ToString("#,000.00");
-                        drow["Amount"] = total_.ToString("#,000.00");
+                        drow["Qty"] = qty.ToString("#,###");
+                        drow["Unit"] = "ea";//(total_ / qty).ToString("#,###.00");
+                        drow["Amount"] = total_.ToString("#,###.00");
                         drow["Disc"] = "0.00";
-                        drow["Total"] = total_.ToString("#,000.00");
+                        drow["Total"] = total_.ToString("#,###.00");
                         m_ds.Tables["List"].Rows.Add(drow);
                     }
 
@@ -121,11 +121,11 @@ namespace APKOnline.Reports
                     RecDate = dr["Document_ReceiveDate"].ToString();
                     credit_ = dr["Document_Credit"].ToString();
                     at_ = dr["Document_Send"].ToString();
-                    subtotal_ = dr["Document_Cog"].ToString();
+                    subtotal_ = Convert.ToDouble(dr["Document_Cog"]).ToString("#,###.00");
                     disc_ = "0.00";
-                    _total = dr["Document_Cog"].ToString();
-                    vat_ = dr["Document_VatSUM"].ToString();
-                    grandtotal_ = dr["Document_NetSUM"].ToString();
+                    _total = Convert.ToDouble(dr["Document_Cog"]).ToString("#,###.00");
+                    vat_ = Convert.ToDouble(dr["Document_VatSUM"]).ToString("#,###.00");
+                    grandtotal_ = Convert.ToDouble(dr["Document_NetSUM"]).ToString("#,###.00");
                     job_ = dr["Document_Job"].ToString();
 
                     sql = "SELECT * FROM CRE WHERE CREcode = '" + dr["Document_Cus"].ToString() + "'";

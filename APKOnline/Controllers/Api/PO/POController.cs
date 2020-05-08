@@ -203,7 +203,39 @@ namespace APKOnline
             resData.Results = ds;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
+        [HttpGet]
+        [ActionName("GETViewPO")]
+        public HttpResponseMessage GETViewPO(int id, int StaffID)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
 
+
+            DataTable dtHeaderData = repository.GetPOHeaderData(id, StaffID, ref errMsg);
+
+
+            DataTable dtDetail = repository.GetDetailData(id, ref errMsg);
+
+
+            ds.Tables.Add(dtHeaderData);
+            ds.Tables.Add(dtDetail);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
         [HttpGet]
         [ActionName("ListPO")]
         public HttpResponseMessage ListPO(int id)

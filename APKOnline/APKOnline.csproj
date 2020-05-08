@@ -226,6 +226,7 @@
     <Content Include="Scripts\src\ManageStaff\ManageStaff.js" />
     <Content Include="Scripts\src\ManageStaff\ManageRole.js" />
     <Content Include="Scripts\src\ManageStaff\PermissionStaff.js" />
+    <Content Include="Scripts\src\PurchaseOrder\ViewPO.js" />
     <Content Include="Scripts\src\PurchaseOrder\PurchaseOrderApprove.js" />
     <Content Include="Scripts\src\PurchaseOrder\PurchaseOrder.js" />
     <Content Include="Scripts\src\PurchaseOrder\ApprovePO.js" />
@@ -7397,6 +7398,7 @@
     <Content Include="Views\ManageStaff\PermissionRole.cshtml" />
     <Content Include="Views\PurchaseRequest\ListOverBGPurchaseRequest.cshtml" />
     <Content Include="Views\PurchaseRequest\ApprovePROver.cshtml" />
+    <Content Include="Views\PurchaseOrder\ViewPO.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

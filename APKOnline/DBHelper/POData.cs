@@ -288,12 +288,14 @@ namespace APKOnline.DBHelper
                  strSQL = "\r\n  " +
                       " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job,g.GroupName AS 'Group'" +
                       " , Objective_Name AS Objective,Category_Name AS Category ,CASE WHEN p.Document_Cog > " + budget + " THEN 'รับทราบ'ELSE 'อนุมัติ' END AS SaveText " +
+                      " ,CONCAT(CREcode,' : ',CAST(cus.CREnameT as NVARCHAR(max))) AS Customer " +
                       " FROM " + tablename + " p LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job" +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
                       " LEFT JOIN Category c on c.Category_Id = p.Document_Category" +
                       " LEFT JOIN Objective o on o.Objective_Id = p.Document_Objective" +
                       " LEFT JOIN Document_Group g on g.id=p.Document_Group" +
+                      " LEFT JOIN CRE cus on cus.CREcode=p.Document_Cus" +
                       " where Document_Delete=0 AND Document_Id =" + Document_id;
                 dt = DBHelper.List(strSQL);
                 //if (dt.Rows.Count > 0)

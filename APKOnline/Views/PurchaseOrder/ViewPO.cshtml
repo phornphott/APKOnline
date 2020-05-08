@@ -3,7 +3,7 @@
         <div class="col-md-12">
             <div class="box box-success">
                 <div class="box-header with-border">
-                    <h3 class="box-title">อนุมัติใบสั่งซื้อ</h3>
+                    <h3 class="box-title">เอกสารขอใช้งบประมาณบริษัท</h3>
                 </div>
                 <div class="box-body">
                     <form class="form-horizontal">
@@ -18,8 +18,8 @@
                                 <div class="form-group">
                                     <label for="inputPassword3" class="col-sm-4 control-label">เบอร์โทร : </label>
                                     <div class="col-sm-8">
-                                        @*<label style="margin-top:7px;">{{Header.Document_Tel}}</label>*@
-                                        <input type="text" class="form-control" id="Document_Tel" ng-model="Header.Document_Tel">
+                                        <label style="margin-top:7px;">{{Header.Document_Tel}}</label>
+                                        @*<input type="text" class="form-control" id="Document_Tel" ng-model="Document_Tel">*@
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -46,10 +46,10 @@
                                     <div class="col-sm-8">
                                         <label style="margin-top:7px;">{{Header.Job}}</label>
                                         @*<select class="form-control">
-                                                <option>-- เลือก --</option>
-                                            </select>*@
+                                    <option>-- เลือก --</option>
+                                </select>*@
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -68,8 +68,7 @@
                                     <label for="inputPassword3" class="col-sm-4 control-label">รหัสเจ้าหนี้ : </label>
                                     <div class="col-sm-8">
                                         <label style="margin-top:7px;">{{Header.Customer}}</label>
-                                        @*<input type="text" class="form-control" id="Document_Tel" ng-model="Document_Cre">*@
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +119,7 @@
                                                     <label for="inputPassword3" class="col-sm-3 control-label">รายละเอียด : </label>
                                                     <div class="col-sm-9">
                                                         <label style="margin-top:7px;">{{Header.Document_Desc}}</label>
-                                                        @*<textarea class="form-control" rows="2" ng-model="Header.Document_Desc"></textarea>*@
+                                                        @*<textarea class="form-control" rows="2" ng-model="Header.Document_Desc" ></textarea>*@
                                                     </div>
                                                 </div>
                                             </div>
@@ -150,12 +149,7 @@
                     </div>
                     <br />
                 </div>
-                <div class="box-footer">
-                    <center>
-                        <button class="btn btn-success btn-lg" style="width:120px;" ng-click="SaveDocuments()">{{SaveText}}</button>&nbsp;&nbsp;&nbsp;
-                        <button class="btn btn-warning btn-lg" style="width:120px;" ng-click="CancelDocuments()">ยกเลิก</button>
-                    </center>
-                </div>
+                
             </div>
         </div>
     </div>

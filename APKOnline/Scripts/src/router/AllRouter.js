@@ -269,5 +269,21 @@
                 }]
             }
         })
+        .state('/PurchaseRequest/ViewPO/:id', {
+            url: "/PurchaseRequest/ViewPO/:id",
+            templateUrl: '\PurchaseOrder/ViewPO',
+            controller: 'ViewPOController',
+            resolve: {
+                lazyLoad: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'AceApp',
+                            files: [
+                                'Scripts/src/PurchaseOrder/ViewPO.js'
+                            ]
+                        }])
+                }]
+            }
+        })
 
 });

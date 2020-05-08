@@ -31,11 +31,17 @@
                 editing: {
                     mode: "row",
                 },
+                onCellClick: onCellClickViewPO,
                 columnAutoWidth: true,
                 columns: [{
                    
                     dataField: "Document_Vnos",
-                    caption: "เลขที่ใบสำคัญ"
+                    caption: "เลขที่ใบสำคัญ",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = "<a >" + data.Document_Vnos + "</a>";
+                        container.append(markup);
+                    },
                 }, {
                         dataField: "DocDate",
                     caption: "วันที่"
@@ -123,6 +129,16 @@
         $scope.goToViewPurchaseOrder = function () {
             
         };
+        var onCellClickViewPO = function (e) {
+            console.log(e);
+            if (e.column.dataField === "Document_Vnos") {
+                setTimeout(function () {
+                    window.location = '#/PurchaseRequest/ViewPO/' + e.data.Document_Id;
+                }, 700);
+
+            }
+        };
+
         var onCellClickViewPR = function (e) {
             console.log(e);
            

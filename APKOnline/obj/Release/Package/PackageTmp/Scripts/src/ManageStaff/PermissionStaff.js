@@ -31,11 +31,12 @@
                     showBorders: "showBorders",
                     rowAlternationEnabled: "rowAlternationEnabled"
                 },
+                height:100+'%',
                 editing: {
                     mode: "row",
                     allowUpdating: true,
-                    //allowDeleting: true,
-                    //allowAdding: true,
+                    allowDeleting: true,
+                    allowAdding: true,
                     texts: {
                         editRow: "แก้ไข",
                         deleteRow: "ลบ",
@@ -59,22 +60,80 @@
                             markup = "<p>" + (item.rowIndex + 1) + "</p>";
                         container.append(markup);
                     },
-                    editorOptions: {
-                        disabled: true
-                    },
-                }, {
+                    }, {
                     dataField: "DEPcode",
                     caption: "รหัสแผนก",
 
-                }, {
-                    dataField: "DEPdescT",
-                    caption: "ชื่อแผนก",
-                    editorOptions: {
-                        disabled: true
-                    },
-
+                    }, {
+                        dataField: "DEPdescT",
+                        caption: "ชื่อแผนก",
                 }],
+                onRowInserted: function (e) {
 
+                    var Dept = {
+                        "DEPid": 0,
+                        "DEPcode": e.key.DEPcode,
+                        "DEPdescT": e.key.DEPdescT,
+                        "DEPdescE": '',
+                    };
+           
+                    $http.post("api/Staffs/SetDepartmentData?", Dept).then(function successCallback(response) {
+
+                        if (response.data.StatusCode > 1) {
+                            swal({
+                                title: 'Information',
+                                text: data.Messages,
+                                type: "info",
+                                showCancelButton: false,
+                                confirmButtonColor: "#6EAA6F",
+                                confirmButtonText: 'OK'
+                            }, function () {
+                            })
+
+                        }
+                    });
+                },
+                onRowUpdated: function (e) {
+                    var Dept = {
+                        "DEPid": e.key.DEPid,
+                        "DEPcode": e.key.DEPcode,
+                        "DEPdescT": e.key.DEPdescT,
+                        "DEPdescE": '',
+                    };
+        
+                    $http.post("api/Staffs/SetDepartmentData?", Dept).then(function successCallback(response) {
+
+                        if (response.data.StatusCode > 1) {
+                            swal({
+                                title: 'Information',
+                                text: data.Messages,
+                                type: "info",
+                                showCancelButton: false,
+                                confirmButtonColor: "#6EAA6F",
+                                confirmButtonText: 'OK'
+                            }, function () {
+                            })
+
+                        }
+                    });
+                },
+                onRowRemoved: function (e) {
+                    $http.post("api/Staffs/DeleteDepartment/" + e.key.DEPid).then(function successCallback(response) {
+
+                        if (response.data.StatusCode > 1) {
+                            swal({
+                                title: 'Information',
+                                text: data.Messages,
+                                type: "info",
+                                showCancelButton: false,
+                                confirmButtonColor: "#6EAA6F",
+                                confirmButtonText: 'OK'
+                            }, function () {
+                            })
+
+                        }
+                    });
+                }
             };
         })
     }

@@ -1,4 +1,4 @@
-﻿angular.module('ApkApp').controller('ListPurchaseRequestController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
+﻿angular.module('ApkApp').controller('ListPRApproveController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
     function ($scope, $stateParams, $http, $rootScope, $filter) {
 
         $scope.showColumnLines = true;
@@ -7,7 +7,7 @@
         $scope.rowAlternationEnabled = true;
 
 
-        $http.get("api/PR/ListPRByStaff/" + localStorage.getItem('StaffID')+"?").then(function (data) {
+        $http.get("api/PR/ListPRForApprove/" + localStorage.getItem('StaffID') + "?deptid=" + localStorage.getItem('StaffDepartmentID')).then(function (data) {
             console.log(data);
             $scope.dataGridOptions = {
                 dataSource: data.data.Results.ListPRData,
@@ -54,17 +54,15 @@
                 }, {
                         dataField: "Staff",
                     caption: "พนักงาน"
-                //}, {
-                //    dataField: "สถานะ",
-                //    caption: "สถานะ",
-                //    editorOptions: {
-                //        disabled: true
-                //    },
-                //    cellTemplate: function (container, item) {
-                //        var data = item.data,
-                //            markup = "<a>อนุมัติ</a>";
-                //        container.append(markup);
-                //    }
+                }, {
+                        dataField: "Approve",
+                    caption: "อนุมัติ",
+                    cellTemplate: function (container, item) {
+                    
+                        var data = item.data,
+                            markup = "<a>อนุมัติ/รับทราบ</a>";
+                        container.append(markup);
+                    }
                 //}, {
                 //    dataField: "ใบสั่งชื้อ",
                 //    caption: "ใบสั่งชื้อ"
@@ -94,6 +92,10 @@
             console.log(e);
             if (e.column.dataField === "Document_Vnos") {
                 window.location = '#/PurchaseRequest/ViewPurchaseRequest/' + e.data.Document_Id;
+            };
+            if (e.column.dataField === "Approve") {
+                console.log(e);
+                window.location = '#/PurchaseRequest/ApprovePR/' + e.data.Document_Id;
             };
         };
 

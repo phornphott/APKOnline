@@ -4,7 +4,7 @@
         $scope.showRowLines = true;
         $scope.showBorders = true;
         $scope.rowAlternationEnabled = true;
-        $http.get("api/PO/ListPO").then(function (data) {
+        $http.get("api/PO/ListPO/" + localStorage.getItem("StaffID")+"?").then(function (data) {
             var ListPRData = data.data.Results.ListPRData;
             $scope.dataGridOptions = {
                 dataSource: ListPRData,
@@ -91,7 +91,12 @@
                 columnAutoWidth: true,
                 columns: [{
                     dataField: "Document_Vnos",
-                    caption: "เลขที่"
+                    caption: "เลขที่" ,
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = "<a >" + data.Document_Vnos + "</a>";
+                        container.append(markup);
+                    },
                 }, {
                         dataField: "DocDate",
                     caption: "วันที่"
@@ -127,6 +132,13 @@
                     window.location = "#/PurchaseRequest/ViewPurchaseOrder/" + e.data.Document_Id;
                 }, 700);
             };
+            if (e.column.dataField === "Document_Vnos") {
+                $('#ImportPRModal').modal('hide');
+                setTimeout(function () {
+                    window.location = '#/PurchaseRequest/ViewPurchaseRequest/' + e.data.Document_Id;
+                }, 700);
+                
+            }
         };
     }
 ])

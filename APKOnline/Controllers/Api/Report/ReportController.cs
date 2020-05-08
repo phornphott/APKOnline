@@ -17,7 +17,7 @@ namespace APKOnline.Controllers.Api.Report
 
         [HttpGet]
         [ActionName("ListReportBudget")]
-        public HttpResponseMessage GETListReportBudget(string STARTDATE, string ENDDATE, string MONTHS, string StaffCode, string DEPcode)
+        public HttpResponseMessage GETListReportBudget(string STARTDATE, string ENDDATE, string MONTHS, int StaffCode, int DEPcode)
          {
             string errMsg = "";
             DataSet ds = new DataSet();

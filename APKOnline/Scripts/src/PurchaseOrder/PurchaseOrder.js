@@ -31,11 +31,17 @@
                 editing: {
                     mode: "row",
                 },
+                onCellClick: onCellClickViewPO,
                 columnAutoWidth: true,
                 columns: [{
                    
                     dataField: "Document_Vnos",
-                    caption: "เลขที่ใบสำคัญ"
+                    caption: "เลขที่ใบสำคัญ",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = "<a >" + data.Document_Vnos + "</a>";
+                        container.append(markup);
+                    },
                 }, {
                         dataField: "DocDate",
                     caption: "วันที่"
@@ -57,6 +63,17 @@
                 }, {
                     dataField: "Staff",
                     caption: "พนักงาน"
+                }, {
+                        dataField: "Document_Status",
+                        caption: "พิมพ์",
+                        cellTemplate: function (container, item) {
+                            var data = item.data,
+                                markup = "<a > พิมพ์เอกสาร </a>";
+                            if (data.Document_Status < 2) {
+                                markup = "<a > </a>";
+                            }
+                            container.append(markup);
+                        },
                 }]
             };
         });
@@ -123,6 +140,21 @@
         $scope.goToViewPurchaseOrder = function () {
             
         };
+        var onCellClickViewPO = function (e) {
+            console.log(e);
+            if (e.column.dataField === "Document_Vnos") {
+                setTimeout(function () {
+                    window.location = '#/PurchaseRequest/ViewPO/' + e.data.Document_Id;
+                }, 700);
+
+            }
+            if (e.column.dataField === "Document_Status") {
+                setTimeout(function () {
+                    window.open('/Reports/PrintPreview.aspx?Parameter=' + e.data.Document_Id, '_blank');
+                }, 700);
+            }
+        };
+
         var onCellClickViewPR = function (e) {
             console.log(e);
            
@@ -140,5 +172,10 @@
                 
             }
         };
+        $scope.CancelDocuments = function () {
+            window.location = '#/PurchaseOrder/ListPurchaseOrder';
+
+        };
+
     }
 ])

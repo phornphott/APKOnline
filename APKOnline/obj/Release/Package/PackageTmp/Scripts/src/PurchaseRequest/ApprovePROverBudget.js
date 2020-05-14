@@ -1,4 +1,4 @@
-﻿angular.module('ApkApp').controller('ViewPurchaseRequestController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
+﻿angular.module('ApkApp').controller('ApprovePROverController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
     function ($scope, $stateParams, $http, $rootScope, $filter) {
         console.log($stateParams);
         $scope.showColumnLines = true;
@@ -173,101 +173,6 @@
                         });
                     }
                 },
-                //onRowUpdated: function (e) {
-
-
-                //    //var MaterialDocCountDaily = [{
-                //    //    "DocumentID": e.key.DocumentID,
-                //    //    "KeyShopID": e.key.KeyShopID,
-                //    //    "DocDetailID": e.key.DocDetailID,
-                //    //    "ProductAmount": e.key.StartProductAmount,
-                //    //    "CurrentStockAmount": e.key.CurrentStockAmount,
-                //    //    "UnitName": e.key.UnitName,
-                //    //    "UnitSmallID": e.key.UnitSmallID,
-                //    //    "UnitLargeID": e.key.UnitLargeID,
-                //    //    "UnitRatio": e.key.UnitRatio,
-                //    //    "UnitLargeRatio": e.key.UnitLargeRatio
-                //    //}];
-
-                //    //var checkStatusAdd = 0;
-                //    //$http.post("api/CountWeekly/AddMaterails", MaterialDocCountDaily).success(function (data, header, status, config) {
-                //    //    $rootScope.MaterialDocAll = data.Results;
-                //    //    if (data.StatusCode > 1) {
-                //    //        swal({
-                //    //            title: 'Information',
-                //    //            text: data.Messages,
-                //    //            type: "info",
-                //    //            showCancelButton: false,
-                //    //            confirmButtonColor: "#6EAA6F",
-                //    //            confirmButtonText: 'OK'
-                //    //        }, function () {
-                //    //        })
-                //    //        checkStatusAdd = 1;
-                //    //    }
-                //    //    $.get("api/CountWeekly/LoadDocument?documentTypeId=" + Number(localStorage.getItem('DocumentTypeID')) + "&documentId=" + $stateParams.DocumentID + "&keyShopId=" + $stateParams.KeyShopID + "&documentStatus=" + $stateParams.DocumentStatus).success(function (data) {
-
-                //    //        if (data.StatusCode > 1) {
-                //    //            swal({
-                //    //                title: 'Information',
-                //    //                text: data.Messages,
-                //    //                type: "info",
-                //    //                showCancelButton: false,
-                //    //                confirmButtonColor: "#6EAA6F",
-                //    //                confirmButtonText: 'OK'
-                //    //            }, function () {
-                //    //            })
-                //    //            checkStatusAdd = 1;
-                //    //        }
-                //    //        else {
-                //    //            $scope.DocumentDetails = data.Results.DocumentDetails;
-                //    //            $scope.checkApprove = data.Results.checkApprove[0].check;
-
-                //    //        }
-                //    //        if (checkStatusAdd == 1) {
-                //    //            $("#gridContainers").dxDataGrid({ dataSource: $scope.DocumentDetails });
-                //    //            $("#gridContainers").dxDataGrid("instance").refresh();
-                //    //        }
-
-
-                //    //        //if ($scope.DocumentDetails.length > 0) {
-                //    //        //    $scope.DocDetailsCountStock = [];
-                //    //        //    for (var a = 0; a < $scope.DocumentDetails.length; a++) {
-                //    //        //        var pushData = $scope.DocumentDetails[a];
-                //    //        //        if ($scope.DocumentDetails[a].ProductAmount == -1 && $scope.checkcopy == false) {
-                //    //        //            pushData.DiffCurrentAmount = 0 - $scope.DocumentDetails[a].CurrentStockAmount;
-                //    //        //            pushData.StartProductAmount = "";
-                //    //        //            pushData.ProductAmountQty = 0;
-                //    //        //            $scope.checkApprove = 0;
-                //    //        //        }
-                //    //        //        else if ($stateParams.DocumentStatus == 1 || $stateParams.DocumentStatus == 99) {
-                //    //        //            pushData.DiffCurrentAmount = $scope.DocumentDetails[a].ProductAmount - $scope.DocumentDetails[a].CurrentStockAmount;
-                //    //        //            pushData.StartProductAmount = numeral($scope.DocumentDetails[a].ProductAmount).format($scope.NumericFormat);
-                //    //        //            pushData.ProductAmountQty = $scope.DocumentDetails[a].ProductAmount;
-                //    //        //        }
-                //    //        //        else {
-                //    //        //            pushData.DiffCurrentAmount = $scope.DocumentDetails[a].DiffCurrentAmount;
-                //    //        //            pushData.StartProductAmount = $scope.DocumentDetails[a].StartProductAmount;
-                //    //        //            pushData.ProductAmountQty = $scope.DocumentDetails[a].ProductAmountQty;
-                //    //        //        }
-
-                //    //        //        $scope.DocDetailsCountStock.push(pushData);
-                //    //        //    }
-                //    //        //}
-
-
-
-                //    //        //$("#gridContainers").dxDataGrid({ dataSource: $scope.DocumentDetails});
-                //    //        //$("#gridContainers").dxDataGrid("instance").refresh();
-
-                //    //        //$("#gridContainers").dxDataGrid("instance").selectRowsByIndexes([rowSelectIndex]);
-
-
-                //    //    });
-
-                //    //});
-                //},
-                //onRowRemoved: function (e) {
-                //    logEvent("RowRemoved");
                 //},
             };
         });
@@ -277,52 +182,32 @@
             $scope.ListFilePR.push({});
         };
         $scope.SaveDocuments = function () {
-            var checkselectValue = 0;
+          
             
-            if ($scope.Document_Dep == 0) {
-                checkselectValue = 1;
-            }
-            //if ($scope.Document_Job == 0) {
-            //    checkselectValue = 1;
-            //}
-            if ($scope.Document_Category == 0) {
-                checkselectValue = 1;
-            }
-            if ($scope.Document_Group == 0) {
-                checkselectValue = 1;
-            }
-            if ($scope.Objective == 0) {
-                checkselectValue = 1;
-            }
-
-            if (checkselectValue == 1) {
-                //swal("แจ้งเตือน", "ข้อมูลบางรายการยังไม่ถูกต้อง กรุณาตวรจสอบรายละเอียดอีกครั้ง", "error");
-            }
-            else {
                 var Header = {
                     "Document_Id": $scope.Document_ID,
-                    "Document_Group": $scope.Document_Group,
-                    "Document_Category": $scope.Document_Category,
-                    "Document_Objective": $scope.Objective,
-                    "Document_Vnos": '',
-                    "Document_Means": $scope.Document_Means,
-                    "Document_Expect": $scope.Document_Expect,
-                    "Document_Cus": '',
-                    "Document_Job": $scope.Document_Job,
-                    "Document_Dep": $scope.Document_Dep,
-                    "Document_Per": '',
-                    "Document_Doc": '',
-                    "Document_Mec": '',
-                    "Document_Desc": '',
-                    "Document_Tel": $scope.Document_Tel,
+                    //"Document_Group": $scope.Document_Group,
+                    //"Document_Category": $scope.Document_Category,
+                    //"Document_Objective": $scope.Objective,
+                    //"Document_Vnos": '',
+                    //"Document_Means": $scope.Document_Means,
+                    //"Document_Expect": $scope.Document_Expect,
+                    //"Document_Cus": '',
+                    //"Document_Job": $scope.Document_Job,
+                    //"Document_Dep": $scope.Document_Dep,
+                    //"Document_Per": '',
+                    //"Document_Doc": '',
+                    //"Document_Mec": '',
+                    //"Document_Desc": '',
+                    //"Document_Tel": $scope.Document_Tel,
                     "Document_CreateUser": localStorage.getItem('StaffID'),
 
                 };
-                $http.post("api/PR/SavePRData?", Header).then(function successCallback(response) {
-                    console.log(data);
-                    window.location = '#/PurchaseRequest/ListPurchaseRequest';
+            $http.post("api/PR/ApprovePROverBudget?", Header).then(function successCallback(response) {
+                    console.log(response);
+                window.location = '#/PurchaseRequest/ListPROverBudgetApprove';
                 });
-            }
+            
 
 
 
@@ -330,10 +215,9 @@
         };
         $scope.CancelDocuments = function () {
 
-            $http.get("api/PR/CancelPRTmpDetail/" + $scope.Document_ID).then(function (data) {
-                    console.log(data);
-                    window.location = '#/PurchaseRequest/ListPurchaseRequest';
-                });
+           
+            window.location = '#/PurchaseRequest/ListPROverBudgetApprove';
+               
         };
 
         $scope.removeFilePR = function (index) {

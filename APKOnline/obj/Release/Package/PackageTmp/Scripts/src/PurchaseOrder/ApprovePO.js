@@ -1,15 +1,16 @@
 ﻿angular.module('ApkApp').controller('ApprovePOController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
     function ($scope, $stateParams, $http, $rootScope, $filter) {
+        $scope.SaveText = "อนุมัติ";
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
         $scope.showBorders = true;
         $scope.rowAlternationEnabled = true;
         console.log($stateParams);
-        $http.get("api/PO/GETApprovePO/" + $stateParams.id ).then(function (data) {
+        $http.get("api/PO/GETApprovePO/" + $stateParams.id + "?StaffID=" + localStorage.getItem("StaffID")).then(function (data) {
             console.log(data);
             //$scope.Header = data.data.Results.Document_Vnos[0].Column1
             $scope.Header = data.data.Results.Header[0]
-            
+            $scope.SaveText = $scope.Header.SaveText; 
             var Detail = data.data.Results.Detail;
             $scope.dataGridOptions = {
                 dataSource: Detail,

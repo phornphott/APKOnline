@@ -33,7 +33,13 @@
             $scope.ENDDATE = new Date($scope.MONTHDATE.getFullYear(), $scope.MONTHDATE.getMonth(), getDaysInMonth(($scope.MONTHDATE.getMonth() + 1), $scope.MONTHDATE.getFullYear()));
             $scope.MONTHS = String($scope.MONTHDATE.getMonth() + 1);
 
-            $http.get("api/Report/ListReportBudget?STARTDATE=" + moment($scope.STARTDATE).format("YYYY-MM-DD") + "&ENDDATE=" + moment($scope.ENDDATE).format("YYYY-MM-DD") + "&MONTHS=" + $scope.MONTHS + "&StaffCode=" + $scope.StaffCode + "&DEPcode=" + $scope.DEPcode).then(function (data) {
+            //$http.get("api/Report/ListReportBudget?STARTDATE=" + moment($scope.STARTDATE).format("YYYY-MM-DD") + "&ENDDATE=" + moment($scope.ENDDATE).format("YYYY-MM-DD") + "&MONTHS=" + $scope.MONTHS + "&StaffCode=" + $scope.StaffCode + "&DEPcode=" + $scope.DEPcode).then(function (data) {
+            //    $scope.ListReportBudgets = data.data.Results.ReportBudget;
+            //    $('#myModal').modal('hide');
+            //    console.log($scope.ListReportBudgets);
+            //});
+
+            $http.get("api/Report/ListReportBudget?STARTDATE=" + moment($scope.STARTDATE).format("YYYY-MM-DD") + "&ENDDATE=" + moment($scope.ENDDATE).format("YYYY-MM-DD") + "&MONTHS=" + $scope.MONTHS + "&StaffCode=" + localStorage.getItem('StaffID') + "&DEPcode=" + localStorage.getItem('StaffDepartmentID')).then(function (data) {
                 $scope.ListReportBudgets = data.data.Results.ReportBudget;
                 $('#myModal').modal('hide');
                 console.log($scope.ListReportBudgets);

@@ -11,7 +11,7 @@ namespace APKOnline.DBHelper
 {
     interface IReportData
     {
-        DataTable GetReportBudget(string STARTDATE, string ENDDATE, string MONTHS, string StaffCode, string DEPcode, ref string errMsg);
+        DataTable GetReportBudget(string STARTDATE, string ENDDATE, string MONTHS, int StaffCode, int DEPcode, ref string errMsg);
         Task<DataSet> GetDashBroadData();
         Task<DataSet> GetDashBroadByDepartment(int id);
         int getdepid(string dep);
@@ -19,20 +19,23 @@ namespace APKOnline.DBHelper
 
     public class ReportData: IReportData
     {
-        public DataTable GetReportBudget(string STARTDATE, string ENDDATE, string MONTHS, string StaffCode, string DEPcode, ref string errMsg)
+        public DataTable GetReportBudget(string STARTDATE, string ENDDATE, string MONTHS, int StaffCode, int DEPcode, ref string errMsg)
         {
             string Addition = null;
             DataTable dt = new DataTable();
 
             try
             {
-                if (StaffCode != null && StaffCode != "undefined")
+                //if (StaffCode != null && StaffCode != "undefined")
+                if (StaffCode != 0)
                 {
-                    Addition += " AND s.StaffCode=" + StaffCode;
+                    //Addition += " AND s.StaffCode=" + StaffCode;
+                    Addition += " AND p.Document_CreateUser=" + StaffCode;
                 }
-                if (DEPcode != null && StaffCode != "undefined")
+                //if (DEPcode != null && StaffCode != "undefined")
+                if (DEPcode != 0)
                 {
-                    Addition += " AND d.DEPcode=" + DEPcode;
+                    Addition += " AND p.Document_Dep=" + DEPcode;
                 }
 
                 string strSQL = "\r\n SELECT distinct p.*, b.SumMonth" + MONTHS + " as SumMonth, s.StaffCode, s.StaffFirstName, s.StaffLastName" +
@@ -62,8 +65,8 @@ namespace APKOnline.DBHelper
             int LastdayofMonth = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month);
             string todate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, LastdayofMonth).ToString("yyyy-MM-dd");
 
-            date = "2020-04-01";
-            todate = "2020-04-30";
+            //date = "2020-04-01";
+            //todate = "2020-04-30";
 
             string sql = "";
 
@@ -83,14 +86,14 @@ namespace APKOnline.DBHelper
             DataSet ds = new DataSet();
             int startdate = 1;
             string month = DateTime.Today.Month.ToString("00");
-            month = "04";
+            //month = "04";
             int LastdayofMonth = DateTime.DaysInMonth(DateTime.Today.Year, Convert.ToInt32(month));
 
             string date = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).ToString("yyyy-MM-dd");
             string todate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, LastdayofMonth).ToString("yyyy-MM-dd");
 
-            date = "2020-04-01";
-            todate = "2020-04-30";
+            //date = "2020-04-01";
+            //todate = "2020-04-30";
 
 
 

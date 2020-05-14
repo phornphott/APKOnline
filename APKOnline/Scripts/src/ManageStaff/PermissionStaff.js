@@ -33,7 +33,7 @@
                 },
                 height:100+'%',
                 editing: {
-                    mode: "row",
+                    mode: "popup",
                     allowUpdating: true,
                     allowDeleting: true,
                     allowAdding: true,
@@ -44,6 +44,25 @@
                         confirmDeleteTitle: "คุณแน่ใจหรือไม่?",
                         confirmDeleteMessage: "คุณไม่สามารถกู้ข้อมูลกลับมาได้!",
                         cancelRowChanges: "ยกเลิก"
+                    },
+                    popup: {
+                        title: "Department Info",
+                        showTitle: true,
+                        width: 700,
+                        height: 300,
+                        position: {
+                            my: "top",
+                            at: "top",
+                            of: window
+                        }
+                    },
+                    form: {
+                        items: [{
+                            itemType: "group",
+                            colCount: 2,
+                            colSpan: 2,
+                            items: ["DEPcode", "DEPdescT"]
+                        }]
                     }
                 },
                 columnAutoWidth: true,

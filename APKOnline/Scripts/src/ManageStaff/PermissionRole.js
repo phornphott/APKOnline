@@ -1,14 +1,14 @@
 ﻿angular.module('ApkApp').controller('PermissionRoleController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
     function ($scope, $stateParams, $http, $rootScope, $filter) {
+        $scope.data = {};
+        $("#showAdd").hide();
+
 
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
         $scope.showBorders = true;
         $scope.rowAlternationEnabled = true;
-
        
-
-
         var api = "api/Staffs/PermissionRoleData"
         $http.get(api).then(function (data) {
 
@@ -38,9 +38,9 @@
                 },
                 editing: {
                     mode: "row",
-                    allowUpdating: true,
-                    allowDeleting: true,
-                    allowAdding: true,
+                    //allowUpdating: true,
+                    //allowDeleting: true,
+                    //allowAdding: true,
                     texts: {
                         editRow: "แก้ไข",
                         deleteRow: "ลบ",

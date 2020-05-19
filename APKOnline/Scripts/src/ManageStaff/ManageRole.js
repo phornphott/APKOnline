@@ -1,5 +1,7 @@
 ﻿angular.module('ApkApp').controller('ManageRoleController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
     function ($scope, $stateParams, $http, $rootScope, $filter) {
+        $scope.data = {};
+        $("#showAdd").hide();
 
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
@@ -33,7 +35,7 @@
                 },
                 editing: {
                     mode: "row",
-                    allowUpdating: true,
+                    //allowUpdating: true,
                     //allowDeleting: true,
                     //allowAdding: true,
                     texts: {
@@ -47,7 +49,7 @@
                 },
                 columnAutoWidth: true,
                 columns: [{
-                    dataField: "ID",
+                    dataField: "Positionid",
                     caption: "ลำดับ",
                     width: 50,
                     alignment: "center",
@@ -65,6 +67,10 @@
                 }, {
                     dataField: "PositionCode",
                     caption: "ตำแหน่ง",
+
+                }, {
+                    dataField: "PositionName",
+                    caption: "ชื่อตำแหน่ง",
 
                 }, {
                     dataField: "PositionLevel",
@@ -100,9 +106,154 @@
                 //    },
                 //    alignment: "center",
 
-                }],
+                }, {
+                    dataField: "Positionid",
+                    caption: "แก้ไขข้อมูล",
+                    alignment: 'center',
+                    allowFiltering: false,
+                    width: 100,
+                    cellTemplate: function (container, options) {
+                        $("<div />").dxButton({
+                            icon: 'fa fa-pencil',
+                            type: 'default',
+                            disabled: false,
+                            onClick: function (e) {
+                                $("#showAdd").show();
+                                $("#btnEditPOS").show();
+                                $("#gridContainer").hide();
+
+                                var api = "api/Staffs/StaffRoleDataByID?POSid=" + options.key.Positionid;
+
+                                $http.get(api)
+                                    .then(function (data) {
+
+                                        if (data.data.StatusCode > 1) {
+                                            DevExpress.ui.notify(data.data.Messages);
+                                            $("#loadIndicator").dxLoadIndicator({
+                                                visible: false
+                                            });
+                                        } else {
+
+                                            //  LoadGrid(data.data);
+                                            console.log(data.data.Results.PositionData);
+                                            $scope.LoadForm(data.data.Results.PositionData[0]);
+                                        }
+
+                                    });
+                            }
+                        }).appendTo(container);
+                    }
+
+                }
+                ],
 
             };
         })
+
+        $scope.LoadForm = function (data) {
+            $("#form-container").dxForm({
+                colCount: 1,
+                width: 500,
+                formData: data,
+                showColonAfterLabel: true,
+                showValidationSummary: true,
+                items: [{
+                    dataField: "PositionCode",
+                    label: {
+                        text: "ตำแหน่ง",
+                    },
+                    editorOptions: {
+                        disabled: false,
+                        attr: { 'style': "text-transform: uppercase" },
+                        Maxleght: 15,
+                    },
+                    validationRules: [{
+                        type: "required",
+                        message: "โปรดระบุ ตำแหน่ง"
+                    }]
+                },
+                {
+                    dataField: "PositionName",
+                    label: {
+                        text: "ชื่อตำแหน่ง"
+                    },
+                    editorOptions: {
+                        disabled: false
+                    }
+                },
+                {
+                    dataField: "PositionLimit",
+
+                    label: {
+                        text: "ยอดอนุมัติ",
+                    },
+                    editorOptions: {
+                        disabled: false
+                    },
+                    validationRules: [{
+                        type: "required",
+                        message: "โปรดระบุยอดอนุมัติ"
+                    }]
+                },
+
+
+                ]
+            });
+
+        }
+
+        $scope.Refresh = function () {
+            $("#btnEditPOS").hide();
+            $("#showAdd").hide();
+            $("#gridContainer").show();
+
+            $scope.LoadForm({});
+        }
+
+        $scope.SubmitEditPosition = function () {
+
+            if ($("#form-container").dxForm("instance").validate().isValid) {
+                var obj = $("#form-container").dxForm("instance").option('formData');
+                var Pos = {
+                    "Positionid": obj.Positionid,
+                    "PositionCode": obj.PositionCode,
+                    "PositionName": obj.PositionName,
+                    "PositionLimit": obj.PositionLimit,
+                };
+                $.post("api/Staffs/SetPositionRoleData?", Pos
+
+                )
+                    .done(function (data) {
+
+                        if (data.StatusCode > 1) {
+                            $("#loadIndicator").dxLoadIndicator({
+                                visible: false
+                            });
+                            DevExpress.ui.notify(data.Messages);
+                            //  Refresh();
+                        } else {
+
+                            DevExpress.ui.notify(data.Messages);
+                            $("#loadIndicator").dxLoadIndicator({
+                                visible: false
+                            });
+                            //$scope.CallData();
+                            $("#btnEditPOS").hide();
+                            $("#showAdd").hide();
+                            $("#gridContainer").show();
+                            var api = "api/Staffs/StaffRoleData"
+                            $http.get(api).then(function (data) {
+                                var Datasource = data.data.Results.PositionData;
+                                $("#gridContainer").dxDataGrid("instance").option("dataSource", Datasource);
+                                $("#gridContainer").dxDataGrid("instance").refresh();
+                            });
+                        }
+
+                    });
+            }
+
+
+        }
+
     }
 ])

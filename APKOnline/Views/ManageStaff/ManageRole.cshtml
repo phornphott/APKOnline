@@ -4,10 +4,18 @@
         <div class="col-md-12">
             <div class="box box-success">
                 <div class="box-header with-border">
-                    <div class="pull-right">
-                        @*<button type="button" class="btn btn-block btn-primary btn-sm" style="width:60px;">New</button>*@
-                    </div>
                     <h3 class="box-title">กำหนดตำแหน่ง</h3>
+                    <br />
+                    <div id="showAdd">
+                        <div id="form-container"></div><br>
+                        <div class="col-lg-11 pull-right">
+                            <button type="button" class="btn btn-success" id="btnEditPOS" ng-click="SubmitEditPosition()"><i class="fa fa-plus"></i> แก้ไขตำแหน่ง</button>
+                            <button type="button" class="btn btn-danger" id="btnRefreshPOS" ng-click="Refresh()"><i class="fa fa-refresh"></i> ยกเลิก</button>
+
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">

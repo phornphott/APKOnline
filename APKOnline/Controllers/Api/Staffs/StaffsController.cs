@@ -75,6 +75,36 @@ namespace APKOnline.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
         [HttpGet]
+        [ActionName("StaffRoleDataByID")]
+        public HttpResponseMessage GETStaffRoleDataByID(int POSid)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+            dt = repository.GetPermissionDataByID(ref errMsg, POSid);
+
+            //dt = repository.GetDepartmentData(ref errMsg);
+
+            ds.Tables.Add(dt);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            resData.Records = ds.Tables[0].Rows.Count;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+        [HttpGet]
         [ActionName("StaffData")]
         public HttpResponseMessage GETStaffData()
         {
@@ -112,6 +142,34 @@ namespace APKOnline.Controllers
             Result resData = new Result();
 
             dt = repository.GetDepartmentData(ref errMsg);
+
+            ds.Tables.Add(dt);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            resData.Records = ds.Tables[0].Rows.Count;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+        [HttpGet]
+        [ActionName("DepartmentRoleDataByID")]
+        public HttpResponseMessage DepartmentRoleDataByID(int DEPid)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+            dt = repository.GetDepartmentDataByID(ref errMsg, DEPid);
 
             ds.Tables.Add(dt);
 
@@ -170,19 +228,95 @@ namespace APKOnline.Controllers
 
             try
             {
-                ret = await repository.SetDepartmentData(item);
+                int iCount = repository.GetCheckUniqe(
+                 " Department ",
+                 " DEPcode ",
+                 " and DEPcode=" + repository.ReplaceString(item.DEPcode),"DEPid",item.DEPid);
 
-                if (ret)
+                bool ExistOK = false;
+
+                if (iCount > 0)  ExistOK = true;
+
+                if (ExistOK)
                 {
-                    response.StatusCode = (int)StatusCodes.Succuss;
-                    response.Messages = "";
+                    response.StatusCode = (int)StatusCodes.Error;
+                    response.Messages = "รหัสแผนกซ้ำ";
+                    //throw new Exception(" รหัสแผนก ซ้ำ !!!");
                 }
                 else
                 {
-                    response.StatusCode = (int)StatusCodes.Error;
-                    response.Messages = "";
+                    ret = await repository.SetDepartmentData(item);
 
+                    if (ret)
+                    {
+                        response.StatusCode = (int)StatusCodes.Succuss;
+                        response.Messages = "บันทึกข้อมูลเรียบร้อยแล้ว";
+                    }
+                    else
+                    {
+                        response.StatusCode = (int)StatusCodes.Error;
+                        response.Messages = "";
+
+                    }
                 }
+                
+                
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = (int)StatusCodes.Error;
+                response.Messages = e.Message;
+            }
+
+
+            //response.Results = ds;
+            //response.Records = ds.Tables[0].Rows.Count;
+            return Request.CreateResponse(HttpStatusCode.OK, response);
+        }
+        [HttpPost]
+        [ActionName("SetPositionRoleData")]
+        public async Task<HttpResponseMessage> SetPosition(Position item)
+        {
+            Result response = new Result();
+            bool ret = false;
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+
+            try
+            {
+                int iCount = repository.GetCheckUniqe(
+                 " PositionPermission ",
+                 " Positioncode ",
+                 " and Positioncode=" + repository.ReplaceString(item.Positioncode), "Positionid", item.Positionid);
+
+                bool ExistOK = false;
+
+                if (iCount > 0) ExistOK = true;
+
+                if (ExistOK)
+                {
+                    response.StatusCode = (int)StatusCodes.Error;
+                    response.Messages = "รหัสตำแหน่งซ้ำ";
+                    //throw new Exception(" รหัสแผนก ซ้ำ !!!");
+                }
+                else
+                {
+                    ret = await repository.SetPositionData(item);
+
+                    if (ret)
+                    {
+                        response.StatusCode = (int)StatusCodes.Succuss;
+                        response.Messages = "บันทึกข้อมูลเรียบร้อยแล้ว";
+                    }
+                    else
+                    {
+                        response.StatusCode = (int)StatusCodes.Error;
+                        response.Messages = "";
+
+                    }
+                }
+
+
             }
             catch (Exception e)
             {
@@ -211,7 +345,7 @@ namespace APKOnline.Controllers
                 if (ret)
                 {
                     response.StatusCode = (int)StatusCodes.Succuss;
-                    response.Messages = "";
+                    response.Messages = "ลบรหัสแผนกเรียบร้อยแล้ว";
                 }
                 else
                 {

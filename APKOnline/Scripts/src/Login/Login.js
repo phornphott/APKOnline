@@ -5,7 +5,7 @@
     $scope.submitLogin = function () {
         $http.post("../api/Staffs/login", { StaffLogin: $scope.username, StaffPassword: $scope.password })
             .then(function (data) {
-                if (data.data.StatusCode == 2) {
+                if (data.data.StatusCode === 2) {
                     console.log(data.data.Messages);
                 }
                 else {

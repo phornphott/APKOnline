@@ -18,4 +18,14 @@ namespace APKOnline.Models
         public string DEPdescE { get; set; }
 
     }
+
+    public class Position
+    {
+        public int Positionid { get; set; }
+        public string Positioncode { get; set; }
+        public string PositionName { get; set; }
+        public decimal PositionLimit { get; set; }
+
+    }
+
 }

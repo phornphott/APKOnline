@@ -4,17 +4,30 @@
         <div class="col-md-12">
             <div class="box box-success">
                 <div class="box-header with-border">
-                    <div class="pull-right">
-                        @*<button type="button" class="btn btn-block btn-primary btn-sm" style="width:60px;"><i class="fa fa-plus"></i> เพิ่ม</button>*@
-                    </div>
+                    
                     <h3 class="box-title">กำหนดแผนก</h3>
+                    <br />
+                    <div id="showAdd">
+                        <div id="form-container"></div><br>
+                        <div class="col-lg-11 pull-right">
+                            <button type="button" class="btn btn-success" id="btnAddDEP" ng-click="InsertDEP()"><i class="fa fa-plus"></i> เพิ่มแผนก</button>
+                            <button type="button" class="btn btn-success" id="btnEditDEP" ng-click="SubmitEditDEP()"><i class="fa fa-plus"></i> แก้ไขแผนก</button>
+                            <button type="button" class="btn btn-danger" id="btnRefreshDEP" ng-click="Refresh()"><i class="fa fa-refresh"></i> ยกเลิก</button>
+
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-block btn-primary btn-sm" id="btnAdd" ng-click="Add()"><i class="fa fa-plus"></i> เพิ่มแผนก</button>
+                    </div>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                     @*<div id="gridContainer" dx-data-grid="dataGridOptions"></div>*@
                     @*<div id="tree-list-demo">
-                        <div id="employees" dx-tree-list="treeListOptions"></div>
-                    </div>*@
+                            <div id="employees" dx-tree-list="treeListOptions"></div>
+                        </div>*@
                     <div id="gridContainer" dx-data-grid="dataGridOptions"></div>
                 </div>
             </div>

@@ -4,10 +4,22 @@
         <div class="col-md-12">
             <div class="box box-success">
                 <div class="box-header with-border">
-                    <div class="pull-right">
-                        @*<button type="button" class="btn btn-block btn-primary btn-sm" style="width:60px;"><i class="fa fa-plus"></i> เพิ่ม</button>*@
-                    </div>
                     <h3 class="box-title">กำหนดบทบาทหน้าที่</h3>
+                    <br />
+                    <div id="showAdd">
+                        <div id="form-container"></div><br>
+                        <div class="col-lg-11 pull-right">
+                            <button type="button" class="btn btn-success" id="btnAddATH" ng-click="InsertAuthorize()"><i class="fa fa-plus"></i> เพิ่มบทบาทหน้าที่</button>
+                            <button type="button" class="btn btn-success" id="btnEditATH" ng-click="SubmitEditAuthorize()"><i class="fa fa-plus"></i> แก้ไขบทบาทหน้าที่</button>
+                            <button type="button" class="btn btn-danger" id="btnRefreshATH" ng-click="Refresh()"><i class="fa fa-refresh"></i> ยกเลิก</button>
+
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-block btn-primary btn-sm" id="btnAdd" ng-click="Add()"><i class="fa fa-plus"></i> เพิ่มบทบาทหน้าที่</button>
+                    </div>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">

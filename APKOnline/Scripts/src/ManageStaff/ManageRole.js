@@ -220,7 +220,7 @@
                     "PositionName": obj.PositionName,
                     "PositionLimit": obj.PositionLimit,
                 };
-                $.post("api/Staffs/SetPositionRoleData?", Pos
+                $.post("api/Staffs/SetPositionData?", Pos
 
                 )
                     .done(function (data) {

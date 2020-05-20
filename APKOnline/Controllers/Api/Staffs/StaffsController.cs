@@ -133,6 +133,34 @@ namespace APKOnline.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
         [HttpGet]
+        [ActionName("StaffDataByID")]
+        public HttpResponseMessage GETStaffDataByID(int StaffID)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+            dt = repository.GetStaffDataByID(ref errMsg, StaffID);
+
+            ds.Tables.Add(dt);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            resData.Records = ds.Tables[0].Rows.Count;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+        [HttpGet]
         [ActionName("DepartmentRoleData")]
         public HttpResponseMessage GETDepartmentData()
         {
@@ -274,7 +302,7 @@ namespace APKOnline.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, response);
         }
         [HttpPost]
-        [ActionName("SetPositionRoleData")]
+        [ActionName("SetPositionData")]
         public async Task<HttpResponseMessage> SetPosition(Position item)
         {
             Result response = new Result();

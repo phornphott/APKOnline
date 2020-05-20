@@ -19,6 +19,8 @@ namespace APKOnline.DBHelper
 
         DataTable GetStaffData(ref string errMsg);
 
+        DataTable GetStaffDataByID(ref string errMsg, int StaffID);
+
         DataTable GetPermissionData(ref string errMsg);
 
         DataTable GetPermissionDataByID(ref string errMsg, int DEPid);
@@ -110,6 +112,32 @@ namespace APKOnline.DBHelper
             dt.TableName = "StaffData";
             return dt;
         }
+
+        public DataTable GetStaffDataByID(ref string errMsg,int StaffID)
+        {
+            string strSQL = null;
+            DataTable dt = new DataTable();
+
+            try
+            {
+                strSQL = "\r\n SELECT * FROM Staffs " +
+                         "\r\n WHERE StaffID=" + StaffID + " and Deleted=0;";
+                dt = DBHelper.List(strSQL);
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    dr["StaffPassword"] = Base64Decode(dr["StaffPassword"].ToString());
+                }
+            }
+            catch (Exception e)
+            {
+                errMsg = e.Message;
+            }
+
+            dt.TableName = "StaffData";
+            return dt;
+        }
+
         public DataTable GetPermissionData(ref string errMsg)
         {
             string strSQL = null;

@@ -4,11 +4,22 @@
         <div class="col-md-12">
             <div class="box box-success">
                 <div class="box-header with-border">
-                    <div class="pull-right">
-                        @*<button type="button" class="btn btn-block btn-primary btn-sm"  id="btnAddDEG" ng-click="InsertStaff()";>เพิ่มพนักงาน</button>*@
-                        @*<button type="button" class="btn btn-primary" id="btnAdd" ng-click="Add()"><i class="fa fa-plus"></i> เพิ่มพนักงาน</button>*@
-                    </div>
                     <h3 class="box-title">กำหนดพนักงาน</h3>
+                    <br />
+                    <div id="showAdd">
+                        <div id="form-container"></div><br>
+                        <div class="col-lg-11 pull-right">
+                            <button type="button" class="btn btn-success" id="btnAddPER" ng-click="InsertPER()"><i class="fa fa-plus"></i> เพิ่มพนักงาน</button>
+                            <button type="button" class="btn btn-success" id="btnEditPER" ng-click="SubmitEditPER()"><i class="fa fa-plus"></i> แก้ไขพนักงาน</button>
+                            <button type="button" class="btn btn-danger" id="btnRefreshPER" ng-click="Refresh()"><i class="fa fa-refresh"></i> ยกเลิก</button>
+
+                        </div>
+                        <br>
+                        <hr>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-block btn-primary btn-sm" id="btnAdd" ng-click="Add()"><i class="fa fa-plus"></i> เพิ่มพนักงาน</button>
+                    </div>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">

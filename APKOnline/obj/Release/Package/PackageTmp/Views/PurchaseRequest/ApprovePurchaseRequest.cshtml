@@ -1,0 +1,356 @@
+﻿<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    @*<div class="pull-right">
+                            <button type="button" class="btn btn-block btn-primary btn-sm" style="width:60px;">New</button>
+                        </div>*@
+                    <h3 class="box-title">ขออนุมัติเบิกใช้งบประมาณบริษัท</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <!-- form start -->
+                    <form class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="inputEmail3" class="col-sm-4 control-label">DM No. : </label>
+                                    <div class="col-sm-8">
+                                        <label class="col-sm-8 control-label">{{Document_Vnos}}</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-4 control-label">เบอร์โทร : </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" id="Document_Tel" ng-model="Document_Tel">
+                                    </div>
+                                </div>
+                                @*<div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-4 control-label"></label>
+                                    <div class="col-sm-8">
+                                        <div class="form-group">
+                                            <label class="col-md-3">
+                                                <input type="checkbox" class="flat-red" checked>
+                                                PR
+                                            </label>
+                                            <label class="col-md-3">
+                                                <input type="checkbox" class="flat-red">
+                                                SR
+                                            </label>
+                                            <label class="col-md-3">
+                                                <input type="checkbox" class="flat-red">
+                                                CR
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>*@
+                                <div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-4 control-label">รหัสโครงการ : </label>
+                                    <div class="col-sm-8">
+                                        <div class="col-xs-10" id="Job" style="height: 32px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-4 control-label">แผนก : </label>
+                                    <div class="col-sm-8">
+                                        <div class="col-xs-10" id="Dept" style="height: 32px;"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-4 control-label">วันที่ : </label>
+                                    <div class="col-sm-8">
+                                        <label style="margin-top:7px;">{{DocDate}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="box-group" id="accordion">
+                        <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                        <div class="panel box box-default">
+                            <div class="box-header with-border" style="background-color:#4fa85b">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="color:white;" onclick="return false">
+                                        <i class="fa fa-angle-down"></i>
+                                        กรุณาป้อนรายละเอียด
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="box-body">
+                                    <form class="form-horizontal">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputPassword3" class="col-sm-4 control-label">ลักษณะค่าใช้จ่าย : </label>
+                                                    <div class="col-sm-8">
+
+                                                        <div class="col-xs-10" id="DocumentGroup" style="height: 32px;"></div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="inputPassword3" class="col-sm-4 control-label">ประเภทการจัดซื้อ : </label>
+                                                    <div class="col-sm-8">
+                                                        <div class="col-xs-10" id="Category" style="height: 32px;"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="inputPassword3" class="col-sm-4 control-label">วัตถุประสงค์ : </label>
+                                                    <div class="col-sm-8">
+                                                        <div class="col-xs-10" id="Objective" style="height: 32px;"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="inputPassword3" class="col-sm-4 control-label">รายละเอียด : </label>
+                                                    <div class="col-sm-8">
+                                                        <textarea class="form-control" rows="3" ng-model="Document_Desc" ></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputPassword3" class="col-sm-3 control-label">งวดงาน : </label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" id="inputPassword3">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="inputPassword3" class="col-sm-3 control-label">รายละเอียด : </label>
+                                                    <div class="col-sm-9">
+                                                        <textarea class="form-control" rows="3" ng-model="Document_Means"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box-group" id="accordion">
+                        <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                        <div class="panel box box-default">
+                            <div class="box-header with-border" style="background-color:#4fa85b">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="color:white;" onclick="return false">
+                                        <i class="fa fa-angle-down"></i>
+                                        รายละเอียดรายการขออนุมัติสั่งซื้อ-เบิก-จ่าย หรือ รายการและจำนวนสินค้าที่ขอทำรายการ
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="box-body">
+                                    <div id="gridContainer" dx-data-grid="dataGridOptions"></div>
+                                    @*<table class="table table-bordered">
+            <tr>
+                <th>รหัสบัญชี</th>
+                <th>รายละเอียดสินค้า</th>
+                <th>จำนวน</th>
+                <th>ราคา/หน่วย</th>
+                <th>จำนวนเงิน</th>
+            </tr>
+            <tr>
+                <td>
+                    <select class="form-control">
+                        <option>-- เลือก --</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+            </tr>
+            <tr>
+                <td>
+                    <select class="form-control">
+                        <option>-- เลือก --</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+            </tr>
+            <tr>
+                <td>
+                    <select class="form-control">
+                        <option>-- เลือก --</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+            </tr>
+            <tr>
+                <td>
+                    <select class="form-control">
+                        <option>-- เลือก --</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+            </tr>
+            <tr>
+                <td>
+                    <select class="form-control">
+                        <option>-- เลือก --</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+            </tr>
+            <tr>
+                <td>
+                    <select class="form-control">
+                        <option>-- เลือก --</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+            </tr>
+            <tr>
+                <td>
+                    <select class="form-control">
+                        <option>-- เลือก --</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+            </tr>
+            <tr>
+                <td>
+                    <select class="form-control">
+                        <option>-- เลือก --</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+            </tr>
+            <tr>
+                <td>
+                    <select class="form-control">
+                        <option>-- เลือก --</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+            </tr>
+            <tr>
+                <td>
+                    <select class="form-control">
+                        <option>-- เลือก --</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3"></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+            </tr>
+            <tr>
+                <td colspan="3"><span class="pull-right" style="margin-top:7px;">ยอดรวมทุกรายการ</span></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
+            </tr>
+        </table>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <form class="form-horizontal">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div ng-repeat="FilePR in ListFilePR">
+                                    <div class="form-group">
+                                        <label for="picFile" class="col-sm-4 control-label" ng-show="$index == 0">ไฟล์แนบ : </label>
+                                        <label for="picFile" class="col-sm-4 control-label" ng-show="$index != 0"></label>
+                                        <div class="col-sm-3">
+                                            <input type="file" style="margin-top:5px;" ngf-select ng-model="FilePR.picFile" name="picFile" ngf-model-invalid="errorFile" />
+                                        </div>
+                                        <label class="col-sm-2" style="color:red;margin-top:7px;">*** ไฟล์ PDF เท่านั้น</label>
+                                        <div class="col-sm-2" ng-show="$last">
+                                            <a class="btn btn-primary" ng-click="addFilePR()"><i class="fa fa-plus"></i></a>&nbsp;&nbsp;
+                                            <a class="btn btn-danger" ng-click="removeFilePR($index)" ng-hide="ListFilePR.length == 1"><i class="fa fa-minus"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="box-footer">
+                    <center>
+                        <button class="btn btn-success btn-lg" style="width:120px;" ng-click="SaveDocuments()">Save</button>&nbsp;&nbsp;&nbsp;
+                        <button class="btn btn-warning btn-lg" style="width:120px;" ng-click="CancelDocuments()">Cancel</button>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    #gridContainer {
+        height: 440px;
+    }
+</style>

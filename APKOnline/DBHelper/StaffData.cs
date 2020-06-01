@@ -12,6 +12,8 @@ namespace APKOnline.DBHelper
     public interface IStaffData
     {
         int GetCheckUniqe(string tableName, string columnName, string wheredata, string colFiled, int id);
+        int GetCheckUniqeLogin(string tableName, string columnName, string wheredata, string colFiled, int id);
+        int GetCheckUniqeAuthorize(string tableName, string columnName, string wheredata, string colFiled, int id);
 
         string ReplaceString(String text);
 
@@ -31,11 +33,23 @@ namespace APKOnline.DBHelper
         
         DataTable GetStaffAuthorizeData(ref string errMsg);
 
+        DataTable GetStaffAuthorizeDataByID(ref string errMsg, int Authorizeid);
+
         Task<bool> SetDepartmentData(Department item);
 
         Task<bool> SetPositionData(Position item);
 
+        Task<bool> SetStaffData(StaffModels item);
+
         Task<bool> DeleteDepartment(int id);
+
+        Task<bool> DeleteStaff(int id);
+
+        Task<bool> DeleteStaffAuthorize(int id);
+
+        Task<bool> SetStaffAuthorize(StaffAuthorize item);
+
+
     }
 
     public class StaffData : IStaffData
@@ -73,6 +87,50 @@ namespace APKOnline.DBHelper
             {
 
                 string StrSql = @" Select " + columnName + " From " + tableName + "   where (FLG_DEL=0 or FLG_DEL is null) and 0=0  " + wheredata;
+                if (id > 0) StrSql += " and " + colFiled + "<>" + id;
+                DataTable dt = DBHelper.List(StrSql);
+                return dt.Rows.Count;
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+            }
+        }
+
+        public int GetCheckUniqeLogin(string tableName, string columnName, string wheredata, string colFiled, int id)
+        {
+
+
+            try
+            {
+
+                string StrSql = @" Select " + columnName + " From " + tableName + "   where (Deleted=0 or Deleted is null) and 0=0  " + wheredata;
+                if (id > 0) StrSql += " and " + colFiled + "<>" + id;
+                DataTable dt = DBHelper.List(StrSql);
+                return dt.Rows.Count;
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+            }
+        }
+
+        public int GetCheckUniqeAuthorize(string tableName, string columnName, string wheredata, string colFiled, int id)
+        {
+            try
+            {
+
+                string StrSql = @" Select " + columnName + " From " + tableName + "  where  0=0  " + wheredata;
                 if (id > 0) StrSql += " and " + colFiled + "<>" + id;
                 DataTable dt = DBHelper.List(StrSql);
                 return dt.Rows.Count;
@@ -247,10 +305,73 @@ namespace APKOnline.DBHelper
             dt.TableName = "StaffAuthorizeData";
             return dt;
         }
+
+        public DataTable GetStaffAuthorizeDataByID(ref string errMsg, int Authorizeid)
+        {
+            string strSQL = null;
+            DataTable dt = new DataTable();
+
+            try
+            {
+                //strSQL = "\r\n SELECT * FROM PermissionGroup ";
+                strSQL = "\r\n SELECT * FROM StaffAuthorize where Authorizeid=" + Authorizeid + " order by StaffCode,DEPid ";
+                dt = DBHelper.List(strSQL);
+
+
+            }
+            catch (Exception e)
+            {
+                errMsg = e.Message;
+            }
+
+            dt.TableName = "StaffAuthorizeData";
+            return dt;
+        }
         #endregion
 
 
         #region Set Staff
+        public async Task<bool> SetStaffData(StaffModels item)
+        {
+            bool result = false;
+            string strSQL = null;
+            DataTable dt = new DataTable();
+
+            if (item.StaffID == 0)
+            {
+                strSQL = "Insert Into Staffs (StaffLogin,StaffPassword,StaffCode,StaffFirstName,StaffLastName,StaffDepartmentID,InputDate,UpdateDate) VALUES (@StaffLogin,@StaffPassword,@StaffCode,@StaffFirstName,@StaffLastName,@StaffDepartmentID,@InputDate,@UpdateDate)";
+                List<SqlParameter> sp = new List<SqlParameter>()
+                {
+                    new SqlParameter() {ParameterName = "@StaffLogin", SqlDbType = SqlDbType.NVarChar, Value= item.StaffLogin},
+                    new SqlParameter() {ParameterName = "@StaffPassword", SqlDbType = SqlDbType.NVarChar, Value = Base64Encode(item.StaffPassword)},
+                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value = item.StaffCode},
+                    new SqlParameter() { ParameterName = "@StaffFirstName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffFirstName },
+                    new SqlParameter() { ParameterName = "@StaffLastName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffLastName },
+                    new SqlParameter() { ParameterName = "@StaffDepartmentID", SqlDbType = SqlDbType.Int, Value = item.StaffDepartmentID },
+                    new SqlParameter() { ParameterName = "@InputDate", SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
+                    new SqlParameter() { ParameterName = "@UpdateDate", SqlDbType = SqlDbType.DateTime, Value = DateTime.Now }
+                };
+                DBHelper.Execute(strSQL, sp);
+            }
+            else
+            {
+                strSQL = "UPDATE Staffs SET StaffLogin=@StaffLogin,StaffPassword=@StaffPassword,StaffCode=@StaffCode,StaffFirstName=@StaffFirstName,StaffLastName=@StaffLastName,StaffDepartmentID=@StaffDepartmentID,UpdateDate=GETDATE() WHERE StaffID=@StaffID";
+
+                List<SqlParameter> sp = new List<SqlParameter>()
+                {
+                    new SqlParameter() {ParameterName = "@StaffID", SqlDbType = SqlDbType.VarChar, Value= item.StaffID},
+                    new SqlParameter() {ParameterName = "@StaffLogin", SqlDbType = SqlDbType.NVarChar, Value= item.StaffLogin},
+                    new SqlParameter() {ParameterName = "@StaffPassword", SqlDbType = SqlDbType.NVarChar, Value = Base64Encode(item.StaffPassword)},
+                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value = item.StaffCode},
+                    new SqlParameter() { ParameterName = "@StaffFirstName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffFirstName },
+                    new SqlParameter() { ParameterName = "@StaffLastName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffLastName },
+                    new SqlParameter() { ParameterName = "@StaffDepartmentID", SqlDbType = SqlDbType.Int, Value = item.StaffDepartmentID}
+                };
+                DBHelper.Execute(strSQL, sp);                
+            }
+            return true;
+        }
+
         public async Task<bool> SetDepartmentData(Department item)
         {
             bool result = false;
@@ -297,6 +418,32 @@ namespace APKOnline.DBHelper
             return true;
         }
 
+        public async Task<bool> DeleteStaffAuthorize(int id)
+        {
+            bool result = false;
+            string strSQL = null;
+
+
+            strSQL = "Delete from StaffAuthorize WHERE Authorizeid=" + id;
+
+            DBHelper.Execute(strSQL);
+
+            return true;
+        }
+
+        public async Task<bool> DeleteStaff(int id)
+        {
+            bool result = false;
+            string strSQL = null;
+
+
+            strSQL = "UPDATE Staffs SET Deleted=1 WHERE StaffID=" + id;
+
+            DBHelper.Execute(strSQL);
+
+            return true;
+        }
+
         #endregion
         public static string Base64Decode(string base64EncodedData)
         {
@@ -330,7 +477,54 @@ namespace APKOnline.DBHelper
             return "'" + data + "'";
         }
 
-        #region Position
+        public string GetNameFromTB(int id, string tb, string xf)
+        {
+            string strSQL = null;
+            DataTable dt = new DataTable();
+            string Xcap = "";
+            string table = "";
+            string tableID = "";
+
+            try
+            {
+                strSQL = "\r\n SELECT * FROM Department where FLG_DEL=0 or FLG_DEL is null order by DEPcode ";
+                dt = DBHelper.List(strSQL);
+
+                switch (tb)
+                {
+                    case "Department":
+                        table = "Department";
+                        tableID = "DEPid";
+                        break;
+                    case "Staffs":
+                        table = "Staffs";
+                        tableID = "StaffID";
+                        break;
+                    case "PositionPermission":
+                        table = "PositionPermission";
+                        tableID = "Positionid";
+                        break;
+                }
+
+                strSQL = "Select " + xf + " From " + table;
+                strSQL += " where " + tableID + "=" + id;
+                dt = DBHelper.List(strSQL);
+
+                if (dt.Rows.Count > 0)
+                {
+                    Xcap = Convert.ToString(dt.Rows[0][xf]);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Xcap = "";
+            }
+
+            return Xcap;
+        }
+
+        #region " ตำแหน่ง "
         public async Task<bool> SetPositionData(Position item)
         {
             bool result = false;
@@ -358,6 +552,55 @@ namespace APKOnline.DBHelper
                     new SqlParameter() {ParameterName = "@PositionCode", SqlDbType = SqlDbType.VarChar, Value= item.Positioncode},
                     new SqlParameter() {ParameterName = "@PositionName", SqlDbType = SqlDbType.NVarChar, Value = item.PositionName},
                     new SqlParameter() {ParameterName = "@PositionLimit", SqlDbType = SqlDbType.Decimal, Value = item.PositionLimit}
+                };
+                DBHelper.Execute(strSQL, sp);
+            }
+            return true;
+        }
+        #endregion
+
+        #region " บทบาทหน้าที่ "
+        public async Task<bool> SetStaffAuthorize(StaffAuthorize item)
+        {
+            bool result = false;
+            string strSQL = null;
+            DataTable dt = new DataTable();
+
+            item.StaffCode = GetNameFromTB(item.StaffID, "Staffs", "StaffCode");
+            item.DEPdescT = GetNameFromTB(item.StaffID, "Department", "DEPdescT");
+            item.PositionCode = GetNameFromTB(item.StaffID, "PositionPermission", "PositionCode");
+
+            if (item.Authorizeid == 0)
+            {
+                strSQL = "Insert Into StaffAuthorize (StaffID,StaffCode,DEPid,DEPdescT,PositionPermissionId,PositionCode,PositionLimit,isPreview) VALUES (@StaffID,@StaffCode,@DEPid,@DEPdescT,@PositionPermissionId,@PositionCode,@PositionLimit,@isPreview)";
+                List<SqlParameter> sp = new List<SqlParameter>()
+                {
+                    new SqlParameter() {ParameterName = "@StaffID", SqlDbType = SqlDbType.Int, Value= item.StaffID},
+                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value= item.StaffCode},
+                    new SqlParameter() {ParameterName = "@DEPid", SqlDbType = SqlDbType.Int, Value = item.DEPid},
+                    new SqlParameter() {ParameterName = "@DEPdescT", SqlDbType = SqlDbType.NVarChar, Value= item.DEPdescT},
+                    new SqlParameter() {ParameterName = "@PositionPermissionId", SqlDbType = SqlDbType.Int, Value = item.PositionPermissionId},
+                    new SqlParameter() {ParameterName = "@PositionCode", SqlDbType = SqlDbType.NVarChar, Value= item.PositionCode},
+                    new SqlParameter() {ParameterName = "@PositionLimit", SqlDbType = SqlDbType.Decimal, Value = item.PositionLimit},
+                    new SqlParameter() {ParameterName = "@isPreview", SqlDbType = SqlDbType.Bit, Value = item.isPreview}
+                };
+                DBHelper.Execute(strSQL, sp);
+            }
+            else
+            {
+                strSQL = "UPDATE StaffAuthorize SET StaffID=@StaffID,StaffCode=@StaffCode,DEPid=@DEPid,DEPdescT=@DEPdescT,PositionPermissionId=@PositionPermissionId,PositionCode=@PositionCode,PositionLimit=@PositionLimit,isPreview=@isPreview WHERE Authorizeid=@Authorizeid";
+
+                List<SqlParameter> sp = new List<SqlParameter>()
+                {
+                    new SqlParameter() {ParameterName = "@Authorizeid", SqlDbType = SqlDbType.VarChar, Value= item.Authorizeid},
+                    new SqlParameter() {ParameterName = "@StaffID", SqlDbType = SqlDbType.Int, Value= item.StaffID},
+                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value= item.StaffCode},
+                    new SqlParameter() {ParameterName = "@DEPid", SqlDbType = SqlDbType.Int, Value = item.DEPid},
+                    new SqlParameter() {ParameterName = "@DEPdescT", SqlDbType = SqlDbType.NVarChar, Value= item.DEPdescT},
+                    new SqlParameter() {ParameterName = "@PositionPermissionId", SqlDbType = SqlDbType.Int, Value = item.PositionPermissionId},
+                    new SqlParameter() {ParameterName = "@PositionCode", SqlDbType = SqlDbType.NVarChar, Value= item.PositionCode},
+                    new SqlParameter() {ParameterName = "@PositionLimit", SqlDbType = SqlDbType.Decimal, Value = item.PositionLimit},
+                    new SqlParameter() {ParameterName = "@isPreview", SqlDbType = SqlDbType.Bit, Value = item.isPreview}
                 };
                 DBHelper.Execute(strSQL, sp);
             }

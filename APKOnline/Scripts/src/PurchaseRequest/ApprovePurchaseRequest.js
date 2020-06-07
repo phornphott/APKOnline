@@ -1,6 +1,6 @@
 ﻿angular.module('ApkApp').controller('ApprovePurchaseRequestController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
     function ($scope, $stateParams, $http, $rootScope, $filter) {
-
+        $scope.ListFilePR = [{}];
         $scope.TextSaveButon="บันทึก";
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
@@ -59,7 +59,7 @@
                 searchPlaceholder: 'ค้นหา',
                 value: $scope.Document_Dep,
                 onSelectionChanged: function (data) {
-                    console.log(data);
+              
                     $scope.Document_Dep = data.selectedItem.ID;
 
                 }
@@ -76,7 +76,7 @@
                 searchPlaceholder: 'ค้นหา',
                 value: $scope.Document_Job,
                 onSelectionChanged: function (data) {
-                    console.log(data);
+                  
                     $scope.Document_Job = data.selectedItem.Code;
 
                 }
@@ -118,7 +118,7 @@
                 searchPlaceholder: 'ค้นหา',
                 value: $scope.Objective,
                 onSelectionChanged: function (data) {
-                    console.log(data);
+                    
                     $scope.Objective = data.selectedItem.ID;
 
                 }
@@ -135,7 +135,7 @@
                 searchPlaceholder: 'ค้นหา',
                 value: $scope.Document_Category,
                 onSelectionChanged: function (data) {
-                    console.log(data);
+                
                     $scope.Document_Category = data.selectedItem.ID;
 
                     $http.get("api/PR/OjectiveData/" + data.selectedItem.ID).then(function (data) {
@@ -413,12 +413,15 @@
                 //},
             };
         });
-        $scope.ListFilePR = [{}];
+      
 
         $scope.addFilePR = function () {
+            console.log($scope.ListFilePR);
             $scope.ListFilePR.push({});
         };
         $scope.SaveDocuments = function () {
+            console.log($scope.ListFilePR);
+          
             var checkselectValue = 0;
             
             //if ($scope.Document_Dep == 0) {
@@ -436,7 +439,7 @@
             //if ($scope.Objective == 0) {
             //    checkselectValue = 1;
             //}
-
+            console.log($scope.Document_Dep );
             if ($scope.Document_Dep == 0) {
                 swal({
                     title: 'info',

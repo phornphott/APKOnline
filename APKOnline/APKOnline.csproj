@@ -135,6 +135,7 @@
     <Content Include="CSS\sweetalert.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="UploadPage\popupUploadfile.aspx" />
     <Content Include="Reports\PrintPreview.aspx" />
     <Content Include="Scripts\angular-ui-router.js" />
     <Content Include="Scripts\angular-ui-router.min.js" />
@@ -6847,6 +6848,7 @@
     <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="UploadPage\ViewUploadFile.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -6874,6 +6876,13 @@
     <Compile Include="Models\PR.cs" />
     <Compile Include="Models\Staffs.cs" />
     <Compile Include="Models\StatusCodes.cs" />
+    <Compile Include="UploadPage\popupUploadfile.aspx.cs">
+      <DependentUpon>popupUploadfile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UploadPage\popupUploadfile.aspx.designer.cs">
+      <DependentUpon>popupUploadfile.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\DS_PO.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -6889,6 +6898,13 @@
     </Compile>
     <Compile Include="Reports\ThaiBaht.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
+    <Compile Include="UploadPage\ViewUploadFile.aspx.cs">
+      <DependentUpon>ViewUploadFile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UploadPage\ViewUploadFile.aspx.designer.cs">
+      <DependentUpon>ViewUploadFile.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -7408,6 +7424,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="tmpUpload\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\Template\bower_components\moment\moment.d.ts" />

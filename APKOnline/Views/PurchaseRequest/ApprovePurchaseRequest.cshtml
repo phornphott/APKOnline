@@ -320,20 +320,16 @@
                     <form class="form-horizontal">
                         <div class="row">
                             <div class="col-md-12">
-                                <div ng-repeat="FilePR in ListFilePR">
-                                    <div class="form-group">
-                                        <label for="picFile" class="col-sm-4 control-label" ng-show="$index == 0">ไฟล์แนบ : </label>
-                                        <label for="picFile" class="col-sm-4 control-label" ng-show="$index != 0"></label>
-                                        <div class="col-sm-3">
-                                            <input type="file" style="margin-top:5px;" ngf-select ng-model="FilePR.picFile" name="picFile" ngf-model-invalid="errorFile" />
-                                        </div>
-                                        <label class="col-sm-2" style="color:red;margin-top:7px;">*** ไฟล์ PDF เท่านั้น</label>
-                                        <div class="col-sm-2" ng-show="$last">
-                                            <a class="btn btn-primary" ng-click="addFilePR()"><i class="fa fa-plus"></i></a>&nbsp;&nbsp;
-                                            <a class="btn btn-danger" ng-click="removeFilePR($index)" ng-hide="ListFilePR.length == 1"><i class="fa fa-minus"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
+                                <center>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="color:red;" onclick="return false">
+                                        *** ถ้ามีการ Upload ไฟล์เสร็จแล้ว  upload อีกครั้งไฟล์เดิมจะหายไป
+                                    </a>
+                                </center>
+                                <center>
+
+                                    <button class="btn btn-info" style="width:120px;" ng-click="OpenUploadFile()">Upload File</button>
+                                </center>
+
                             </div>
                         </div>
                     </form>

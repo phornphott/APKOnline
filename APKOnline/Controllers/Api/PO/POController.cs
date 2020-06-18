@@ -155,6 +155,36 @@ namespace APKOnline
             ds.Tables.Add(dtCus);
 
 
+            //Get Pathfile
+            DataTable dtfile = new DataTable();
+            dtfile.Columns.Add("filename");
+            dtfile.Columns.Add("path");
+
+            string targetpath = System.Web.Hosting.HostingEnvironment.MapPath("~/Upload/" + id.ToString() + "/");
+            if (System.IO.Directory.Exists(targetpath))
+            {
+                string[] files = System.IO.Directory.GetFiles(targetpath);
+
+                // Copy the files and overwrite destination files if they already exist.
+                foreach (string s in files)
+                {
+                    DataRow dr = dtfile.NewRow();
+
+
+
+                    // Use static Path methods to extract only the file name from the path.
+                    dr[0] = System.IO.Path.GetFileName(s);
+                    dr[1] = id.ToString() + "/" + dr[0];
+
+                    dtfile.Rows.Add(dr);
+                    //string destFile = System.IO.Path.Combine(targetpath, fileName);
+
+                }
+
+            }
+            dtfile.TableName = "FileUpload";
+            ds.Tables.Add(dtfile);
+
 
             if (errMsg != "")
             {
@@ -188,6 +218,40 @@ namespace APKOnline
            
             ds.Tables.Add(dtHeaderData);
             ds.Tables.Add(dtDetail);
+
+
+            foreach (DataRow row in dtHeaderData.Rows)
+            {
+                //Get Pathfile
+                DataTable dtfile = new DataTable();
+                dtfile.Columns.Add("filename");
+                dtfile.Columns.Add("path");
+
+                string targetpath = System.Web.Hosting.HostingEnvironment.MapPath("~/Upload/" + row["Document_PRID"].ToString() + "/");
+                if (System.IO.Directory.Exists(targetpath))
+                {
+                    string[] files = System.IO.Directory.GetFiles(targetpath);
+
+                    // Copy the files and overwrite destination files if they already exist.
+                    foreach (string s in files)
+                    {
+                        DataRow dr = dtfile.NewRow();
+
+
+
+                        // Use static Path methods to extract only the file name from the path.
+                        dr[0] = System.IO.Path.GetFileName(s);
+                        dr[1] = id.ToString() + "/" + dr[0];
+
+                        dtfile.Rows.Add(dr);
+                        //string destFile = System.IO.Path.Combine(targetpath, fileName);
+
+                    }
+
+                }
+                dtfile.TableName = "FileUpload";
+                ds.Tables.Add(dtfile);
+            }
 
             if (errMsg != "")
             {

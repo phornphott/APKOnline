@@ -433,7 +433,7 @@ namespace APKOnline.DBHelper
                 da.Fill(tmp);
                 foreach (DataRow dr in tmp.Rows)
                 {
-                    amount = Convert.ToDecimal(dr[0] == DBNull.Value? 0: dr[0]);
+                    amount = Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
                 }
 
                 string sqlQuery = "INSERT INTO DocumentPR_Header(Document_Group,Document_Category,Document_Objective " +
@@ -505,6 +505,39 @@ namespace APKOnline.DBHelper
                 cmd.ExecuteNonQuery();
 
                 myTran.Commit();
+
+                string sourcePath = System.Web.Hosting.HostingEnvironment .MapPath("~/tmpUpload/" + Header.folderUpload + "/");
+                string targetpath = System.Web.Hosting.HostingEnvironment.MapPath("~/Upload/" + document_id.ToString() + "/");
+                if (System.IO.Directory.Exists(sourcePath))
+                {
+                    if (!System.IO.Directory.Exists(targetpath))
+                    { System.IO.Directory.CreateDirectory(targetpath); }
+
+                    string[] files = System.IO.Directory.GetFiles(sourcePath);
+
+                    // Copy the files and overwrite destination files if they already exist.
+                    foreach (string s in files)
+                    {
+                        // Use static Path methods to extract only the file name from the path.
+                        string fileName = System.IO.Path.GetFileName(s);
+                        string destFile = System.IO.Path.Combine(targetpath, fileName);
+                        System.IO.File.Copy(s, destFile, true);
+
+                    }
+                    System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(sourcePath);
+                    foreach (System.IO.FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                    foreach (System.IO.DirectoryInfo dir in di.GetDirectories())
+                    {
+                        dir.Delete(true);
+                    }
+                }
+
+
+
+
             }
             catch (Exception ex)
             {

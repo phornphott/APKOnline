@@ -12,6 +12,7 @@
         $scope.Document_Group = 0;
         $scope.Objective = 0;
         $scope.Document_ID = Math.floor(Math.random() * 10000); 
+        $scope.tmpfolder=Math.floor(Math.random() * 1000000);
         $scope.Document_Vnos = "";
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
@@ -468,6 +469,7 @@
                     "Document_Desc": '',
                     "Document_Tel": $scope.Document_Tel,
                     "Document_CreateUser": localStorage.getItem('StaffID'),
+                    "folderUpload": $scope.tmpfolder,
 
                 };
                 $http.post("api/PR/SavePRData?", Header).then(function successCallback(response) {
@@ -492,5 +494,12 @@
         $scope.removeFilePR = function (index) {
             $scope.ListFilePR.splice(index, 1);
         };
+
+        $scope.OpenUploadFile = function () {
+            var data = "/UploadPage/popupUploadfile.aspx?Parameter=" + $scope.tmpfolder;
+            window.open(data, "popup", "width=600,height=400,left=300,top=200");
+            ////window.open('/UploadPage/popupUploadfile.aspx?Parameter=' + e.data.Document_Id, '_blank');
+
+        }
     }
 ])

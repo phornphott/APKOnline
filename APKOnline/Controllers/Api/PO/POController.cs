@@ -241,7 +241,7 @@ namespace APKOnline
 
                         // Use static Path methods to extract only the file name from the path.
                         dr[0] = System.IO.Path.GetFileName(s);
-                        dr[1] = id.ToString() + "/" + dr[0];
+                        dr[1] = row["Document_PRID"].ToString() + "/" + dr[0];
 
                         dtfile.Rows.Add(dr);
                         //string destFile = System.IO.Path.Combine(targetpath, fileName);

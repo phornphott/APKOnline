@@ -135,6 +135,9 @@
     <Content Include="CSS\sweetalert.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\angular-upload.js" />
+    <Content Include="Scripts\angular-upload.min.js" />
+    <Content Include="Scripts\ng-file-upload.min.js" />
     <Content Include="UploadPage\popupUploadfile.aspx" />
     <Content Include="Reports\PrintPreview.aspx" />
     <Content Include="Scripts\angular-ui-router.js" />
@@ -7415,6 +7418,7 @@
     <Content Include="Views\PurchaseRequest\ListOverBGPurchaseRequest.cshtml" />
     <Content Include="Views\PurchaseRequest\ApprovePROver.cshtml" />
     <Content Include="Views\PurchaseOrder\ViewPO.cshtml" />
+    <Content Include="UploadHandler.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

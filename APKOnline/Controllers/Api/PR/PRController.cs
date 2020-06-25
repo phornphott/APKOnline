@@ -6,7 +6,11 @@ using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web;
+using System.Web.Http;
+using System.IO;
 
 namespace APKOnline
 {
@@ -476,5 +480,28 @@ namespace APKOnline
             resData.Results = ds;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
+
+        [HttpPost]
+        [ActionName("UploadFiles")]
+        public HttpResponseMessage UploadFiles(string tmppath)
+        {
+            //Create the Directory.
+            string path = HttpContext.Current.Server.MapPath("~/tmpUpload/" + tmppath + "/");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            //Save the Files.
+            foreach (string key in HttpContext.Current.Request.Files)
+            {
+                HttpPostedFile postedFile = HttpContext.Current.Request.Files[key];
+                postedFile.SaveAs(path + postedFile.FileName);
+            }
+
+            //Send OK Response to Client.
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
     }
 }

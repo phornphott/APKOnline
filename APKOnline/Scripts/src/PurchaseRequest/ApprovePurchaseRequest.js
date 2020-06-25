@@ -1,5 +1,5 @@
-﻿angular.module('ApkApp').controller('ApprovePurchaseRequestController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
-    function ($scope, $stateParams, $http, $rootScope, $filter) {
+﻿angular.module('ApkApp').controller('ApprovePurchaseRequestController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter', 'Upload',
+    function ($scope, $stateParams, $http, $rootScope, $filter, Upload) {
         $scope.ListFilePR = [{}];
         $scope.TextSaveButon="บันทึก";
         $scope.showColumnLines = true;
@@ -501,5 +501,37 @@
             ////window.open('/UploadPage/popupUploadfile.aspx?Parameter=' + e.data.Document_Id, '_blank');
 
         }
+        $scope.upload = function () {
+            console.log($scope.files);
+            alert($scope.files.length + " files selected ... Write your Upload Code");
+
+        };
+
+        $scope.UploadFiles = function (files) {
+            console.log(files);
+            $scope.SelectedFiles = files;
+            if ($scope.SelectedFiles && $scope.SelectedFiles.length) {
+                Upload.upload({
+                    url: "/api/PR/UploadFiles?tmppath=" + $scope.tmpfolder,
+                    data: {
+                        files: $scope.SelectedFiles
+                    }
+                }).then(function (response) {
+                    $timeout(function () {
+                        $scope.Result = response.data;
+                    });
+                }, function (response) {
+                    if (response.status > 0) {
+                        var errorMsg = response.status + ': ' + response.data;
+                        alert(errorMsg);
+                    }
+                }, function (evt) {
+                    var element = angular.element(document.querySelector('#dvProgress'));
+                    $scope.Progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                    element.html('<div style="width: ' + $scope.Progress + '%">' + $scope.Progress + '%</div>');
+                });
+            }
+        };
+
     }
 ])

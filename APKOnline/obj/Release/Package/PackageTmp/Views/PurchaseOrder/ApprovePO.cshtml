@@ -46,10 +46,10 @@
                                     <div class="col-sm-8">
                                         <label style="margin-top:7px;">{{Header.Job}}</label>
                                         @*<select class="form-control">
-                                                <option>-- เลือก --</option>
-                                            </select>*@
+                                <option>-- เลือก --</option>
+                            </select>*@
                                     </div>
-                                </div> 
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -69,7 +69,7 @@
                                     <div class="col-sm-8">
                                         <label style="margin-top:7px;">{{Header.Customer}}</label>
                                         @*<input type="text" class="form-control" id="Document_Tel" ng-model="Document_Cre">*@
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -148,6 +148,26 @@
                             </div>
                         </div>
                     </div>
+                    <div class="box-group" id="accordion">
+                        <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                        <div class="panel box box-default">
+                            <div class="box-header with-border" style="background-color:#4fa85b">
+                                <h4 class="box-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="color:white;" onclick="return false">
+                                        <i class="fa fa-angle-down"></i>
+                                        รายละเอียดไฟล์แนบ
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="box-body">
+                                    <div id="gridfileContainer" dx-data-grid="datafileGridOptions"></div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <br />
                 </div>
                 <div class="box-footer">

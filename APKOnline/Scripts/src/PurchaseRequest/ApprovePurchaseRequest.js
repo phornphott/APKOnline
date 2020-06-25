@@ -420,6 +420,7 @@
             console.log($scope.ListFilePR);
             $scope.ListFilePR.push({});
         };
+
         $scope.SaveDocuments = function () {
             console.log($scope.ListFilePR);
           
@@ -466,7 +467,7 @@
                     "Document_Per": '',
                     "Document_Doc": '',
                     "Document_Mec": '',
-                    "Document_Desc": '',
+                    "Document_Desc": $scope.Document_Desc,
                     "Document_Tel": $scope.Document_Tel,
                     "Document_CreateUser": localStorage.getItem('StaffID'),
                     "folderUpload": $scope.tmpfolder,
@@ -483,6 +484,7 @@
 
 
         };
+
         $scope.CancelDocuments = function () {
 
             $http.get("api/PR/CancelPRTmpDetail/" + $scope.Document_ID).then(function (data) {

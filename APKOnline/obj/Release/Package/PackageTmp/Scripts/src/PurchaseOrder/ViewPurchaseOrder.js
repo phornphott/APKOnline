@@ -11,31 +11,9 @@
         $scope.Document_Vnos = "";
         $http.get("api/PO/CreatePOData/" + $stateParams.id + "?tmpid=" + $scope.Document_ID).then(function (data) {
             console.log(data);
-            //$scope.Header = data.data.Results.Document_Vnos[0].Column1
-            $scope.Header = data.data.Results.Header[0]
-            $scope.Document_Vnos = data.data.Results.Document_Vnos[0].Column1
-            $rootScope.Customer = data.data.Results.Customer;
-            $rootScope.Customer.splice(0, 0, {
-                "ID": 0,
-                "Name": '- กรุณาเลือก -',
-            });
-            $("#Customer").dxLookup({
-                dataSource: $rootScope.Customer,
-                displayExpr: 'Name',
-                valueExpr: 'ID',
-                showPopupTitle: false,
-                showCancelButton: false,
-                placeholder: 'เลือก',
-                closeOnOutsideClick: true,
-                searchEnabled: true,
-                searchPlaceholder: 'ค้นหา',
-                value: $scope.Document_Cus,
-                onSelectionChanged: function (data) {
-                    console.log(data);
-                    $scope.Document_Cus = data.selectedItem.ID;
+            //$scope.Header = data.data.Results.Document_Vnos[0].
+            var FileUpload = data.data.Results.FileUpload;
 
-                }
-            });
             var Detail = data.data.Results.Detail;
             $scope.dataGridOptions = {
                 dataSource: Detail,
@@ -62,7 +40,7 @@
                 editing: {
                     mode: "row",
                     allowUpdating: true,
-                    
+
                     texts: {
                         editRow: "แก้ไข",
                         saveRowChanges: "บันทึก",
@@ -77,21 +55,21 @@
                     dataField: "Document_Detail_Stk",
                     caption: "รหัสสินค้า"
                 }, {
-                        
-                        dataField: "Document_Detail_Stk_Desc",
+
+                    dataField: "Document_Detail_Stk_Desc",
                     caption: "รายละเอียดสินค้า"
                 }, {
-                        dataField: "Document_Detail_Quan",
+                    dataField: "Document_Detail_Quan",
                     caption: "จำนวน"
                 }, {
-                        dataField: "Document_Detail_UnitPrice",
+                    dataField: "Document_Detail_UnitPrice",
                     caption: "ราคา/หน่วย"
                 }, {
-                        dataField: "Document_Detail_Cog",
-                        caption: "จำนวนเงิน",
-                        editorOptions: {
-                            disabled: true
-                        }
+                    dataField: "Document_Detail_Cog",
+                    caption: "จำนวนเงิน",
+                    editorOptions: {
+                        disabled: true
+                    }
                 }],
                 onEditorPrepared: function (e) {
 
@@ -138,7 +116,7 @@
                 },
                 onRowUpdated: function (e) {
                     var detail = {
-                        
+
                         "Document_Detail_Id": e.key.Document_Detail_Id,
 
                         "Document_Detail_Vnos": '',
@@ -155,7 +133,74 @@
                     });
                 }
             };
+            console.log(FileUpload);
+            $scope.datafileGridOptions = {
+                dataSource: data.data.Results.FileUpload,
+                loadPanel: {
+                    enabled: false
+                },
+                scrolling: {
+                    mode: "infinite"
+                },
+                sorting: {
+                    mode: "multiple"
+                },
+                searchPanel: {
+                    visible: false,
+                    width: 200,
+                    placeholder: "Search..."
+                },
+                onCellClick: onCellClickViewFile,
+
+                bindingOptions: {
+                    showColumnLines: "showColumnLines",
+                    showRowLines: "showRowLines",
+                    showBorders: "showBorders",
+                    rowAlternationEnabled: "rowAlternationEnabled"
+                },
+                columnAutoWidth: true,
+                columns: [{
+                    dataField: "filename",
+                    caption: "ไฟล์",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = "<a >" + data.filename + "</a>";
+                        container.append(markup);
+                    },
+
+                }],
+
+            };
+            $scope.Header = data.data.Results.Header[0]
+            $scope.Document_Vnos = data.data.Results.Document_Vnos[0].Column1
+            $rootScope.Customer = data.data.Results.Customer;
+            $rootScope.Customer.splice(0, 0, {
+                "ID": 0,
+                "Name": '- กรุณาเลือก -',
+            });
+            $("#Customer").dxLookup({
+                dataSource: $rootScope.Customer,
+                displayExpr: 'Name',
+                valueExpr: 'ID',
+                showPopupTitle: false,
+                showCancelButton: false,
+                placeholder: 'เลือก',
+                closeOnOutsideClick: true,
+                searchEnabled: true,
+                searchPlaceholder: 'ค้นหา',
+                value: $scope.Document_Cus,
+                onSelectionChanged: function (data) {
+                    console.log(data);
+                    $scope.Document_Cus = data.selectedItem.ID;
+
+                }
+            });
+
+
         });
+        var onCellClickViewFile = function (e) {
+            window.open("/Upload/" + e.data.path, "popup", "width=800,height=600,left=300,top=200");
+        };
 
         $scope.SaveDocuments = function () {
 

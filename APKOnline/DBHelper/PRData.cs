@@ -27,6 +27,10 @@ namespace APKOnline.DBHelper
         int ApprovePR(int Document_Id, int StaffID, ref string errMsg);
         DataTable GetPROverDataForApprove(int id, int DeptID, ref string errMsg);
         int ApprovePROverBudget(int Document_Id, int StaffID, ref string errMsg);
+
+        Task<bool> DeletePRData(int Document_Id);
+
+        Task<bool> CheckDeletePRData(int Document_Id);
     }
 
     public class PRData : IPRData
@@ -257,15 +261,20 @@ namespace APKOnline.DBHelper
 
             try
             {
-                string strSQL = "\r\n  " +
-                      " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                      ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,d.DEPdescT,j.JOBdescT" +
-                      " FROM " + tablename + " p " +
-                      " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
-                      " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
-                      " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
-                      " where Document_Delete=0 ";
-                if (staffID > 0 && staffID != 99)
+                string strSQL = "";
+
+                strSQL = "\r\n  " +
+                " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,d.DEPdescT,j.JOBdescT,CASE WHEN p.Document_Status = 0 THEN 'รออนุมัติ' WHEN p.Document_Status = 1 THEN 'รับทราบ' WHEN p.Document_Status = 2 THEN 'อนุมัติ' ELSE 'ไม่อนุมัติ' END AS DocStatus" +
+                " FROM " + tablename + " p " +
+                " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+
+                " where Document_Delete=0 ";
+
+                    
+                if (staffID > 0 && staffID != 1)
                 {
                     strSQL += " AND p.Document_CreateUser="+ staffID;
                 }
@@ -425,6 +434,7 @@ namespace APKOnline.DBHelper
             try
             {
                 decimal amount = 0;
+                int NoList = 0;
 
                 string sql = "Select SUM(Document_Detail_Cog) From DocumentPR_Detail_tmp WHERE Document_Detail_Hid = " + Header.Document_Id;
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
@@ -436,12 +446,21 @@ namespace APKOnline.DBHelper
                     amount = Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
                 }
 
-                string sqlQuery = "INSERT INTO DocumentPR_Header(Document_Group,Document_Category,Document_Objective " +
-                                      ",Document_Vnos,Document_Date ,Document_Means,Document_Expect,Document_Cus,Document_Job,Document_Dep,Document_Per" +
+                //จำนวนรายการ
+                sql = "Select * From DocumentPR_Detail_tmp WHERE Document_Detail_Hid = " + Header.Document_Id;
+                da = new SqlDataAdapter(sql, conn);
+                da.SelectCommand.Transaction = myTran;
+                tmp = new DataTable();
+                da.Fill(tmp);
+                NoList = tmp.Rows.Count;
+
+
+                string sqlQuery = "INSERT INTO DocumentPR_Header(Document_Group,Document_ExpenseType,Document_Category,Document_Objective " +
+                                      ",Document_Vnos,Document_Date ,Document_Means,Document_Expect,Document_Cus,Document_Job,Document_Depid,Document_Dep,Document_Per" +
                                       ",Document_Doc,Document_Mec,Document_Desc,Document_Nolist,Document_Cog,Document_VatSUM,Document_VatPer" +
                                       " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete) VALUES " +
-                                      " (@Document_Group,@Document_Category,@Document_Objective " +
-                                      ",dbo.GeneratePRID(@Document_Group),GETDATE() ,@Document_Means,@Document_Expect,@Document_Cus,@Document_Job,@Document_Dep,@Document_Per" +
+                                      " (@Document_Group,@Document_ExpenseType,@Document_Category,@Document_Objective " +
+                                      ",dbo.GeneratePRID(@Document_Group),GETDATE() ,@Document_Means,@Document_Expect,@Document_Cus,@Document_Job,@Document_Depid,@Document_Dep,@Document_Per" +
                                       ",@Document_Doc,@Document_Mec,@Document_Desc,@Document_Nolist,@Document_Cog,@Document_VatSUM,@Document_VatPer" +
                                       " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0) SET @Document_Id=SCOPE_IDENTITY()";
                 cmd.CommandText = sqlQuery;
@@ -453,6 +472,7 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.Add(shipperIdParam);
 
                 cmd.Parameters.AddWithValue("@Document_Group", Header.Document_Group);
+                cmd.Parameters.AddWithValue("@Document_ExpenseType", Header.Document_Group);
                 cmd.Parameters.AddWithValue("@Document_Category", Header.Document_Category);
                 cmd.Parameters.AddWithValue("@Document_Objective", Header.Document_Objective);
                 cmd.Parameters.AddWithValue("@Document_Means", Header.Document_Means == null ? "" : Header.Document_Means);
@@ -460,12 +480,13 @@ namespace APKOnline.DBHelper
 
                 cmd.Parameters.AddWithValue("@Document_Cus", "");
                 cmd.Parameters.AddWithValue("@Document_Job", Header.Document_Job);
+                cmd.Parameters.AddWithValue("@Document_Depid", Header.Document_Dep);
                 cmd.Parameters.AddWithValue("@Document_Dep", Header.Document_Dep);
                 cmd.Parameters.AddWithValue("@Document_Per", "");
                 cmd.Parameters.AddWithValue("@Document_Doc", "");
                 cmd.Parameters.AddWithValue("@Document_Mec", "");
                 cmd.Parameters.AddWithValue("@Document_Desc", Header.Document_Desc);
-                cmd.Parameters.AddWithValue("@Document_Nolist", 0);
+                cmd.Parameters.AddWithValue("@Document_Nolist", NoList);
                 cmd.Parameters.AddWithValue("@Document_Cog", amount);
                 cmd.Parameters.AddWithValue("@Document_VatSUM", amount * (decimal)0.07);//()
                 cmd.Parameters.AddWithValue("@Document_VatPer", 7);
@@ -816,6 +837,46 @@ namespace APKOnline.DBHelper
             return document_id;
         }
 
+        public async Task<bool> DeletePRData(int id)
+        {
+            bool result = false;
+            string strSQL = null;
+
+
+            strSQL = "UPDATE DocumentPR_Header SET Document_Delete=1 WHERE Document_Id=" + id;
+
+            DBHelper.Execute(strSQL);
+
+            return true;
+        }
+
+        public async Task<bool> CheckDeletePRData(int id)
+        {
+            string strSQL = null;
+            DataTable dt = new DataTable();
+            bool ok = false;
+
+
+            try
+            {
+                strSQL = "\r\n  " +
+                    " SELECT Document_Vnos_PO FROM DocumentPR_Header where Document_Id=" + id;
+
+
+                dt = DBHelper.List(strSQL);
+
+                if (dt.Rows.Count > 0)
+                {
+                    if (dt.Rows[0]["Document_Vnos_PO"].ToString().Length > 0) ok = true;
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
+            return ok;
+        }
         #endregion
 
     }

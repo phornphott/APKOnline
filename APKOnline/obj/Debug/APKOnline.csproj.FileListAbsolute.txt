@@ -164,7 +164,6 @@ D:\Project\APK\APKonline\APKOnline\APKOnline\bin\Newtonsoft.Json.xml
 D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Net.Http.Formatting.xml
 D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Http.xml
 D:\Project\APK\APKonline\APKOnline\APKOnline\bin\System.Web.Http.WebHost.xml
-D:\Project\APK\APKonline\APKOnline\APKOnline\obj\Debug\APKOnline.csprojResolveAssemblyReference.cache
 D:\Project\APK\APKonline\APKOnline\APKOnline\obj\Debug\APKOnline.dll
 D:\Project\APK\APKonline\APKOnline\APKOnline\obj\Debug\APKOnline.pdb
 D:\Repository\APK Online\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll

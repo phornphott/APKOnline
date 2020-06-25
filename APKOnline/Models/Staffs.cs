@@ -13,6 +13,7 @@ namespace APKOnline.Models
         public string StaffLastName { get; set; }
         public string StaffLogin { get; set; }
         public string StaffPassword { get; set; }
+        public int StaffLevel { get; set; }
         public int StaffDepartmentID { get; set; }
     }
     public class Department

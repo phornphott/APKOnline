@@ -289,7 +289,37 @@
                         type: "required",
                         message: "โปรดระบุแผนก"
                     }]
+                }, 
+                {
+                    dataField: "StaffLevel",
+
+                    label: {
+                        text: "ระดับ ",
+                    },
+                    editorType: "dxSelectBox",
+                    editorOptions: {
+                        items: [{
+                            "ID": 1,
+                            "NAME": "ระดับ 1"
+                        }, {
+                            "ID": 2,
+                            "NAME": "ระดับ 2"
+                        }, {
+                            "ID": 3,
+                            "NAME": "ระดับ 3"
+                        }, {
+                            "ID": 4,
+                            "NAME": "ระดับ 4"
+                        }, {
+                            "ID": 5,
+                            "NAME": "ระดับ 5"
+                        }],
+                        valueExpr: 'ID',
+                        displayExpr: 'NAME',
+                        disabled: false
+
                 },
+                }
 
                 ]
             });
@@ -373,6 +403,10 @@
                     dataField: "StaffLogin",
                     caption: "Login",
                     
+                }, {
+                    dataField: "StaffLevel",
+                    caption: "ระดับ",
+                    alignment: "center",
                 }, {
 
                     caption: "กำหนดแผนก",
@@ -506,6 +540,7 @@
                     "StaffLastName": obj.StaffLastName,
                     "StaffLogin": obj.StaffLogin,
                     "StaffPassword": obj.StaffPassword,
+                    "StaffLevel": obj.StaffLevel,
                     "StaffDepartmentID": obj.StaffDepartmentID,
                 };
                 $.post("api/Staffs/SetStaffData?", Per
@@ -558,6 +593,7 @@
                     "StaffLastName": obj.StaffLastName,
                     "StaffLogin": obj.StaffLogin,
                     "StaffPassword": obj.StaffPassword,
+                    "StaffLevel": obj.StaffLevel,
                     "StaffDepartmentID": obj.StaffDepartmentID,
                 };
                 $.post("api/Staffs/SetStaffData?", Per

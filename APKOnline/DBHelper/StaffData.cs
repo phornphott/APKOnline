@@ -339,14 +339,15 @@ namespace APKOnline.DBHelper
 
             if (item.StaffID == 0)
             {
-                strSQL = "Insert Into Staffs (StaffLogin,StaffPassword,StaffCode,StaffFirstName,StaffLastName,StaffDepartmentID,InputDate,UpdateDate) VALUES (@StaffLogin,@StaffPassword,@StaffCode,@StaffFirstName,@StaffLastName,@StaffDepartmentID,@InputDate,@UpdateDate)";
+                strSQL = "Insert Into Staffs (StaffLogin,StaffPassword,StaffCode,StaffFirstName,StaffLastName,StaffLevel,StaffDepartmentID,InputDate,UpdateDate) VALUES (@StaffLogin,@StaffPassword,@StaffCode,@StaffFirstName,@StaffLastName,@StaffLevel,@StaffDepartmentID,@InputDate,@UpdateDate)";
                 List<SqlParameter> sp = new List<SqlParameter>()
                 {
                     new SqlParameter() {ParameterName = "@StaffLogin", SqlDbType = SqlDbType.NVarChar, Value= item.StaffLogin},
                     new SqlParameter() {ParameterName = "@StaffPassword", SqlDbType = SqlDbType.NVarChar, Value = Base64Encode(item.StaffPassword)},
-                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value = item.StaffCode},
+                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value = item.StaffCode.ToUpper()},
                     new SqlParameter() { ParameterName = "@StaffFirstName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffFirstName },
                     new SqlParameter() { ParameterName = "@StaffLastName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffLastName },
+                    new SqlParameter() { ParameterName = "@StaffLevel", SqlDbType = SqlDbType.TinyInt, Value = item.StaffLevel },
                     new SqlParameter() { ParameterName = "@StaffDepartmentID", SqlDbType = SqlDbType.Int, Value = item.StaffDepartmentID },
                     new SqlParameter() { ParameterName = "@InputDate", SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
                     new SqlParameter() { ParameterName = "@UpdateDate", SqlDbType = SqlDbType.DateTime, Value = DateTime.Now }
@@ -355,16 +356,17 @@ namespace APKOnline.DBHelper
             }
             else
             {
-                strSQL = "UPDATE Staffs SET StaffLogin=@StaffLogin,StaffPassword=@StaffPassword,StaffCode=@StaffCode,StaffFirstName=@StaffFirstName,StaffLastName=@StaffLastName,StaffDepartmentID=@StaffDepartmentID,UpdateDate=GETDATE() WHERE StaffID=@StaffID";
+                strSQL = "UPDATE Staffs SET StaffLogin=@StaffLogin,StaffPassword=@StaffPassword,StaffCode=@StaffCode,StaffFirstName=@StaffFirstName,StaffLastName=@StaffLastName,StaffLevel=@StaffLevel,StaffDepartmentID=@StaffDepartmentID,UpdateDate=GETDATE() WHERE StaffID=@StaffID";
 
                 List<SqlParameter> sp = new List<SqlParameter>()
                 {
                     new SqlParameter() {ParameterName = "@StaffID", SqlDbType = SqlDbType.VarChar, Value= item.StaffID},
                     new SqlParameter() {ParameterName = "@StaffLogin", SqlDbType = SqlDbType.NVarChar, Value= item.StaffLogin},
                     new SqlParameter() {ParameterName = "@StaffPassword", SqlDbType = SqlDbType.NVarChar, Value = Base64Encode(item.StaffPassword)},
-                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value = item.StaffCode},
+                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value = item.StaffCode.ToUpper()},
                     new SqlParameter() { ParameterName = "@StaffFirstName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffFirstName },
                     new SqlParameter() { ParameterName = "@StaffLastName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffLastName },
+                    new SqlParameter() { ParameterName = "@StaffLevel", SqlDbType = SqlDbType.TinyInt, Value = item.StaffLevel},
                     new SqlParameter() { ParameterName = "@StaffDepartmentID", SqlDbType = SqlDbType.Int, Value = item.StaffDepartmentID}
                 };
                 DBHelper.Execute(strSQL, sp);                

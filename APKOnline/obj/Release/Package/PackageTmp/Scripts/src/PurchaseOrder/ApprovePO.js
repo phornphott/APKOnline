@@ -11,6 +11,8 @@
             //$scope.Header = data.data.Results.Document_Vnos[0].Column1
             $scope.Header = data.data.Results.Header[0]
             $scope.SaveText = $scope.Header.SaveText; 
+            var FileUpload = data.data.Results.FileUpload; 
+
             var Detail = data.data.Results.Detail;
             $scope.dataGridOptions = {
                 dataSource: Detail,
@@ -60,7 +62,48 @@
                         }
                 }],
             };
+            $scope.datafileGridOptions = {
+                dataSource: FileUpload,
+                loadPanel: {
+                    enabled: false
+                },
+                scrolling: {
+                    mode: "infinite"
+                },
+                sorting: {
+                    mode: "multiple"
+                },
+                searchPanel: {
+                    visible: false,
+                    width: 200,
+                    placeholder: "Search..."
+                },
+                onCellClick: onCellClickViewFile,
+
+                bindingOptions: {
+                    showColumnLines: "showColumnLines",
+                    showRowLines: "showRowLines",
+                    showBorders: "showBorders",
+                    rowAlternationEnabled: "rowAlternationEnabled"
+                },
+                columnAutoWidth: true,
+                columns: [{
+                    dataField: "filename",
+                    caption: "ไฟล์",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = "<a >" + data.filename + "</a>";
+                        container.append(markup);
+                    },
+
+                }],
+
+            };
+
         });
+        var onCellClickViewFile = function (e) {
+            window.open("/Upload/" + e.data.path, "popup", "width=800,height=600,left=300,top=200");
+        };
 
         $scope.SaveDocuments = function () {
             

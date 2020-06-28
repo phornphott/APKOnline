@@ -399,6 +399,53 @@ namespace APKOnline
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
 
+        [HttpPost]
+        [ActionName("DeletePRData")]
+        public async Task<HttpResponseMessage> DeletePRData(int id)
+        {
+            string errMsg = "";
+            bool ret = false;
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result response = new Result();
+            bool POok = false;
+
+            try
+            {
+                POok = await repository.CheckDeletePRData(id);
+                if (POok)
+                {
+                    response.StatusCode = (int)(StatusCodes.Error);
+                    response.Messages = "ไม่สามารถลบฝบขออนุมัตินี้ได้" + Environment.NewLine + "ใบขออนุมัตินี้ถูกอนุมัติเรียบร้อยแล้ว";
+                }
+                else
+                {
+                    ret = await repository.DeletePRData(id);
+
+                    //ds.Tables.Add(dtDocumentVnos);
+                    if (ret)
+                    {
+                        response.StatusCode = (int)(StatusCodes.Succuss);
+                        response.Messages = "ลบใบขออนุมัติเรียบร้อยแล้ว";
+
+                    }
+                    else
+                    {
+                        response.StatusCode = (int)(StatusCodes.Error);
+                        response.Messages = errMsg;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = (int)StatusCodes.Error;
+                response.Messages = e.Message;
+            }
+
+
+            return Request.CreateResponse(HttpStatusCode.OK, response);
+        }
+
         [HttpGet]
         [ActionName("GeneratePRNo")]
         public HttpResponseMessage GETGeneratePRID(int id)

@@ -1,6 +1,6 @@
 ﻿angular.module('ApkApp').controller('ApprovePurchaseRequestController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
     function ($scope, $stateParams, $http, $rootScope, $filter) {
-
+        $scope.ListFilePR = [{}];
         $scope.TextSaveButon="บันทึก";
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
@@ -12,6 +12,7 @@
         $scope.Document_Group = 0;
         $scope.Objective = 0;
         $scope.Document_ID = Math.floor(Math.random() * 10000); 
+        $scope.tmpfolder=Math.floor(Math.random() * 1000000);
         $scope.Document_Vnos = "";
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
@@ -59,7 +60,7 @@
                 searchPlaceholder: 'ค้นหา',
                 value: $scope.Document_Dep,
                 onSelectionChanged: function (data) {
-                    console.log(data);
+              
                     $scope.Document_Dep = data.selectedItem.ID;
 
                 }
@@ -76,7 +77,7 @@
                 searchPlaceholder: 'ค้นหา',
                 value: $scope.Document_Job,
                 onSelectionChanged: function (data) {
-                    console.log(data);
+                  
                     $scope.Document_Job = data.selectedItem.Code;
 
                 }
@@ -118,7 +119,7 @@
                 searchPlaceholder: 'ค้นหา',
                 value: $scope.Objective,
                 onSelectionChanged: function (data) {
-                    console.log(data);
+                    
                     $scope.Objective = data.selectedItem.ID;
 
                 }
@@ -135,7 +136,7 @@
                 searchPlaceholder: 'ค้นหา',
                 value: $scope.Document_Category,
                 onSelectionChanged: function (data) {
-                    console.log(data);
+                
                     $scope.Document_Category = data.selectedItem.ID;
 
                     $http.get("api/PR/OjectiveData/" + data.selectedItem.ID).then(function (data) {
@@ -413,12 +414,16 @@
                 //},
             };
         });
-        $scope.ListFilePR = [{}];
+      
 
         $scope.addFilePR = function () {
+            console.log($scope.ListFilePR);
             $scope.ListFilePR.push({});
         };
+
         $scope.SaveDocuments = function () {
+            console.log($scope.ListFilePR);
+          
             var checkselectValue = 0;
             
             //if ($scope.Document_Dep == 0) {
@@ -436,7 +441,7 @@
             //if ($scope.Objective == 0) {
             //    checkselectValue = 1;
             //}
-
+            console.log($scope.Document_Dep );
             if ($scope.Document_Dep == 0) {
                 swal({
                     title: 'info',
@@ -462,9 +467,10 @@
                     "Document_Per": '',
                     "Document_Doc": '',
                     "Document_Mec": '',
-                    "Document_Desc": '',
+                    "Document_Desc": $scope.Document_Desc,
                     "Document_Tel": $scope.Document_Tel,
                     "Document_CreateUser": localStorage.getItem('StaffID'),
+                    "folderUpload": $scope.tmpfolder,
 
                 };
                 $http.post("api/PR/SavePRData?", Header).then(function successCallback(response) {
@@ -478,6 +484,7 @@
 
 
         };
+
         $scope.CancelDocuments = function () {
 
             $http.get("api/PR/CancelPRTmpDetail/" + $scope.Document_ID).then(function (data) {
@@ -489,5 +496,12 @@
         $scope.removeFilePR = function (index) {
             $scope.ListFilePR.splice(index, 1);
         };
+
+        $scope.OpenUploadFile = function () {
+            var data = "/UploadPage/popupUploadfile.aspx?Parameter=" + $scope.tmpfolder;
+            window.open(data, "popup", "width=600,height=400,left=300,top=200");
+            ////window.open('/UploadPage/popupUploadfile.aspx?Parameter=' + e.data.Document_Id, '_blank');
+
+        }
     }
 ])

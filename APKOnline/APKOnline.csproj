@@ -137,7 +137,6 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\angular-upload.js" />
     <Content Include="Scripts\angular-upload.min.js" />
-    <Content Include="Scripts\ng-file-upload.min.js" />
     <Content Include="UploadPage\popupUploadfile.aspx" />
     <Content Include="Reports\PrintPreview.aspx" />
     <Content Include="Scripts\angular-ui-router.js" />
@@ -6859,6 +6858,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Api\FileUploadController.cs" />
     <Compile Include="Controllers\Api\PO\POController.cs" />
     <Compile Include="Controllers\Api\PR\PRController.cs" />
     <Compile Include="Controllers\Api\Report\ReportController.cs" />

@@ -167,11 +167,14 @@
             <button class="btn btn-info" type="button" ng-click="upload()">Upload</button>
 
         </div>*@
-                            <input type="file" multiple="multiple" ngf-select="UploadFiles($files)" />
-                            <hr />
-                            Files:
-                            <ul><li ng-repeat="file in SelectedFiles">{{file.name}}</li></ul>
-                            <div id="dvProgress" class="progress" ng-show="Progress >= 0">   </div>
+                            <input type="file" id="file1" name="file" multiple
+                                   ng-files="getTheFiles($files)" />
+                            <ul>
+                                <li ng-repeat="file in files">{{file.name}}</li>
+                            </ul>
+                            <input type="button" class="btn btn-info" ng-click="uploadFiles()" value="Upload Files" />
+                            <input type="button" class="btn btn-danger" ng-click="DeleteFile()" value="Delete Files" />
+
                         </center>
                     </div>
 

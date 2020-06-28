@@ -1,6 +1,7 @@
-﻿angular.module('ApkApp').controller('ApprovePurchaseRequestController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter', 'Upload',
-    function ($scope, $stateParams, $http, $rootScope, $filter, Upload) {
+﻿angular.module('ApkApp').controller('ApprovePurchaseRequestController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
+    function ($scope, $stateParams, $http, $rootScope, $filter) {
         $scope.ListFilePR = [{}];
+        $scope.files = []; 
         $scope.TextSaveButon="บันทึก";
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
@@ -14,6 +15,10 @@
         $scope.Document_ID = Math.floor(Math.random() * 10000); 
         $scope.tmpfolder=Math.floor(Math.random() * 1000000);
         $scope.Document_Vnos = "";
+        $scope.jsonData = {
+            name: "Jignesh Trivedi",
+            comments: "Multiple upload files"
+        }; 
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
         $http.get("api/PR/PreparePageData/0?type=0").then(function (data) {
@@ -532,6 +537,56 @@
                 });
             }
         };
+        $scope.DeleteFile = function () {
 
+            $http.post("api/PR/DeleteFiles?tmppath=" + $scope.tmpfolder).then(function (data) {
+                $scope.files = [];
+            });
+        };
+        var formdata = new FormData();
+        var tmpfile = [];
+        $scope.getTheFiles = function ($files) {
+            tmpfile = [];
+            angular.forEach($files, function (value, key) {
+                console.log(key);
+                console.log(value);
+                tmpfile.push(value);
+                formdata.append(key, value);
+            });
+        };
+        $scope.uploadFiles = function () {
+            var url = "/api/PR/FileUpload?tmppath=" + $scope.tmpfolder;
+            $scope.files = [];
+
+            $http({
+                url: url,
+                method: "POST",
+                data: formdata,
+                async: false,
+                crossDomain: true,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'Content-Type': undefined
+                }
+            }).then(function successCallback(response) {
+                console.log(response);
+                if (response.data.StatusCode==1) {
+                    $scope.files = tmpfile;
+                }
+                swal({
+                    title: 'Information',
+                    text: data.Messages,
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                }, function () {
+                })
+                // this callback will be called asynchronously
+                // when the response is available
+            }, function errorCallback(response) {
+            });
+        }
     }
 ])

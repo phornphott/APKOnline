@@ -502,6 +502,112 @@ namespace APKOnline
             //Send OK Response to Client.
             return Request.CreateResponse(HttpStatusCode.OK);
         }
+        [HttpPost]
+        [ActionName("DeleteFiles")]
+        public HttpResponseMessage DeleteFiles(string tmppath)
+        {
+            Result resData = new Result();
+            try
+            {
+                string path = HttpContext.Current.Server.MapPath("~/tmpUpload/" + tmppath + "/");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                else
+                {
+                    string sourcePath = System.Web.Hosting.HostingEnvironment.MapPath("~/tmpUpload/" + tmppath + "/");
+                    if (System.IO.Directory.Exists(sourcePath))
+                    {
+
+
+                        System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(sourcePath);
+                        foreach (System.IO.FileInfo file in di.GetFiles())
+                        {
+                            file.Delete();
+                        }
+                    }
+                }
+
+
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+
+            }
+            catch (Exception ex)
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = ex.Message; ;
+            }
+
+            //Send OK Response to Client.
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+
+        [HttpPost]
+        [ActionName("FileUpload")]
+        public HttpResponseMessage UploadFile(string tmppath)
+        {
+            int iUploadedCnt = 0;
+            Result resData = new Result();
+            try
+            {
+
+
+                // DEFINE THE PATH WHERE WE WANT TO SAVE THE FILES.
+                string sPath = "";
+                sPath = System.Web.Hosting.HostingEnvironment.MapPath("~/tmpUpload/" + tmppath + "/");
+                if (!Directory.Exists(sPath))
+                {
+                    Directory.CreateDirectory(sPath);
+                }
+                else
+                {
+                    System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(sPath);
+                    foreach (System.IO.FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                }
+                System.Web.HttpFileCollection hfc = System.Web.HttpContext.Current.Request.Files;
+
+                // CHECK THE FILE COUNT.
+                for (int iCnt = 0; iCnt <= hfc.Count - 1; iCnt++)
+                {
+                    System.Web.HttpPostedFile hpf = hfc[iCnt];
+
+                    if (hpf.ContentLength > 0)
+                    {
+                        // CHECK IF THE SELECTED FILE(S) ALREADY EXISTS IN FOLDER. (AVOID DUPLICATE)
+                        if (!File.Exists(sPath + Path.GetFileName(hpf.FileName)))
+                        {
+                            // SAVE THE FILES IN THE FOLDER.
+                            hpf.SaveAs(sPath + Path.GetFileName(hpf.FileName));
+                            iUploadedCnt = iUploadedCnt + 1;
+                        }
+                    }
+                }
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+
+                // RETURN A MESSAGE (OPTIONAL).
+                if (iUploadedCnt > 0)
+                {
+                    resData.Messages = iUploadedCnt + " Files Uploaded Successfully";
+                }
+                else
+                {
+                    resData.Messages = "Upload Failed";
+                }
+            }
+            catch (Exception ex)
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = ex.Message; ;
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+
+
+        }
 
     }
 }

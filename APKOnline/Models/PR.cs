@@ -37,6 +37,8 @@ namespace APKOnline.Models
         public DateTime Document_DeleteDate { get; set; }
         public string Document_Tel { get; set; }
         public string folderUpload { get; set; }
+        public int Document_Term { get; set; }
+
     }
 
     public class PRDetailModels

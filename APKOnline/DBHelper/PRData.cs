@@ -27,7 +27,7 @@ namespace APKOnline.DBHelper
         int ApprovePR(int Document_Id, int StaffID, ref string errMsg);
         DataTable GetPROverDataForApprove(int id, int DeptID, ref string errMsg);
         int ApprovePROverBudget(int Document_Id, int StaffID, ref string errMsg);
-
+        bool UpdatePRDetail(PRDetailModels detail, ref string errMsg);
         Task<bool> DeletePRData(int Document_Id);
 
         Task<bool> CheckDeletePRData(int Document_Id);
@@ -458,11 +458,11 @@ namespace APKOnline.DBHelper
                 string sqlQuery = "INSERT INTO DocumentPR_Header(Document_Group,Document_ExpenseType,Document_Category,Document_Objective " +
                                       ",Document_Vnos,Document_Date ,Document_Means,Document_Expect,Document_Cus,Document_Job,Document_Depid,Document_Dep,Document_Per" +
                                       ",Document_Doc,Document_Mec,Document_Desc,Document_Nolist,Document_Cog,Document_VatSUM,Document_VatPer" +
-                                      " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete) VALUES " +
+                                      " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete,Document_Term) VALUES " +
                                       " (@Document_Group,@Document_ExpenseType,@Document_Category,@Document_Objective " +
                                       ",dbo.GeneratePRID(@Document_Group),GETDATE() ,@Document_Means,@Document_Expect,@Document_Cus,@Document_Job,@Document_Depid,@Document_Dep,@Document_Per" +
                                       ",@Document_Doc,@Document_Mec,@Document_Desc,@Document_Nolist,@Document_Cog,@Document_VatSUM,@Document_VatPer" +
-                                      " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0) SET @Document_Id=SCOPE_IDENTITY()";
+                                      " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0,@Document_Term) SET @Document_Id=SCOPE_IDENTITY()";
                 cmd.CommandText = sqlQuery;
                 cmd.CommandTimeout = 30;
                 cmd.CommandType = CommandType.Text;
@@ -494,6 +494,8 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_Status", 0);
                 cmd.Parameters.AddWithValue("@Document_Tel", Header.Document_Tel == null ? "" : Header.Document_Tel);
                 cmd.Parameters.AddWithValue("@Document_CreateUser", Header.Document_CreateUser);
+                cmd.Parameters.AddWithValue("@Document_Term", Header.Document_Term);
+
                 cmd.Transaction = myTran;
                 cmd.ExecuteNonQuery();
 
@@ -631,6 +633,8 @@ namespace APKOnline.DBHelper
 
                 
                 cmd.ExecuteNonQuery();
+
+
 
                 //document_id = (int)shipperIdParam.Value;
 
@@ -836,7 +840,59 @@ namespace APKOnline.DBHelper
 
             return document_id;
         }
+        public bool UpdatePRDetail(PRDetailModels detail, ref string errMsg)
+        { 
+            bool ret = false;
+            string sqlQuery = "";
+            SqlCommand cmd = new SqlCommand();
+            SqlConnection conn = DBHelper.sqlConnection();
+            if (conn.State == ConnectionState.Closed)
+                conn.Open();
+            cmd = conn.CreateCommand();
+            //myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
+            cmd.Connection = conn;
 
+            try
+            {
+                sqlQuery = "UPDATE DocumentPR_Detail SET " +
+                            "Document_Detail_UnitPrice=@Document_Detail_UnitPrice" +
+                            ",Document_Detail_Quan=@Document_Detail_Quan,Document_Detail_Cog=@Document_Detail_Cog" +
+                            ",Document_Detail_Vat=@Document_Detail_Vat,Document_Detail_Sum=@Document_Detail_Sum WHERE Document_Detail_Id=@Document_Detail_Id";
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@Document_Detail_Id", detail.Document_Detail_Id);
+
+                cmd.Parameters.AddWithValue("@Document_Detail_Quan", detail.Document_Detail_Quan);
+                cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", detail.Document_Detail_UnitPrice);
+                cmd.Parameters.AddWithValue("@Document_Detail_Cog", detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice);
+
+                cmd.Parameters.AddWithValue("@Document_Detail_Vat", (detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)0.07);
+                cmd.Parameters.AddWithValue("@Document_Detail_Sum", (detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07);
+
+
+
+                cmd.ExecuteNonQuery();
+
+                sqlQuery = "Update DocumentPR_Header SET Document_Cog=@Document_Cog,Document_VatSUM=@Document_VatSUM,Document_NetSUM=@Document_NetSUM WHERE Document_Id=@Document_Detail_Hid";
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@Document_Detail_Hid", detail.Document_Detail_Hid);
+
+                cmd.Parameters.AddWithValue("@Document_Cog", detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice);
+                cmd.Parameters.AddWithValue("@Document_VatSUM", detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice * (decimal)0.07);//()
+                cmd.Parameters.AddWithValue("@Document_NetSUM", detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice * (decimal)1.07);//
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            { }
+
+            return ret;
+        }
         public async Task<bool> DeletePRData(int id)
         {
             bool result = false;

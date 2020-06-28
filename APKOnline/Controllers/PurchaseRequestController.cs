@@ -38,5 +38,9 @@ namespace APKOnline.Controllers
         {
             return View();
         }
+        public ActionResult EditPurchaseRequest()
+        {
+            return View();
+        }
     }
 }

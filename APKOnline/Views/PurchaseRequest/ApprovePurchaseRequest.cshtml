@@ -30,20 +30,13 @@
                                 <div class="form-group">
                                     <label for="inputPassword3" class="col-sm-4 control-label"></label>
                                     <div class="col-sm-8">
-                                        <div class="form-group">
-                                            <label class="col-md-3">
-                                                <input type="checkbox" class="flat-red" checked>
-                                                PR
-                                            </label>
-                                            <label class="col-md-3">
-                                                <input type="checkbox" class="flat-red">
-                                                SR
-                                            </label>
-                                            <label class="col-md-3">
-                                                <input type="checkbox" class="flat-red">
-                                                CR
-                                            </label>
-                                        </div>
+                                            <div class="form-group">
+
+                                                <div id="radio-group-with-selection" dx-radio-group="radioGroup.eventRadioGroupOptions">
+
+                                                </div>
+
+                                            </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -117,15 +110,15 @@
                                                 <div class="form-group">
                                                     <label for="inputPassword3" class="col-sm-3 control-label">งวดงาน : </label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="inputPassword3">
+                                                        <input type="text" class="form-control" id="inputPassword3" ng-model="Document_Term">
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
+                                                @*<div class="form-group">
                                                     <label for="inputPassword3" class="col-sm-3 control-label">รายละเอียด : </label>
                                                     <div class="col-sm-9">
                                                         <textarea class="form-control" rows="3" ng-model="Document_Means"></textarea>
                                                     </div>
-                                                </div>
+                                                </div>*@
                                             </div>
                                         </div>
                                     </form>
@@ -167,7 +160,7 @@
             <button class="btn btn-info" type="button" ng-click="upload()">Upload</button>
 
         </div>*@
-                            <input type="file" id="file1" name="file" multiple
+                            <input type="file" id="file1" name="file" accept="application/pdf" multiple
                                    ng-files="getTheFiles($files)" />
                             <ul>
                                 <li ng-repeat="file in files">{{file.name}}</li>

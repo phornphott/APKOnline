@@ -2,6 +2,7 @@
     function ($scope, $stateParams, $http, $rootScope, $filter) {
         $scope.ListFilePR = [{}];
         $scope.files = []; 
+        $scope.RadioValue=["PR","SR","CR"]
         $scope.TextSaveButon="บันทึก";
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
@@ -15,10 +16,18 @@
         $scope.Document_ID = Math.floor(Math.random() * 10000); 
         $scope.tmpfolder=Math.floor(Math.random() * 1000000);
         $scope.Document_Vnos = "";
-        $scope.jsonData = {
-            name: "Jignesh Trivedi",
-            comments: "Multiple upload files"
-        }; 
+        $scope.ProjectSelect = "";
+        $scope.radioGroup = {
+            eventRadioGroupOptions: {
+                items: $scope.RadioValue,
+                value: $scope.RadioValue[0],
+                layout: "horizontal",
+                onValueChanged: function (e) {
+                    console.log(e.value);
+                    $scope.ProjectSelect = e.value;
+                }
+            }
+        };
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
         $http.get("api/PR/PreparePageData/0?type=0").then(function (data) {
@@ -476,6 +485,7 @@
                     "Document_Tel": $scope.Document_Tel,
                     "Document_CreateUser": localStorage.getItem('StaffID'),
                     "folderUpload": $scope.tmpfolder,
+                    "Document_Term": $scope.Document_Term
 
                 };
                 $http.post("api/PR/SavePRData?", Header).then(function successCallback(response) {
@@ -491,7 +501,7 @@
         };
 
         $scope.CancelDocuments = function () {
-
+            $scope.DeleteFile();
             $http.get("api/PR/CancelPRTmpDetail/" + $scope.Document_ID).then(function (data) {
 
                     window.location = '#/PurchaseRequest/ListPurchaseRequest';

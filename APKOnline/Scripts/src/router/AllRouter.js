@@ -93,6 +93,22 @@
                 }]
             }
         })
+        .state('/PurchaseRequest/EditPurchaseRequest/:id', {
+            url: "/PurchaseRequest/EditPurchaseRequest/:id",
+            templateUrl: '\PurchaseRequest/EditPurchaseRequest',
+            controller: 'EditPurchaseRequestController',
+            resolve: {
+                lazyLoad: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'AceApp',
+                            files: [
+                                'Scripts/src/PurchaseRequest/EditPurchaseRequest.js'
+                            ]
+                        }])
+                }]
+            }
+        })
         .state('/PurchaseRequest/ApprovePR/:id', {
             url: "/PurchaseRequest/ApprovePR/:id",
             templateUrl: '\PurchaseRequest/ApprovePR',

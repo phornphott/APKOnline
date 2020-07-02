@@ -458,11 +458,11 @@ namespace APKOnline.DBHelper
                 string sqlQuery = "INSERT INTO DocumentPR_Header(Document_Group,Document_ExpenseType,Document_Category,Document_Objective " +
                                       ",Document_Vnos,Document_Date ,Document_Means,Document_Expect,Document_Cus,Document_Job,Document_Depid,Document_Dep,Document_Per" +
                                       ",Document_Doc,Document_Mec,Document_Desc,Document_Nolist,Document_Cog,Document_VatSUM,Document_VatPer" +
-                                      " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete,Document_Term) VALUES " +
+                                      " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete,Document_Term,Document_Project) VALUES " +
                                       " (@Document_Group,@Document_ExpenseType,@Document_Category,@Document_Objective " +
                                       ",dbo.GeneratePRID(@Document_Group),GETDATE() ,@Document_Means,@Document_Expect,@Document_Cus,@Document_Job,@Document_Depid,@Document_Dep,@Document_Per" +
                                       ",@Document_Doc,@Document_Mec,@Document_Desc,@Document_Nolist,@Document_Cog,@Document_VatSUM,@Document_VatPer" +
-                                      " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0,@Document_Term) SET @Document_Id=SCOPE_IDENTITY()";
+                                      " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0,@Document_Term,@Document_Project) SET @Document_Id=SCOPE_IDENTITY()";
                 cmd.CommandText = sqlQuery;
                 cmd.CommandTimeout = 30;
                 cmd.CommandType = CommandType.Text;
@@ -485,7 +485,7 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_Per", "");
                 cmd.Parameters.AddWithValue("@Document_Doc", "");
                 cmd.Parameters.AddWithValue("@Document_Mec", "");
-                cmd.Parameters.AddWithValue("@Document_Desc", Header.Document_Desc);
+                cmd.Parameters.AddWithValue("@Document_Desc", Header.Document_Desc==null? "" : Header.Document_Desc);
                 cmd.Parameters.AddWithValue("@Document_Nolist", NoList);
                 cmd.Parameters.AddWithValue("@Document_Cog", amount);
                 cmd.Parameters.AddWithValue("@Document_VatSUM", amount * (decimal)0.07);//()
@@ -495,6 +495,7 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_Tel", Header.Document_Tel == null ? "" : Header.Document_Tel);
                 cmd.Parameters.AddWithValue("@Document_CreateUser", Header.Document_CreateUser);
                 cmd.Parameters.AddWithValue("@Document_Term", Header.Document_Term);
+                cmd.Parameters.AddWithValue("@Document_Project", Header.Document_Project);
 
                 cmd.Transaction = myTran;
                 cmd.ExecuteNonQuery();

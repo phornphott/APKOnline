@@ -38,7 +38,7 @@ namespace APKOnline.Models
         public string Document_Tel { get; set; }
         public string folderUpload { get; set; }
         public int Document_Term { get; set; }
-
+        public string Document_Project { get; set; }
     }
 
     public class PRDetailModels

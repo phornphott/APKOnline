@@ -485,7 +485,8 @@
                     "Document_Tel": $scope.Document_Tel,
                     "Document_CreateUser": localStorage.getItem('StaffID'),
                     "folderUpload": $scope.tmpfolder,
-                    "Document_Term": $scope.Document_Term
+                    "Document_Term": $scope.Document_Term,
+                    "Document_Project": $scope.ProjectSelect
 
                 };
                 $http.post("api/PR/SavePRData?", Header).then(function successCallback(response) {

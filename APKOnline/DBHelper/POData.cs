@@ -465,11 +465,11 @@ namespace APKOnline.DBHelper
                 string sqlQuery = "INSERT INTO DocumentPO_Header(Document_Group,Document_Category,Document_Objective " +
                                       ",Document_Vnos,Document_Date ,Document_Means,Document_Expect,Document_Cus,Document_Job,Document_Dep,Document_Per" +
                                       ",Document_Doc,Document_Mec,Document_Desc,Document_Nolist,Document_Cog,Document_VatSUM,Document_VatPer" +
-                                      " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete,Document_PRID) VALUES " +
+                                      " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete,Document_PRID,Document_Term,Document_Project) VALUES " +
                                       " (@Document_Group,@Document_Category,@Document_Objective " +
                                       ",dbo.GeneratePOID(),GETDATE() ,@Document_Means,@Document_Expect,@Document_Cus,@Document_Job,@Document_Dep,@Document_Per" +
                                       ",@Document_Doc,@Document_Mec,@Document_Desc,@Document_Nolist,@Document_Cog,@Document_VatSUM,@Document_VatPer" +
-                                      " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0,@Document_PRID) SET @Document_Id=SCOPE_IDENTITY()";
+                                      " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0,@Document_PRID,@Document_Term,@Document_Project) SET @Document_Id=SCOPE_IDENTITY()";
                 cmd.CommandText = sqlQuery;
                 cmd.CommandTimeout = 30;
                 cmd.CommandType = CommandType.Text;
@@ -500,6 +500,8 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_Tel", Header.Document_Tel == null ? "" : Header.Document_Tel);
                 cmd.Parameters.AddWithValue("@Document_PRID", prid);
                 cmd.Parameters.AddWithValue("@Document_CreateUser", Header.Document_CreateUser);
+                cmd.Parameters.AddWithValue("@Document_Term", Header.Document_Term);
+                cmd.Parameters.AddWithValue("@Document_Project", Header.Document_Project == null ? "" : Header.Document_Project);
                 cmd.Transaction = myTran;
                 cmd.ExecuteNonQuery();
 

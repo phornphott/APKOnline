@@ -334,7 +334,7 @@ namespace APKOnline.DBHelper
                           " AND Document_Cog <=" + Dep_Budget + " And p.Document_Dep= " + DeptID +
                           ") UNION ALL (" +
                           " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,d.DEPdescT,j.JOBdescT" +
+                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT" +
                           " FROM " + tablename + " p " +
                           " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                           " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
@@ -391,8 +391,8 @@ namespace APKOnline.DBHelper
 
 
                             string strSQL = "\r\n  " +
-                              " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                              ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,d.DEPdescT,j.JOBdescT" +
+                              " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                              ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT" +
                               " FROM " + tablename + " p " +
                               " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                               " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +

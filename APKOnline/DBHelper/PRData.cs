@@ -226,8 +226,10 @@ namespace APKOnline.DBHelper
 
 
                  strSQL = "\r\n  " +
-                      " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,d.DEPdescT AS Dep,j.JOBdescT As Job ,g.GroupName AS 'Group'" +
-                      " , Objective_Name AS Objective,Category_Name AS Category ,CASE WHEN p.Document_Cog > "+ budget + " THEN 'รับทราบ'ELSE 'อนุมัติ' END AS SaveText" +
+                      " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                      " ,CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job ,g.GroupName AS 'Group'" +
+                      " ,CAST(Objective_Name as NVARCHAR(max)) AS Objective,CAST(Category_Name as NVARCHAR(max)) AS Category" +
+                      ",CASE WHEN p.Document_Cog > "+ budget + " THEN 'รับทราบ'ELSE 'อนุมัติ' END AS SaveText" +
                       " FROM "+ tablename + " p LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job" +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
@@ -264,8 +266,9 @@ namespace APKOnline.DBHelper
                 string strSQL = "";
 
                 strSQL = "\r\n  " +
-                " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,d.DEPdescT,j.JOBdescT,CASE WHEN p.Document_Status = 0 THEN 'รออนุมัติ' WHEN p.Document_Status = 1 THEN 'รับทราบ' WHEN p.Document_Status = 2 THEN 'อนุมัติ' ELSE 'ไม่อนุมัติ' END AS DocStatus" +
+                " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
+                ",CASE WHEN p.Document_Status = 0 THEN 'รออนุมัติ' WHEN p.Document_Status = 1 THEN 'รับทราบ' WHEN p.Document_Status = 2 THEN 'อนุมัติ' ELSE 'ไม่อนุมัติ' END AS DocStatus" +
                 " FROM " + tablename + " p " +
                 " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                 " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
@@ -320,9 +323,9 @@ namespace APKOnline.DBHelper
                         Dep_Budget = Convert.ToDecimal(dr[monthcol]);
 
 
-                        string strSQL = "\r\n  SELECT * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevelID ELSE a.Current_Level END AS Document_Level FROM  (" +
+                        string strSQL = "\r\n  SELECT distinct * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevelID ELSE a.Current_Level END AS Document_Level FROM  (" +
                           "(SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,d.DEPdescT,j.JOBdescT" +
+                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
                           " FROM " + tablename + " p " +
                           " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                           " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +

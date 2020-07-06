@@ -17,13 +17,14 @@
         $scope.tmpfolder=Math.floor(Math.random() * 1000000);
         $scope.Document_Vnos = "";
         $scope.ProjectSelect = "";
+        $scope.ProjectSelect = $scope.RadioValue[0];
+        console.log($scope.ProjectSelect);
         $scope.radioGroup = {
             eventRadioGroupOptions: {
                 items: $scope.RadioValue,
-                value: $scope.RadioValue[0],
+                value: $scope.ProjectSelect,
                 layout: "horizontal",
                 onValueChanged: function (e) {
-                    console.log(e.value);
                     $scope.ProjectSelect = e.value;
                 }
             }
@@ -455,7 +456,9 @@
             //if ($scope.Objective == 0) {
             //    checkselectValue = 1;
             //}
-            console.log($scope.Document_Dep );
+            console.log($scope.Document_Dep);
+            if ($scope.ProjectSelect == '')
+            { $scope.ProjectSelect = 'PR';}
             if ($scope.Document_Dep == 0) {
                 swal({
                     title: 'info',
@@ -489,9 +492,10 @@
                     "Document_Project": $scope.ProjectSelect
 
                 };
+                console.log(Header);
                 $http.post("api/PR/SavePRData?", Header).then(function successCallback(response) {
 
-                    console.log(response);
+
                     window.location = '#/PurchaseRequest/ListPurchaseRequest';
                 });
 

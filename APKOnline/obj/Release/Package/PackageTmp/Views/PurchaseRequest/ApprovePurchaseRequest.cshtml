@@ -30,20 +30,13 @@
                                 <div class="form-group">
                                     <label for="inputPassword3" class="col-sm-4 control-label"></label>
                                     <div class="col-sm-8">
-                                        <div class="form-group">
-                                            <label class="col-md-3">
-                                                <input type="checkbox" class="flat-red" checked>
-                                                PR
-                                            </label>
-                                            <label class="col-md-3">
-                                                <input type="checkbox" class="flat-red">
-                                                SR
-                                            </label>
-                                            <label class="col-md-3">
-                                                <input type="checkbox" class="flat-red">
-                                                CR
-                                            </label>
-                                        </div>
+                                            <div class="form-group">
+
+                                                <div id="radio-group-with-selection" dx-radio-group="radioGroup.eventRadioGroupOptions">
+
+                                                </div>
+
+                                            </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -109,7 +102,7 @@
                                                 <div class="form-group">
                                                     <label for="inputPassword3" class="col-sm-4 control-label">รายละเอียด : </label>
                                                     <div class="col-sm-8">
-                                                        <textarea class="form-control" rows="3" ng-model="Document_Desc" ></textarea>
+                                                        <textarea class="form-control" rows="3" ng-model="Document_Desc"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -117,15 +110,15 @@
                                                 <div class="form-group">
                                                     <label for="inputPassword3" class="col-sm-3 control-label">งวดงาน : </label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="inputPassword3">
+                                                        <input type="text" class="form-control" id="inputPassword3" ng-model="Document_Term">
                                                     </div>
                                                 </div>
-                                                <div class="form-group">
+                                                @*<div class="form-group">
                                                     <label for="inputPassword3" class="col-sm-3 control-label">รายละเอียด : </label>
                                                     <div class="col-sm-9">
                                                         <textarea class="form-control" rows="3" ng-model="Document_Means"></textarea>
                                                     </div>
-                                                </div>
+                                                </div>*@
                                             </div>
                                         </div>
                                     </form>
@@ -148,192 +141,53 @@
                             <div id="collapseOne" class="panel-collapse collapse in">
                                 <div class="box-body">
                                     <div id="gridContainer" dx-data-grid="dataGridOptions"></div>
-                                    @*<table class="table table-bordered">
-            <tr>
-                <th>รหัสบัญชี</th>
-                <th>รายละเอียดสินค้า</th>
-                <th>จำนวน</th>
-                <th>ราคา/หน่วย</th>
-                <th>จำนวนเงิน</th>
-            </tr>
-            <tr>
-                <td>
-                    <select class="form-control">
-                        <option>-- เลือก --</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                    </select>
-                </td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="form-control">
-                        <option>-- เลือก --</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                    </select>
-                </td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="form-control">
-                        <option>-- เลือก --</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                    </select>
-                </td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="form-control">
-                        <option>-- เลือก --</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                    </select>
-                </td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="form-control">
-                        <option>-- เลือก --</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                    </select>
-                </td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="form-control">
-                        <option>-- เลือก --</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                    </select>
-                </td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="form-control">
-                        <option>-- เลือก --</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                    </select>
-                </td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="form-control">
-                        <option>-- เลือก --</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                    </select>
-                </td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="form-control">
-                        <option>-- เลือก --</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                    </select>
-                </td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-            </tr>
-            <tr>
-                <td>
-                    <select class="form-control">
-                        <option>-- เลือก --</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                    </select>
-                </td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3"></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-            </tr>
-            <tr>
-                <td colspan="3"><span class="pull-right" style="margin-top:7px;">ยอดรวมทุกรายการ</span></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-                <td><input type="text" class="form-control" id="inputPassword3" disabled></td>
-            </tr>
-        </table>*@
                                 </div>
                             </div>
                         </div>
                     </div>
                     <br />
-                    <form class="form-horizontal">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <center>
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="color:red;" onclick="return false">
-                                        *** ถ้ามีการ Upload ไฟล์เสร็จแล้ว  upload อีกครั้งไฟล์เดิมจะหายไป
-                                    </a>
-                                </center>
-                                <center>
+                    <div >
+                        <center>
+                            @*<div class="row">
+            <input type="file" ng-file-model="files" multiple class="btn btn-secondary" />
+        </div>
+        <div class="row">
+            <p ng-repeat="file in files">
+                {{file.name}}
+            </p>
+        </div>
+        <div class="row">
+            <button class="btn btn-info" type="button" ng-click="upload()">Upload</button>
 
-                                    <button class="btn btn-info" style="width:120px;" ng-click="OpenUploadFile()">Upload File</button>
-                                </center>
+        </div>*@
+                            <input type="file" id="file1" name="file" accept="application/pdf" multiple
+                                   ng-files="getTheFiles($files)" />
+                            <ul>
+                                <li ng-repeat="file in files">{{file.name}}</li>
+                            </ul>
+                            <input type="button" class="btn btn-info" ng-click="uploadFiles()" value="Upload Files" />
+                            <input type="button" class="btn btn-danger" ng-click="DeleteFile()" value="Delete Files" />
 
-                            </div>
-                        </div>
-                    </form>
+                        </center>
+                    </div>
+
+                        @*<form class="form-horizontal">
+            <div class="row">
+                <div class="col-md-12">
+                    <center>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="color:red;" onclick="return false">
+                            *** ถ้ามีการ Upload ไฟล์เสร็จแล้ว  upload อีกครั้งไฟล์เดิมจะหายไป
+                        </a>
+                    </center>
+                    <center>
+
+                        <button class="btn btn-info" style="width:120px;" ng-click="OpenUploadFile()">Upload File</button>
+                    </center>
+
                 </div>
+            </div>
+        </form>*@
+                    </div>
                 <div class="box-footer">
                     <center>
                         <button class="btn btn-success btn-lg" style="width:120px;" ng-click="SaveDocuments()">Save</button>&nbsp;&nbsp;&nbsp;

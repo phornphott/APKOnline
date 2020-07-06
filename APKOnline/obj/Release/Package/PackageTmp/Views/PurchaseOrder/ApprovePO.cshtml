@@ -23,31 +23,17 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="inputPassword3" class="col-sm-4 control-label"></label>
+                                    <label for="inputPassword3" class="col-sm-4 control-label"> </label>
                                     <div class="col-sm-8">
-                                        <div class="form-group">
-                                            <label class="col-md-3">
-                                                <input type="checkbox" class="flat-red" checked>
-                                                PR
-                                            </label>
-                                            <label class="col-md-3">
-                                                <input type="checkbox" class="flat-red">
-                                                SR
-                                            </label>
-                                            <label class="col-md-3">
-                                                <input type="checkbox" class="flat-red">
-                                                CR
-                                            </label>
-                                        </div>
+                                        <label style="margin-top:7px;">{{Header.Document_Project}}</label>
                                     </div>
-                                </div>
-                                <div class="form-group">
+                                </div>                                <div class="form-group">
                                     <label for="inputPassword3" class="col-sm-4 control-label">รหัสโครงการ : </label>
                                     <div class="col-sm-8">
                                         <label style="margin-top:7px;">{{Header.Job}}</label>
                                         @*<select class="form-control">
-                                <option>-- เลือก --</option>
-                            </select>*@
+                    <option>-- เลือก --</option>
+                </select>*@
                                     </div>
                                 </div>
                             </div>
@@ -107,15 +93,6 @@
                                                     <label for="inputPassword3" class="col-sm-4 control-label">วัตถุประสงค์ : </label>
                                                     <label style="margin-top:7px;">{{Header.Objective}}</label>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="inputPassword3" class="col-sm-3 control-label">งวดงาน : </label>
-                                                    <div class="col-sm-9">
-                                                        <label style="margin-top:7px;">{{Header.Document_Expect}}</label>
-                                                        @*<input type="text" class="form-control" id="inputPassword3">*@
-                                                    </div>
-                                                </div>
                                                 <div class="form-group">
                                                     <label for="inputPassword3" class="col-sm-3 control-label">รายละเอียด : </label>
                                                     <div class="col-sm-9">
@@ -123,6 +100,16 @@
                                                         @*<textarea class="form-control" rows="2" ng-model="Header.Document_Desc"></textarea>*@
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="inputPassword3" class="col-sm-3 control-label">งวดงาน : </label>
+                                                    <div class="col-sm-9">
+                                                        <label style="margin-top:7px;">{{Header.Document_Term}}</label>
+                                                        @*<input type="text" class="form-control" id="inputPassword3">*@
+                                                    </div>
+                                                </div>
+                                               
                                             </div>
                                         </div>
                                     </form>

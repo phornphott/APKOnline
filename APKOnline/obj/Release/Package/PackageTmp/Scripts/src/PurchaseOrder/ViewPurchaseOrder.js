@@ -221,7 +221,7 @@
                     "Document_Id": $scope.Document_ID,
                     "Document_Group": $scope.Header.Document_Group,
                     "Document_Category": $scope.Header.Document_Category,
-                    "Document_Objective": $scope.Header.Objective,
+                    "Document_Objective": $scope.Header.Document_Objective,
                     "Document_Vnos": '',
                     "Document_Means": $scope.Header.Document_Means,
                     "Document_Expect": $scope.Header.Document_Expect,
@@ -231,9 +231,11 @@
                     "Document_Per": '',
                     "Document_Doc": '',
                     "Document_Mec": '',
-                    "Document_Desc": '',
-                    "Document_Tel": $scope.Document_Tel,
+                    "Document_Desc": $scope.Header.Document_Desc,
+                    "Document_Tel": $scope.Header.Document_Tel,
                     "Document_CreateUser": localStorage.getItem('StaffID'),
+                    "Document_Term": $scope.Header.Document_Term,
+                    "Document_Project": $scope.Header.Document_Project
 
                 };
                 $http.post("api/PO/SavePOData/" + $stateParams.id + "?", Header).then(function successCallback(response) {

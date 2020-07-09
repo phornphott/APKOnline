@@ -213,7 +213,6 @@
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",
                     confirmButtonText: 'OK'
-                }, function () {
                 })}
             else {
 

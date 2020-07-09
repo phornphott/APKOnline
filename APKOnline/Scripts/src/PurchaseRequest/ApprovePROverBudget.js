@@ -105,7 +105,6 @@
                                 showCancelButton: false,
                                 confirmButtonColor: "#6EAA6F",
                                 confirmButtonText: 'OK'
-                            }, function () {
                             })
                            
                         }
@@ -119,7 +118,6 @@
                                     showCancelButton: false,
                                     confirmButtonColor: "#6EAA6F",
                                     confirmButtonText: 'OK'
-                                }, function () {
                                 })
                                 
                             }

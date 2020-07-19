@@ -242,7 +242,6 @@
                     }]
                 },{
                     dataField: "StaffLastName",
-
                     label: {
                         text: "นามสกุล",
                     },
@@ -250,6 +249,14 @@
                         disabled: false
                     }
                 }, {
+                    dataField: "StaffPosition",
+                    label: {
+                        text: "ตำแหน่ง",
+                    },
+                    editorOptions: {
+                        disabled: false
+                    }
+                },{
                     dataField: "StaffLogin",
 
                     label: {
@@ -400,6 +407,9 @@
                     dataField: "StaffLastName",
                     caption: "นามสกุล"
                 }, {
+                    dataField: "StaffPosition",
+                    caption: "ตำแหน่ง"
+                },{
                     dataField: "StaffLogin",
                     caption: "Login",
                     
@@ -407,28 +417,30 @@
                     dataField: "StaffLevel",
                     caption: "ระดับ",
                     alignment: "center",
-                }, {
+                },
+                //{
 
-                    caption: "กำหนดแผนก",
-                    cellTemplate: function (container, item) {
-                        //    console.log(item)
-                        var data = item.data,
-                            markup = "<a >กำหนดแผนก</a>";
-                        container.append(markup);
-                    },
-                    alignment: "center",
-                }, {
+                //    caption: "กำหนดแผนก",
+                //    cellTemplate: function (container, item) {
+                //        //    console.log(item)
+                //        var data = item.data,
+                //            markup = "<a >กำหนดแผนก</a>";
+                //        container.append(markup);
+                //    },
+                //    alignment: "center",
+                //}, {
 
-                    caption: "กำหนดตำแหน่ง",
-                    cellTemplate: function (container, item) {
-                        //    console.log(item)
-                        var data = item.data,
-                            markup = "<a >กำหนดตำแหน่ง</a>";
-                        container.append(markup);
-                    },
-                    alignment: "center",
+                //    caption: "กำหนดตำแหน่ง",
+                //    cellTemplate: function (container, item) {
+                //        //    console.log(item)
+                //        var data = item.data,
+                //            markup = "<a >กำหนดตำแหน่ง</a>";
+                //        container.append(markup);
+                //    },
+                //    alignment: "center",
                    
-                }, {
+                //},
+                {
                     dataField: "StaffID",
                     caption: "แก้ไขข้อมูล",
                     alignment: 'center',
@@ -538,6 +550,7 @@
                     "StaffCode": obj.StaffCode,
                     "StaffFirstName": obj.StaffFirstName,
                     "StaffLastName": obj.StaffLastName,
+                    "StaffPosition": obj.StaffPosition,
                     "StaffLogin": obj.StaffLogin,
                     "StaffPassword": obj.StaffPassword,
                     "StaffLevel": obj.StaffLevel,
@@ -591,6 +604,7 @@
                     "StaffCode": obj.StaffCode,
                     "StaffFirstName": obj.StaffFirstName,
                     "StaffLastName": obj.StaffLastName,
+                    "StaffPosition": obj.StaffPosition,
                     "StaffLogin": obj.StaffLogin,
                     "StaffPassword": obj.StaffPassword,
                     "StaffLevel": obj.StaffLevel,

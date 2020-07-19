@@ -8,6 +8,7 @@
         $scope.showRowLines = true;
         $scope.showBorders = true;
         $scope.rowAlternationEnabled = true;
+        $scope.detailCount = 0;
         $scope.Document_Dep = 0;
         $scope.Document_Job = 0;
         $scope.Document_Category = 0;
@@ -263,10 +264,10 @@
                                 showCancelButton: false,
                                 confirmButtonColor: "#6EAA6F",
                                 confirmButtonText: 'OK'
-                            }, function () {
                             })
                            
                         }
+                        $scope.detailCount = $scope.detailCount + 1;
                         $http.get("api/PR/PRDetailData/" + $scope.Document_ID + "?type=0").then(function (data) {
                             console.log(data);
                             if (data.data.StatusCode > 1) {
@@ -277,7 +278,6 @@
                                     showCancelButton: false,
                                     confirmButtonColor: "#6EAA6F",
                                     confirmButtonText: 'OK'
-                                }, function () {
                                 })
                                 
                             }
@@ -358,7 +358,6 @@
                 //    //            showCancelButton: false,
                 //    //            confirmButtonColor: "#6EAA6F",
                 //    //            confirmButtonText: 'OK'
-                //    //        }, function () {
                 //    //        })
                 //    //        checkStatusAdd = 1;
                 //    //    }
@@ -372,7 +371,6 @@
                 //    //                showCancelButton: false,
                 //    //                confirmButtonColor: "#6EAA6F",
                 //    //                confirmButtonText: 'OK'
-                //    //            }, function () {
                 //    //            })
                 //    //            checkStatusAdd = 1;
                 //    //        }
@@ -460,6 +458,7 @@
             if ($scope.ProjectSelect == '')
             { $scope.ProjectSelect = 'PR';}
             if ($scope.Document_Dep == 0) {
+               
                 swal({
                     title: 'info',
                     text: "กรุณาเลือกแผนกก่อนบันทึก",
@@ -467,9 +466,59 @@
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",
                     confirmButtonText: 'OK'
-                }, function () {
                 })
-            } else {
+            }
+            else if ($scope.Document_Job == 0) {
+                swal({
+                    title: 'info',
+                    text: "กรุณาเลือกรหัสโครงการก่อนบันทึก",
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                })
+            }
+            else if ($scope.Document_Group == 0) {
+                swal({
+                    title: 'info',
+                    text: "กรุณาเลือกลักษณะค่าใช้จ่ายก่อนบันทึก",
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                })
+            }
+            else if ($scope.Document_Category == 0) {
+                swal({
+                    title: 'info',
+                    text: "กรุณาเลือกประเภทการจัดซื้อก่อนบันทึก",
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                })
+            }
+            else if ($scope.Objective== 0) {
+                swal({
+                    title: 'info',
+                    text: "กรุณาเลือกวัตถุประสงค์ก่อนบันทึก",
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                })
+            }
+            else if ($scope.detailCount == 0) {
+                swal({
+                    title: 'info',
+                    text: "กรุณาเพิ่มรายละเอียดรายการขออนุมัติ ก่อนบันทึก",
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                })
+            }
+            else {
                 var Header = {
                     "Document_Id": $scope.Document_ID,
                     "Document_Group": $scope.Document_Group,
@@ -557,7 +606,17 @@
         $scope.DeleteFile = function () {
 
             $http.post("api/PR/DeleteFiles?tmppath=" + $scope.tmpfolder).then(function (data) {
+        
                 $scope.files = [];
+                console.log(data);
+                swal({                 
+                    title: 'info',
+                    text: data.data.Messages,
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                })
             });
         };
         var formdata = new FormData();
@@ -598,7 +657,6 @@
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",
                     confirmButtonText: 'OK'
-                }, function () {
                 })
                 // this callback will be called asynchronously
                 // when the response is available

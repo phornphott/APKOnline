@@ -11,6 +11,7 @@ namespace APKOnline.Models
         public string StaffCode { get; set; }
         public string StaffFirstName { get; set; }
         public string StaffLastName { get; set; }
+        public string StaffPosition { get; set; }    
         public string StaffLogin { get; set; }
         public string StaffPassword { get; set; }
         public int StaffLevel { get; set; }

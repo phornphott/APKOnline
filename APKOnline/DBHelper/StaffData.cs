@@ -339,7 +339,7 @@ namespace APKOnline.DBHelper
 
             if (item.StaffID == 0)
             {
-                strSQL = "Insert Into Staffs (StaffLogin,StaffPassword,StaffCode,StaffFirstName,StaffLastName,StaffLevel,StaffDepartmentID,InputDate,UpdateDate) VALUES (@StaffLogin,@StaffPassword,@StaffCode,@StaffFirstName,@StaffLastName,@StaffLevel,@StaffDepartmentID,@InputDate,@UpdateDate)";
+                strSQL = "Insert Into Staffs (StaffLogin,StaffPassword,StaffCode,StaffFirstName,StaffLastName,StaffPosition,StaffLevel,StaffDepartmentID,InputDate,UpdateDate) VALUES (@StaffLogin,@StaffPassword,@StaffCode,@StaffFirstName,@StaffLastName,@StaffLevel,@StaffDepartmentID,@InputDate,@UpdateDate)";
                 List<SqlParameter> sp = new List<SqlParameter>()
                 {
                     new SqlParameter() {ParameterName = "@StaffLogin", SqlDbType = SqlDbType.NVarChar, Value= item.StaffLogin},
@@ -347,6 +347,7 @@ namespace APKOnline.DBHelper
                     new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value = item.StaffCode.ToUpper()},
                     new SqlParameter() { ParameterName = "@StaffFirstName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffFirstName },
                     new SqlParameter() { ParameterName = "@StaffLastName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffLastName },
+                    new SqlParameter() { ParameterName = "@StaffPosition", SqlDbType = SqlDbType.NVarChar, Value = item.StaffPosition },
                     new SqlParameter() { ParameterName = "@StaffLevel", SqlDbType = SqlDbType.TinyInt, Value = item.StaffLevel },
                     new SqlParameter() { ParameterName = "@StaffDepartmentID", SqlDbType = SqlDbType.Int, Value = item.StaffDepartmentID },
                     new SqlParameter() { ParameterName = "@InputDate", SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
@@ -356,7 +357,7 @@ namespace APKOnline.DBHelper
             }
             else
             {
-                strSQL = "UPDATE Staffs SET StaffLogin=@StaffLogin,StaffPassword=@StaffPassword,StaffCode=@StaffCode,StaffFirstName=@StaffFirstName,StaffLastName=@StaffLastName,StaffLevel=@StaffLevel,StaffDepartmentID=@StaffDepartmentID,UpdateDate=GETDATE() WHERE StaffID=@StaffID";
+                strSQL = "UPDATE Staffs SET StaffLogin=@StaffLogin,StaffPassword=@StaffPassword,StaffCode=@StaffCode,StaffFirstName=@StaffFirstName,StaffLastName=@StaffLastName,StaffPosition=@StaffPosition,StaffLevel=@StaffLevel,StaffDepartmentID=@StaffDepartmentID,UpdateDate=GETDATE() WHERE StaffID=@StaffID";
 
                 List<SqlParameter> sp = new List<SqlParameter>()
                 {
@@ -366,6 +367,7 @@ namespace APKOnline.DBHelper
                     new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value = item.StaffCode.ToUpper()},
                     new SqlParameter() { ParameterName = "@StaffFirstName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffFirstName },
                     new SqlParameter() { ParameterName = "@StaffLastName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffLastName },
+                    new SqlParameter() { ParameterName = "@StaffPosition", SqlDbType = SqlDbType.NVarChar, Value = item.StaffPosition },
                     new SqlParameter() { ParameterName = "@StaffLevel", SqlDbType = SqlDbType.TinyInt, Value = item.StaffLevel},
                     new SqlParameter() { ParameterName = "@StaffDepartmentID", SqlDbType = SqlDbType.Int, Value = item.StaffDepartmentID}
                 };

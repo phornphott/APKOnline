@@ -153,7 +153,10 @@ namespace APKOnline
             ds.Tables.Add(dtDetail);
             DataTable dtCus = repository.GetCustomer(0, ref errMsg);
             ds.Tables.Add(dtCus);
-
+            DataTable dtAccount = repository.GetAccountData(ref errMsg);
+            ds.Tables.Add(dtAccount);
+            DataTable dtSTK= repository.GetSTKData(ref errMsg);
+            ds.Tables.Add(dtSTK);
 
             //Get Pathfile
             DataTable dtfile = new DataTable();

@@ -461,7 +461,7 @@
                
                 swal({
                     title: 'info',
-                    text: "กรุณาเลือกแผนกก่อนบันทึก",
+                    text: "กรุณาเลือกแผนกและตรวจสอบตัวเลือกที่มี * ก่อนบันทึก",
                     type: "info",
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",
@@ -471,7 +471,7 @@
             else if ($scope.Document_Job == 0) {
                 swal({
                     title: 'info',
-                    text: "กรุณาเลือกรหัสโครงการก่อนบันทึก",
+                    text: "กรุณาเลือกรหัสโครงการและตรวจสอบตัวเลือกที่มี *ก่อนบันทึก",
                     type: "info",
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",
@@ -481,7 +481,7 @@
             else if ($scope.Document_Group == 0) {
                 swal({
                     title: 'info',
-                    text: "กรุณาเลือกลักษณะค่าใช้จ่ายก่อนบันทึก",
+                    text: "กรุณาเลือกลักษณะค่าใช้จ่ายและตรวจสอบตัวเลือกที่มี * ก่อนบันทึก",
                     type: "info",
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",
@@ -491,7 +491,7 @@
             else if ($scope.Document_Category == 0) {
                 swal({
                     title: 'info',
-                    text: "กรุณาเลือกประเภทการจัดซื้อก่อนบันทึก",
+                    text: "กรุณาเลือกประเภทการจัดซื้อ และตรวจสอบตัวเลือกที่มี * ก่อนบันทึก",
                     type: "info",
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",
@@ -501,7 +501,7 @@
             else if ($scope.Objective== 0) {
                 swal({
                     title: 'info',
-                    text: "กรุณาเลือกวัตถุประสงค์ก่อนบันทึก",
+                    text: "กรุณาเลือกวัตถุประสงค์ และตรวจสอบตัวเลือกที่มี * ก่อนบันทึก",
                     type: "info",
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",
@@ -511,7 +511,7 @@
             else if ($scope.detailCount == 0) {
                 swal({
                     title: 'info',
-                    text: "กรุณาเพิ่มรายละเอียดรายการขออนุมัติ ก่อนบันทึก",
+                    text: "กรุณาเพิ่มรายละเอียดรายการขออนุมัติ และตรวจสอบตัวเลือกที่มี * ก่อนบันทึก",
                     type: "info",
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",

@@ -11,6 +11,8 @@
         $scope.Document_Vnos = "";
         $http.get("api/PO/CreatePOData/" + $stateParams.id + "?tmpid=" + $scope.Document_ID).then(function (data) {
             console.log(data);
+            $rootScope.Account = data.data.Results.Account;
+            $rootScope.STK = data.data.Results.STK;
             //$scope.Header = data.data.Results.Document_Vnos[0].
             var FileUpload = data.data.Results.FileUpload;
 
@@ -50,17 +52,27 @@
                 columnAutoWidth: true,
                 columns: [{
                     dataField: "Document_Detail_Acc",
-                    caption: "รหัสบัญชี"
+                    caption: "รหัสบัญชี",
+                    lookup: {
+                        dataSource: $rootScope.Account,
+                        displayExpr: "Name",
+                        valueExpr: "Code"
+                    }
                 }, {
-                    dataField: "Document_Detail_Stk",
-                    caption: "รหัสสินค้า"
-                }, {
-
-                    dataField: "Document_Detail_Stk_Desc",
+                        dataField: "Document_Detail_Stk",
+                        caption: "รหัสสินค้า",
+                        lookup: {
+                            dataSource: $rootScope.STK,
+                            displayExpr: "Name",
+                            valueExpr: "Code"
+                        }
+                    }, {
+                    dataField: "Document_Detail_Acc_Desc",
                     caption: "รายละเอียดสินค้า"
                 }, {
                     dataField: "Document_Detail_Quan",
-                    caption: "จำนวน"
+                    caption: "Qty",
+
                 }, {
                     dataField: "Document_Detail_UnitPrice",
                     caption: "ราคา/หน่วย"

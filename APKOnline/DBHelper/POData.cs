@@ -30,6 +30,7 @@ namespace APKOnline.DBHelper
         DataTable GetPOHeaderData(int Document_id, int staffid, ref string errMsg);
         DataTable GetDetailData(int Document_Detail_Hid, ref string errMsg);
         DataTable GetCustomer(int id, ref string errMsg);
+        DataTable GetSTKData(ref string errMsg);
     }
 
     public class POData : IPOData
@@ -182,6 +183,32 @@ namespace APKOnline.DBHelper
             dt.TableName = "Account";
             return dt;
         }
+        public DataTable GetSTKData(ref string errMsg)
+        {
+            string strSQL = null;
+            DataTable dt = new DataTable();
+
+            try
+            {
+                strSQL = "\r\n  " +
+                    " SELECT STKcode AS Code, STKdescT1 AS Name " +
+                    " FROM STK ";
+
+
+
+                dt = DBHelper.List(strSQL);
+
+
+            }
+            catch (Exception e)
+            {
+                errMsg = e.Message;
+            }
+
+            dt.TableName = "STK";
+            return dt;
+        }
+
         public DataTable GetDetailData(int Document_Detail_Hid, ref string errMsg)
         {
             DataTable dt = new DataTable();

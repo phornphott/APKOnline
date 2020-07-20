@@ -194,10 +194,10 @@
     <Content Include="Scripts\component\dx\css\icons\dxicons.woff" />
     <Content Include="Scripts\component\dx\css\icons\dxiconsios.ttf" />
     <Content Include="Scripts\component\dx\css\icons\dxiconsios.woff" />
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Reports\DS_PO.xsc">
       <DependentUpon>DS_PO.xsd</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Reports\DS_PO.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>

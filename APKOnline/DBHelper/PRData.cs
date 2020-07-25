@@ -860,6 +860,7 @@ namespace APKOnline.DBHelper
             {
                 sqlQuery = "UPDATE DocumentPR_Detail SET " +
                             "Document_Detail_UnitPrice=@Document_Detail_UnitPrice" +
+                             ",Document_Detail_Acc=@Document_Detail_Acc,Document_Detail_Acc_Desc=@Document_Detail_Acc_Desc" +
                             ",Document_Detail_Quan=@Document_Detail_Quan,Document_Detail_Cog=@Document_Detail_Cog" +
                             ",Document_Detail_Vat=@Document_Detail_Vat,Document_Detail_Sum=@Document_Detail_Sum WHERE Document_Detail_Id=@Document_Detail_Id";
                 cmd.CommandText = sqlQuery;
@@ -867,7 +868,8 @@ namespace APKOnline.DBHelper
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@Document_Detail_Id", detail.Document_Detail_Id);
-
+                cmd.Parameters.AddWithValue("@Document_Detail_Acc", detail.Document_Detail_Acc);
+                cmd.Parameters.AddWithValue("@Document_Detail_Acc_Desc", detail.Document_Detail_Acc_Desc);
                 cmd.Parameters.AddWithValue("@Document_Detail_Quan", detail.Document_Detail_Quan);
                 cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", detail.Document_Detail_UnitPrice);
                 cmd.Parameters.AddWithValue("@Document_Detail_Cog", detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice);

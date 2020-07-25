@@ -88,13 +88,21 @@
                 }, {
                     dataField: "Document_Detail_Quan",
                     caption: "Qty",
-                   
+                    alignment: "right",
+                    format: "#,##0.00",
+                    dataType: "number"
                 }, {
                     dataField: "Document_Detail_UnitPrice",
-                    caption: "ราคา/หน่วย"
+                    caption: "ราคา/หน่วย",
+                    alignment: "right",
+                    format: "#,##0.00",
+                    dataType: "number"
                 }, {
                     dataField: "Document_Detail_Cog",
                     caption: "จำนวนเงิน",
+                    alignment: "right",
+                    format: "#,##0.00",
+                    dataType: "number",
                     editorOptions: {
                         disabled: true
                     }

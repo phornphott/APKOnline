@@ -237,13 +237,22 @@
                 }, {
                     dataField: "Document_Detail_Quan",
                     caption: "Qty",
-                   
+                    alignment: "right",
+                    format: "#,##0.00",
+                    dataType: "number"
                 }, {
                     dataField: "Document_Detail_UnitPrice",
-                    caption: "ราคา/หน่วย"
+                    caption: "ราคา/หน่วย",
+                    alignment: "right",
+                    format: "#,##0.00",
+                    dataType: "number"
+
                 }, {
                     dataField: "Document_Detail_Cog",
                     caption: "จำนวนเงิน",
+                    alignment: "right",
+                    format: "#,##0.00",
+                    dataType: "number",
                     editorOptions: {
                         disabled: true
                     }
@@ -299,49 +308,6 @@
                         });
 
                     });             
-                },
-                onEditorPrepared: function (e) {
-              
-                    if (e.dataField == "Document_Detail_Quan") {
-                        $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
-                            var grid = $("#gridContainer").dxDataGrid("instance");
-                            var index = e.row.rowIndex;
-                            var data = grid.cellValue(index, "Document_Detail_UnitPrice");
-                            var result = 0;
-                            if (data == undefined) {
-                                result = 0;
-                                
-                            }
-                            else {
-                                result = args.value * data;
-                            }
-
-                            var amount = args.value;
-                            grid.cellValue(index, "Document_Detail_Quan", amount);
-                            grid.cellValue(index, "Document_Detail_Cog", result);
-                      
-                        });
-                    }
-                    else if (e.dataField == "Document_Detail_UnitPrice") {
-                        $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
-                            var grid = $("#gridContainer").dxDataGrid("instance");
-                            var index = e.row.rowIndex;
-                            var data = grid.cellValue(index, "Document_Detail_Quan");
-                            var result = 0;
-                            if (data == undefined) {
-                                result = 0;
-                                
-                            }
-                            else {
-                                result = args.value * data;
-                            }
-
-                            var amount = args.value;
-                            grid.cellValue(index, "Document_Detail_UnitPrice", amount);
-                            grid.cellValue(index, "Document_Detail_Cog", result);
-                            
-                        });
-                    }
                 },
                 //onRowUpdated: function (e) {
 

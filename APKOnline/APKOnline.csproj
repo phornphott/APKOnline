@@ -234,6 +234,7 @@
     <Content Include="Scripts\jszip.js" />
     <Content Include="Scripts\jszip.min.js" />
     <Content Include="Scripts\src\PurchaseRequest\EditPurchaseRequest.js" />
+    <Content Include="Scripts\Template\dist\img\user.png" />
     <Content Include="Scripts\vectormap-data\africa.js" />
     <Content Include="Scripts\vectormap-data\canada.js" />
     <Content Include="Scripts\vectormap-data\eurasia.js" />

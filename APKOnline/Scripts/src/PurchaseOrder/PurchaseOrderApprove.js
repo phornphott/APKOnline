@@ -48,8 +48,20 @@
                     dataField: "Document_Desc",
                     caption: "คำอธิบาย"
                 }, {
+                    dataField: "Document_Cog",
+                    alignment: "right",
+                    format: "#,##0.00",
+                    caption: "ยอดเงิน"
+                }, {
+                    dataField: "Document_VatSUM",
+                    alignment: "right",
+                    format: "#,##0.00",
+                    caption: "VAT"
+                }, {
                     dataField: "Document_NetSUM",
-                    caption: "ยอดรวม"
+                    alignment: "right",
+                    format: "#,##0.00",
+                    caption: "ยอดเงินรวม VAT"
                 }, {
                     dataField: "Dep",
                     caption: "แผนก"

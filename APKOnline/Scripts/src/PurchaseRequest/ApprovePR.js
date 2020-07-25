@@ -68,13 +68,16 @@
                 }, {
                     dataField: "Document_Detail_Quan",
                     caption: "Qty",
+                    format: "#,##0",
                    
                 }, {
                     dataField: "Document_Detail_UnitPrice",
-                    caption: "ราคา/หน่วย"
+                    caption: "ราคา/หน่วย",
+                    format: "#,##0.00",
                 }, {
                     dataField: "Document_Detail_Cog",
                     caption: "จำนวนเงิน",
+                    format: "#,##0.00",
                     editorOptions: {
                         disabled: true
                     }

@@ -50,13 +50,17 @@
                     caption: "รายละเอียดสินค้า"
                 }, {
                         dataField: "Document_Detail_Quan",
-                    caption: "จำนวน"
+                        caption: "จำนวน", 
+                        dataType: "number",
+                        format: "#,##0",
                 }, {
                         dataField: "Document_Detail_UnitPrice",
-                    caption: "ราคา/หน่วย"
+                        caption: "ราคา/หน่วย",
+                        format: "#,##0.00",
                 }, {
                         dataField: "Document_Detail_Cog",
                         caption: "จำนวนเงิน",
+                        format: "#,##0.00",
                         editorOptions: {
                             disabled: true
                         }

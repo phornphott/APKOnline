@@ -14,12 +14,14 @@
         $scope.Document_Category = 0;
         $scope.Document_Group = 0;
         $scope.Objective = 0;
+        $scope.Document_Term = 0;
         $scope.Document_ID = Math.floor(Math.random() * 10000); 
         $scope.tmpfolder=Math.floor(Math.random() * 1000000);
         $scope.Document_Vnos = "";
         $scope.ProjectSelect = "";
         $scope.ProjectSelect = $scope.RadioValue[0];
         console.log($scope.ProjectSelect);
+        $scope.JobVisible = false;
         $scope.radioGroup = {
             eventRadioGroupOptions: {
                 items: $scope.RadioValue,
@@ -27,6 +29,16 @@
                 layout: "horizontal",
                 onValueChanged: function (e) {
                     $scope.ProjectSelect = e.value;
+                    if ($scope.ProjectSelect == 'PR') {
+                        $scope.JobVisible = false;
+                    }
+                    else if ($scope.ProjectSelect == 'SR') {
+                        $scope.JobVisible = false;
+                    }
+                    else {
+                        $scope.JobVisible = true;
+                    }
+                    console.log($scope.JobVisible);
                 }
             }
         };
@@ -456,7 +468,10 @@
             //}
             console.log($scope.Document_Dep);
             if ($scope.ProjectSelect == '')
-            { $scope.ProjectSelect = 'PR';}
+            { $scope.ProjectSelect = 'PR'; }
+            if ($scope.ProjectSelect == 'PR' && $scope.ProjectSelect == 'SR') {
+                $scope.Document_Job == 0
+            }
             if ($scope.Document_Dep == 0) {
                
                 swal({
@@ -468,10 +483,10 @@
                     confirmButtonText: 'OK'
                 })
             }
-            else if ($scope.Document_Job == 0) {
+            else if ($scope.Document_Job == 0 && $scope.ProjectSelect == 'CR') {
                 swal({
                     title: 'info',
-                    text: "กรุณาเลือกรหัสโครงการและตรวจสอบตัวเลือกที่มี *ก่อนบันทึก",
+                    text: "กรุณาเลือกรหัสโครงการและตรวจสอบตัวเลือกที่มี * ก่อนบันทึก",
                     type: "info",
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",
@@ -663,5 +678,6 @@
             }, function errorCallback(response) {
             });
         }
+       
     }
 ])

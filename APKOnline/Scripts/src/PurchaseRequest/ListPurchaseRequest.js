@@ -49,13 +49,26 @@
                     dataField: "DEPdescT",
                     caption: "แผนก"
                 }, {
-                    dataField: "JOBdescT",
+                        dataField: "Document_Project",
                     caption: "โครงการ"
-                }, , {
-                    dataField: "Document_NetSUM",
+                }, {
+                    dataField: "JOBdescT",
+                    caption: "รหัสโครงการ"
+                },  {
+                        dataField: "Document_Cog",
                     alignment: "right",
-                    format: "currency",
+                    format: "#,##0.00",
                     caption: "ยอดเงิน"
+                }, {
+                        dataField: "Document_VatSUM",
+                    alignment: "right",
+                    format: "#,##0.00",
+                    caption: "VAT"
+                }, {
+                        dataField: "Document_NetSUM",
+                    alignment: "right",
+                    format: "#,##0.00" ,
+                    caption: "ยอดเงินรวม VAT"
                 }, {
                     dataField: "Staff",
                     caption: "พนักงาน"

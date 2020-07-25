@@ -30,16 +30,16 @@
                                 <div class="form-group">
                                     <label for="inputPassword3" class="col-sm-4 control-label"></label>
                                     <div class="col-sm-8">
-                                            <div class="form-group">
+                                        <div class="form-group">
 
-                                                <div id="radio-group-with-selection" dx-radio-group="radioGroup.eventRadioGroupOptions">
-
-                                                </div>
+                                            <div id="radio-group-with-selection" dx-radio-group="radioGroup.eventRadioGroupOptions">
 
                                             </div>
+
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" ng-show="JobVisible">
                                     <label for="inputPassword3" class="col-sm-4 control-label">รหัสโครงการ : <a style="color:red">*</a></label>
                                     <div class="col-sm-8">
                                         <div class="col-xs-10" id="Job" style="height: 32px;"></div>
@@ -110,15 +110,15 @@
                                                 <div class="form-group">
                                                     <label for="inputPassword3" class="col-sm-3 control-label">งวดงาน : </label>
                                                     <div class="col-sm-9">
-                                                        <input type="text" class="form-control" id="inputPassword3" ng-model="Document_Term">
+                                                        <input type="text" class="form-control" id="inputPassword3" ng-model="Document_Term" onkeypress="return isNumberKey(event)">
                                                     </div>
                                                 </div>
                                                 @*<div class="form-group">
-                                                    <label for="inputPassword3" class="col-sm-3 control-label">รายละเอียด : </label>
-                                                    <div class="col-sm-9">
-                                                        <textarea class="form-control" rows="3" ng-model="Document_Means"></textarea>
-                                                    </div>
-                                                </div>*@
+                                                        <label for="inputPassword3" class="col-sm-3 control-label">รายละเอียด : </label>
+                                                        <div class="col-sm-9">
+                                                            <textarea class="form-control" rows="3" ng-model="Document_Means"></textarea>
+                                                        </div>
+                                                    </div>*@
                                             </div>
                                         </div>
                                     </form>
@@ -147,20 +147,20 @@
                         </div>
                     </div>
                     <br />
-                    <div >
+                    <div>
                         <center>
                             @*<div class="row">
-            <input type="file" ng-file-model="files" multiple class="btn btn-secondary" />
-        </div>
-        <div class="row">
-            <p ng-repeat="file in files">
-                {{file.name}}
-            </p>
-        </div>
-        <div class="row">
-            <button class="btn btn-info" type="button" ng-click="upload()">Upload</button>
+                                    <input type="file" ng-file-model="files" multiple class="btn btn-secondary" />
+                                </div>
+                                <div class="row">
+                                    <p ng-repeat="file in files">
+                                        {{file.name}}
+                                    </p>
+                                </div>
+                                <div class="row">
+                                    <button class="btn btn-info" type="button" ng-click="upload()">Upload</button>
 
-        </div>*@
+                                </div>*@
                             <input type="file" id="file1" name="file" accept="application/pdf" multiple
                                    ng-files="getTheFiles($files)" />
                             <ul>
@@ -172,23 +172,23 @@
                         </center>
                     </div>
 
-                        @*<form class="form-horizontal">
-            <div class="row">
-                <div class="col-md-12">
-                    <center>
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="color:red;" onclick="return false">
-                            *** ถ้ามีการ Upload ไฟล์เสร็จแล้ว  upload อีกครั้งไฟล์เดิมจะหายไป
-                        </a>
-                    </center>
-                    <center>
+                    @*<form class="form-horizontal">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <center>
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" style="color:red;" onclick="return false">
+                                            *** ถ้ามีการ Upload ไฟล์เสร็จแล้ว  upload อีกครั้งไฟล์เดิมจะหายไป
+                                        </a>
+                                    </center>
+                                    <center>
 
-                        <button class="btn btn-info" style="width:120px;" ng-click="OpenUploadFile()">Upload File</button>
-                    </center>
+                                        <button class="btn btn-info" style="width:120px;" ng-click="OpenUploadFile()">Upload File</button>
+                                    </center>
 
+                                </div>
+                            </div>
+                        </form>*@
                 </div>
-            </div>
-        </form>*@
-                    </div>
                 <div class="box-footer">
                     <center>
                         <button class="btn btn-success btn-lg" style="width:120px;" ng-click="SaveDocuments()">Save</button>&nbsp;&nbsp;&nbsp;
@@ -199,7 +199,14 @@
         </div>
     </div>
 </section>
-
+<SCRIPT language=Javascript>
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+</SCRIPT>
 <style>
     #gridContainer {
         height: 440px;

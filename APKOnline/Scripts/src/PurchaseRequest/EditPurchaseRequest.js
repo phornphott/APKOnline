@@ -71,9 +71,9 @@
                 columns: [{
                     dataField: "Document_Detail_Acc",
                     caption: "รหัสบัญชี",
-                    editorOptions: {
-                        disabled: true
-                    },
+                    //editorOptions: {
+                    //    disabled: true
+                    //},
                     lookup: {
                         dataSource: $rootScope.Account,
                         displayExpr: "Name",
@@ -82,9 +82,9 @@
                 }, {
                     dataField: "Document_Detail_Acc_Desc",
                     caption: "รายละเอียดสินค้า" ,
-                     editorOptions: {
-                        disabled: true
-                    }
+                    // editorOptions: {
+                    //    disabled: true
+                    //}
                 }, {
                     dataField: "Document_Detail_Quan",
                     caption: "Qty",

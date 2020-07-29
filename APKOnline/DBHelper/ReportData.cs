@@ -38,14 +38,14 @@ namespace APKOnline.DBHelper
                     Addition += " AND p.Document_Dep=" + DEPcode;
                 }
 
-                string strSQL = "\r\n SELECT distinct p.*, b.SumMonth" + MONTHS + " as SumMonth, s.StaffCode, s.StaffFirstName, s.StaffLastName" +
+                string strSQL = "\r\n SELECT distinct p.*, b.DEPmonth" + MONTHS + " as SumMonth, s.StaffCode, s.StaffFirstName, s.StaffLastName" +
                     " , d.DEPcode, CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job, Objective_Name AS Objective, Category_Name AS Category FROM DocumentPR_Header p " +
                       "\r\n LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job " +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep " +
                       " LEFT JOIN Category c on c.Category_Id = p.Document_Category " +
                       " LEFT JOIN Objective o on o.Objective_Id = p.Document_Objective " +
-                      " LEFT JOIN Budget b on d.DEPcode=b.CodeDEP" +
+                      " LEFT JOIN BudgetOfYearByDepartment b on d.DEPcode=b.DEPcode" +
                       " where Document_Delete=0 AND p.Document_Date BETWEEN '" + STARTDATE + "' AND '" + ENDDATE + "'" + Addition + ";";
                 dt = DBHelper.List(strSQL);
             }

@@ -154,7 +154,7 @@ namespace APKOnline.DBHelper
             try
             {
                 strSQL = "\r\n SELECT * FROM Staffs " +
-                         "\r\n WHERE Deleted=0;";
+                         "\r\n WHERE Deleted=0 order by StaffCode;";
                 dt = DBHelper.List(strSQL);
 
                 foreach (DataRow dr in dt.Rows)
@@ -339,15 +339,15 @@ namespace APKOnline.DBHelper
 
             if (item.StaffID == 0)
             {
-                strSQL = "Insert Into Staffs (StaffLogin,StaffPassword,StaffCode,StaffFirstName,StaffLastName,StaffPosition,StaffLevel,StaffDepartmentID,InputDate,UpdateDate) VALUES (@StaffLogin,@StaffPassword,@StaffCode,@StaffFirstName,@StaffLastName,@StaffLevel,@StaffDepartmentID,@InputDate,@UpdateDate)";
+                strSQL = "Insert Into Staffs (StaffLogin,StaffPassword,StaffCode,StaffFirstName,StaffLastName,StaffPosition,StaffLevel,StaffDepartmentID,InputDate,UpdateDate) VALUES (@StaffLogin,@StaffPassword,@StaffCode,@StaffFirstName,@StaffLastName,@StaffPosition,@StaffLevel,@StaffDepartmentID,@InputDate,@UpdateDate)";
                 List<SqlParameter> sp = new List<SqlParameter>()
                 {
                     new SqlParameter() {ParameterName = "@StaffLogin", SqlDbType = SqlDbType.NVarChar, Value= item.StaffLogin},
                     new SqlParameter() {ParameterName = "@StaffPassword", SqlDbType = SqlDbType.NVarChar, Value = Base64Encode(item.StaffPassword)},
                     new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value = item.StaffCode.ToUpper()},
-                    new SqlParameter() { ParameterName = "@StaffFirstName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffFirstName },
-                    new SqlParameter() { ParameterName = "@StaffLastName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffLastName },
-                    new SqlParameter() { ParameterName = "@StaffPosition", SqlDbType = SqlDbType.NVarChar, Value = item.StaffPosition },
+                    new SqlParameter() { ParameterName = "@StaffFirstName", SqlDbType = SqlDbType.NVarChar, Value = DBString(item.StaffFirstName)},
+                    new SqlParameter() { ParameterName = "@StaffLastName", SqlDbType = SqlDbType.NVarChar, Value = DBString(item.StaffLastName) },
+                    new SqlParameter() { ParameterName = "@StaffPosition", SqlDbType = SqlDbType.NVarChar, Value = DBString(item.StaffPosition) },
                     new SqlParameter() { ParameterName = "@StaffLevel", SqlDbType = SqlDbType.TinyInt, Value = item.StaffLevel },
                     new SqlParameter() { ParameterName = "@StaffDepartmentID", SqlDbType = SqlDbType.Int, Value = item.StaffDepartmentID },
                     new SqlParameter() { ParameterName = "@InputDate", SqlDbType = SqlDbType.DateTime, Value = DateTime.Now },
@@ -365,9 +365,9 @@ namespace APKOnline.DBHelper
                     new SqlParameter() {ParameterName = "@StaffLogin", SqlDbType = SqlDbType.NVarChar, Value= item.StaffLogin},
                     new SqlParameter() {ParameterName = "@StaffPassword", SqlDbType = SqlDbType.NVarChar, Value = Base64Encode(item.StaffPassword)},
                     new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value = item.StaffCode.ToUpper()},
-                    new SqlParameter() { ParameterName = "@StaffFirstName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffFirstName },
-                    new SqlParameter() { ParameterName = "@StaffLastName", SqlDbType = SqlDbType.NVarChar, Value = item.StaffLastName },
-                    new SqlParameter() { ParameterName = "@StaffPosition", SqlDbType = SqlDbType.NVarChar, Value = item.StaffPosition },
+                    new SqlParameter() { ParameterName = "@StaffFirstName", SqlDbType = SqlDbType.NVarChar, Value = DBString(item.StaffFirstName)},
+                    new SqlParameter() { ParameterName = "@StaffLastName", SqlDbType = SqlDbType.NVarChar, Value = DBString(item.StaffLastName) },
+                    new SqlParameter() { ParameterName = "@StaffPosition", SqlDbType = SqlDbType.NVarChar, Value = DBString(item.StaffPosition)},
                     new SqlParameter() { ParameterName = "@StaffLevel", SqlDbType = SqlDbType.TinyInt, Value = item.StaffLevel},
                     new SqlParameter() { ParameterName = "@StaffDepartmentID", SqlDbType = SqlDbType.Int, Value = item.StaffDepartmentID}
                 };
@@ -481,6 +481,15 @@ namespace APKOnline.DBHelper
             return "'" + data + "'";
         }
 
+        public string DBString(object obj)
+        {
+            string str;
+
+            str = obj == DBNull.Value ? "" : Convert.ToString(obj);
+
+            return str;
+        }
+
         public string GetNameFromTB(int id, string tb, string xf)
         {
             string strSQL = null;
@@ -571,8 +580,8 @@ namespace APKOnline.DBHelper
             DataTable dt = new DataTable();
 
             item.StaffCode = GetNameFromTB(item.StaffID, "Staffs", "StaffCode");
-            item.DEPdescT = GetNameFromTB(item.StaffID, "Department", "DEPdescT");
-            item.PositionCode = GetNameFromTB(item.StaffID, "PositionPermission", "PositionCode");
+            item.DEPdescT = GetNameFromTB(item.DEPid, "Department", "DEPdescT");
+            item.PositionCode = GetNameFromTB(item.PositionPermissionId, "PositionPermission", "PositionCode");
 
             if (item.Authorizeid == 0)
             {
@@ -580,11 +589,11 @@ namespace APKOnline.DBHelper
                 List<SqlParameter> sp = new List<SqlParameter>()
                 {
                     new SqlParameter() {ParameterName = "@StaffID", SqlDbType = SqlDbType.Int, Value= item.StaffID},
-                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value= item.StaffCode},
+                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value= item.StaffCode.ToUpper()},
                     new SqlParameter() {ParameterName = "@DEPid", SqlDbType = SqlDbType.Int, Value = item.DEPid},
                     new SqlParameter() {ParameterName = "@DEPdescT", SqlDbType = SqlDbType.NVarChar, Value= item.DEPdescT},
                     new SqlParameter() {ParameterName = "@PositionPermissionId", SqlDbType = SqlDbType.Int, Value = item.PositionPermissionId},
-                    new SqlParameter() {ParameterName = "@PositionCode", SqlDbType = SqlDbType.NVarChar, Value= item.PositionCode},
+                    new SqlParameter() {ParameterName = "@PositionCode", SqlDbType = SqlDbType.NVarChar, Value= item.PositionCode.ToUpper()},
                     new SqlParameter() {ParameterName = "@PositionLimit", SqlDbType = SqlDbType.Decimal, Value = item.PositionLimit},
                     new SqlParameter() {ParameterName = "@isPreview", SqlDbType = SqlDbType.Bit, Value = item.isPreview}
                 };
@@ -598,11 +607,11 @@ namespace APKOnline.DBHelper
                 {
                     new SqlParameter() {ParameterName = "@Authorizeid", SqlDbType = SqlDbType.VarChar, Value= item.Authorizeid},
                     new SqlParameter() {ParameterName = "@StaffID", SqlDbType = SqlDbType.Int, Value= item.StaffID},
-                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value= item.StaffCode},
+                    new SqlParameter() {ParameterName = "@StaffCode", SqlDbType = SqlDbType.NVarChar, Value= item.StaffCode.ToUpper()},
                     new SqlParameter() {ParameterName = "@DEPid", SqlDbType = SqlDbType.Int, Value = item.DEPid},
                     new SqlParameter() {ParameterName = "@DEPdescT", SqlDbType = SqlDbType.NVarChar, Value= item.DEPdescT},
                     new SqlParameter() {ParameterName = "@PositionPermissionId", SqlDbType = SqlDbType.Int, Value = item.PositionPermissionId},
-                    new SqlParameter() {ParameterName = "@PositionCode", SqlDbType = SqlDbType.NVarChar, Value= item.PositionCode},
+                    new SqlParameter() {ParameterName = "@PositionCode", SqlDbType = SqlDbType.NVarChar, Value= item.PositionCode.ToUpper()},
                     new SqlParameter() {ParameterName = "@PositionLimit", SqlDbType = SqlDbType.Decimal, Value = item.PositionLimit},
                     new SqlParameter() {ParameterName = "@isPreview", SqlDbType = SqlDbType.Bit, Value = item.isPreview}
                 };

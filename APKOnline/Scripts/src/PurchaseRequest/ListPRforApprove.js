@@ -52,6 +52,21 @@
                     dataField: "JOBdescT",
                     caption: "โครงการ"
                 }, {
+                    dataField: "Document_Cog",
+                    alignment: "right",
+                    format: "#,##0.00",
+                    caption: "ยอดเงิน"
+                }, {
+                    dataField: "Document_VatSUM",
+                    alignment: "right",
+                    format: "#,##0.00",
+                    caption: "VAT"
+                }, {
+                    dataField: "Document_NetSUM",
+                    alignment: "right",
+                    format: "#,##0.00",
+                    caption: "ยอดเงินรวม VAT"
+                }, {
                         dataField: "Staff",
                     caption: "พนักงาน"
                 }, {

@@ -25,7 +25,7 @@ namespace APKOnline.DBHelper
         int DeleteTmpDetail(int Hid, ref string errMsg);
         DataTable GetListPO(int id,ref string errMsg);
         DataTable GetPRDataForCreatePO(int DeptID, ref string errMsg);
-        int ApprovePO(int Document_Id, int StaffID, ref string errMsg);
+        int ApprovePO(int Document_Id, int StaffID, int DeptID, ref string errMsg);
         DataTable GetListPOForApprove(int id, ref string errMsg);
         DataTable GetPOHeaderData(int Document_id, int staffid, ref string errMsg);
         DataTable GetDetailData(int Document_Detail_Hid, ref string errMsg);
@@ -208,7 +208,6 @@ namespace APKOnline.DBHelper
             dt.TableName = "STK";
             return dt;
         }
-
         public DataTable GetDetailData(int Document_Detail_Hid, ref string errMsg)
         {
             DataTable dt = new DataTable();
@@ -232,7 +231,6 @@ namespace APKOnline.DBHelper
 
             return dt;
         }
-
         public DataTable GetDetailData(int Document_Detail_Hid,int tmp, ref string errMsg)
         {
             DataTable dt = new DataTable();
@@ -300,21 +298,26 @@ namespace APKOnline.DBHelper
             DataTable dt = new DataTable();
             string tablename = "DocumentPO_Header";
             decimal budget = 0;
+            decimal DocCog = 0;
+            int DEPid = 0;
 
             try
             {
-                string strSQL = "\r\n  " +
-                    " SELECT * " +
-                    " FROM StaffAuthorize WHERE StaffID = " + staffid;
-                DataTable staffauth = DBHelper.List(strSQL);
-                foreach (DataRow dr in staffauth.Rows)
-                {
-                    budget = Convert.ToDecimal(dr["PositionLimit"]);
-                }
+                //string strSQL = "\r\n  " +
+                //    " SELECT * " +
+                //    " FROM StaffAuthorize WHERE StaffID = " + staffid;
+                //DataTable staffauth = DBHelper.List(strSQL);
+                //foreach (DataRow dr in staffauth.Rows)
+                //{
+                //    budget = Convert.ToDecimal(dr["PositionLimit"]);
+                //}
 
-                 strSQL = "\r\n  " +
+                //" ,CASE WHEN p.Document_Cog > " + budget + " THEN 'รับทราบ'ELSE 'อนุมัติ' END AS SaveText " +
+
+                string strSQL = "\r\n  " +
                       " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job,g.GroupName AS 'Group'" +
-                      " , Objective_Name AS Objective,Category_Name AS Category ,CASE WHEN p.Document_Cog > " + budget + " THEN 'รับทราบ'ELSE 'อนุมัติ' END AS SaveText " +
+                      " , Objective_Name AS Objective,Category_Name AS Category " +
+                      " ,'อนุมัติ' AS SaveText " +
                       " ,CONCAT(CREcode,' : ',CAST(cus.CREnameT as NVARCHAR(max))) AS Customer " +
                       " FROM " + tablename + " p LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job" +
@@ -325,13 +328,31 @@ namespace APKOnline.DBHelper
                       " LEFT JOIN CRE cus on cus.CREcode=p.Document_Cus" +
                       " where Document_Delete=0 AND Document_Id =" + Document_id;
                 dt = DBHelper.List(strSQL);
-                //if (dt.Rows.Count > 0)
-                //{
-                //    foreach (DataRow dr in dt.Rows)
-                //    {
-                //        dr["Document_Date"] = Convert.ToDateTime(dr["Document_Date"]).ToString("dd-MM-yyyy");
-                //    }
-                //}
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        DEPid = DBInt(dr["Document_Dep"]);
+                        DocCog = Convert.ToDecimal(dr["Document_Cog"]);
+                    }
+
+                    strSQL = "\r\n  " +
+                    " SELECT * " +
+                    //" FROM StaffAuthorize WHERE StaffID = " + staffid + " and DEPid = " + DEPid;
+                    " FROM StaffAuthorize WHERE StaffID = " + staffid;
+                    DataTable staffauth = DBHelper.List(strSQL);
+                    foreach (DataRow dr in staffauth.Rows)
+                    {
+                        budget = Convert.ToDecimal(dr["PositionLimit"]);
+                    }
+
+                    if (DocCog > budget)
+                    {
+                        dt.Rows[0]["SaveText"] = "รับทราบ";
+                    }
+                }
+
+
 
             }
             catch (Exception e)
@@ -406,11 +427,27 @@ namespace APKOnline.DBHelper
                 {
                     foreach (DataRow dr in staff.Rows)
                     {
-                        staffLevel = Convert.ToInt32(dr["StaffLevelID"]) - 1;
+                        //staffLevel = Convert.ToInt32(dr["StaffLevelID"]) - 1;
+                        staffLevel = Convert.ToInt32(dr["StaffLevel"]) - 1;
                     }
                 }
-                string strSQL = "\r\n   SELECT * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevelID ELSE a.Current_Level END AS Document_Level FROM " +
-                      " (SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,s.StaffLevelID" +
+                //string strSQL = "\r\n   SELECT * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevelID ELSE a.Current_Level END AS Document_Level FROM " +
+                //      " (SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,s.StaffLevelID" +
+                //      ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff" +
+                //      " ,g.GroupName AS 'Group', Objective_Name AS Objective,Category_Name AS Category" +
+                //      " FROM " + tablename + " p " +
+                //      " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                //      " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                //      " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
+                //      " LEFT JOIN Category c on c.Category_Id = p.Document_Category" +
+                //      " LEFT JOIN Objective o on o.Objective_Id = p.Document_Objective" +
+                //      " LEFT JOIN Document_Group g on g.id=p.Document_Group" +
+                //      " where Document_Delete=0 AND Document_Status < 2) aa " +
+                //      " left join(SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
+                //          " FROM ApprovePO GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel; 
+
+                string strSQL = "\r\n   SELECT * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevel ELSE a.Current_Level END AS Document_Level FROM " +
+                      " (SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,s.StaffLevel" +
                       ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff" +
                       " ,g.GroupName AS 'Group', Objective_Name AS Objective,Category_Name AS Category" +
                       " FROM " + tablename + " p " +
@@ -422,7 +459,8 @@ namespace APKOnline.DBHelper
                       " LEFT JOIN Document_Group g on g.id=p.Document_Group" +
                       " where Document_Delete=0 AND Document_Status < 2) aa " +
                       " left join(SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
-                          " FROM ApprovePO GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel; 
+                          " FROM ApprovePO GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel;
+
                 dt = DBHelper.List(strSQL);
             }
             catch (Exception e)
@@ -434,7 +472,6 @@ namespace APKOnline.DBHelper
 
             return dt;
         }
-
         public DataTable GetPRDataForCreatePO(int DeptID, ref string errMsg)
         {
             DataTable dt = new DataTable();
@@ -462,7 +499,6 @@ namespace APKOnline.DBHelper
 
             return dt;
         }
-
         public int InsertHeader(PRHeaderModels Header,int prid, ref string errMsg)
         {
             int document_id = 0;
@@ -561,14 +597,14 @@ namespace APKOnline.DBHelper
                 cmd.ExecuteNonQuery();
 
 
-                sql = " Update DocumentPR_Header Set Document_Status=3 " +
-                      "  WHERE Document_id = " + prid;
-                cmd.CommandText = sql;
-                cmd.CommandTimeout = 30;
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Clear();
-                cmd.Transaction = myTran;
-                cmd.ExecuteNonQuery();
+                //sql = " Update DocumentPR_Header Set Document_Status=3 " +
+                //      "  WHERE Document_id = " + prid;
+                //cmd.CommandText = sql;
+                //cmd.CommandTimeout = 30;
+                //cmd.CommandType = CommandType.Text;
+                //cmd.Parameters.Clear();
+                //cmd.Transaction = myTran;
+                //cmd.ExecuteNonQuery();
 
                 myTran.Commit();
             }
@@ -707,7 +743,7 @@ namespace APKOnline.DBHelper
 
             return document_id;
         }
-        public int ApprovePO(int Document_Id,int StaffID, ref string errMsg)
+        public int ApprovePO(int Document_Id,int StaffID, int DeptID, ref string errMsg)
         {
             int document_id = 0;
             string sqlQuery = "";
@@ -727,7 +763,17 @@ namespace APKOnline.DBHelper
                 foreach (DataRow dr in staffauth.Rows)
                 {
                     budget = Convert.ToDecimal(dr["PositionLimit"]);
-                    ApproveLevel = Convert.ToInt32(dr["PositionPermissionId"]);
+                    //ApproveLevel = Convert.ToInt32(dr["PositionPermissionId"]);
+                }
+
+                string sql = "Select * from Staffs WHERE StaffID = " + StaffID;
+                DataTable staff = DBHelper.List(sql);
+                if (staff.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in staff.Rows)
+                    {
+                        ApproveLevel = Convert.ToInt32(dr["StaffLevel"]);
+                    }
                 }
 
                 strSQL = "\r\n  " +
@@ -737,7 +783,8 @@ namespace APKOnline.DBHelper
                 foreach (DataRow dr in docHeader.Rows)
                 {
                     doc_cog = Convert.ToDecimal(dr["Document_Cog"]);
-                    docLevel = Convert.ToInt32(dr["StaffLevelID"]);
+                    //docLevel = Convert.ToInt32(dr["StaffLevelID"]);
+                    docLevel = Convert.ToInt32(dr["StaffLevel"]);
                 }
                 SqlConnection conn = DBHelper.sqlConnection();
                 if (conn.State == ConnectionState.Closed)
@@ -784,6 +831,28 @@ namespace APKOnline.DBHelper
                     cmd.Parameters.AddWithValue("@Document_Id", Document_Id);
                     cmd.Parameters.AddWithValue("@Document_EditUser", StaffID);
                     cmd.ExecuteNonQuery();
+
+                    string DocPO = "";
+                    int PRID = 0;
+                    strSQL = " SELECT Document_PRID,Document_Vnos FROM DocumentPO_Header WHERE Document_Id = " + Document_Id;
+                    docHeader = DBHelper.List(strSQL);
+                    foreach (DataRow dr in docHeader.Rows)
+                    {
+                        PRID = DBInt(dr["Document_PRID"]);
+                        DocPO = DBString(dr["Document_Vnos"]);
+                    }
+
+                    sqlQuery = "Update DocumentPR_Header SET " +
+                                "Document_Vnos_PO = @Document_Vnos_PO,Document_PO=@Document_PO  WHERE Document_Id = @Document_Id";
+                    cmd.CommandText = sqlQuery;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@Document_Id", PRID);
+                    cmd.Parameters.AddWithValue("@Document_Vnos_PO", DocPO);
+                    cmd.Parameters.AddWithValue("@Document_PO", 1);
+                    cmd.ExecuteNonQuery();
+
                 }
                 //document_id = (int)shipperIdParam.Value;
 
@@ -818,7 +887,29 @@ namespace APKOnline.DBHelper
             dt.TableName = "Document_Vnos";
             return dt;
         }
+        public int DBInt(object obj)
+        {
+            int i;
 
+            try
+            {
+                i = obj == DBNull.Value ? 0 : Convert.ToInt32(obj);
+            }
+            catch
+            {
+                i = 0;
+            }
+
+            return i;
+        }
+        public string DBString(object obj)
+        {
+            string str;
+
+            str = obj == DBNull.Value ? "" : Convert.ToString(obj);
+
+            return str;
+        }
         #endregion
 
     }

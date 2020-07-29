@@ -7,6 +7,7 @@
         $scope.showBorders = true;
         $scope.rowAlternationEnabled = true;
         $scope.Document_Dep = 0;
+        $scope.Document_Depid = 0;
         $scope.Document_Job = 0;
         $scope.Document_Category = 0;
         $scope.Document_Group = 0;
@@ -19,6 +20,8 @@
             console.log(data);
             $scope.Header = data.data.Results.Header[0];
             $scope.SaveText = data.data.Results.Header[0].SaveText;
+            $scope.Document_Depid = data.data.Results.Header[0].Document_Depid;
+            console.log($scope.Document_Depid);
             var Detail = data.data.Results.Detail;
             $rootScope.Account = data.data.Results.Account;
             $scope.dataGridOptions = {
@@ -195,6 +198,7 @@
                     //"Document_Cus": '',
                     //"Document_Job": $scope.Document_Job,
                     //"Document_Dep": $scope.Document_Dep,
+                    "Document_Depid": $scope.Document_Depid,
                     //"Document_Per": '',
                     //"Document_Doc": '',
                     //"Document_Mec": '',

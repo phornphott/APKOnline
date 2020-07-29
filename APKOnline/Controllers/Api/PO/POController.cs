@@ -561,7 +561,7 @@ namespace APKOnline
             Result resData = new Result();
 
 
-            int id = repository.ApprovePO(Header.Document_Id,Header.Document_CreateUser, ref errMsg);
+            int id = repository.ApprovePO(Header.Document_Id,Header.Document_CreateUser, DBInt(Header.Document_Dep),  ref errMsg);
 
             //ds.Tables.Add(dtDocumentVnos);
             if (errMsg != "")
@@ -577,6 +577,22 @@ namespace APKOnline
 
             resData.Results = ds;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+
+        public int DBInt(object obj)
+        {
+            int i;
+
+            try
+            {
+                i = obj == DBNull.Value ? 0 : Convert.ToInt32(obj);
+            }
+            catch
+            {
+                i = 0;
+            }
+
+            return i;
         }
     }
 }

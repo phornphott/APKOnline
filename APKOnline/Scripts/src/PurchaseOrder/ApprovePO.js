@@ -6,11 +6,13 @@
         $scope.showBorders = true;
         $scope.rowAlternationEnabled = true;
         console.log($stateParams);
+        $scope.Document_Dep = 0;
         $http.get("api/PO/GETApprovePO/" + $stateParams.id + "?StaffID=" + localStorage.getItem("StaffID")).then(function (data) {
             console.log(data);
             //$scope.Header = data.data.Results.Document_Vnos[0].Column1
             $scope.Header = data.data.Results.Header[0]
             $scope.SaveText = $scope.Header.SaveText; 
+            $scope.Document_Dep = $scope.Header.Document_Dep;
             var FileUpload = data.data.Results.FileUpload; 
 
             var Detail = data.data.Results.Detail;

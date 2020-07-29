@@ -217,7 +217,7 @@
                     editorOptions: {
                         items: $scope.USER,
                         valueExpr: 'StaffID',
-                        displayExpr: 'StaffCode',
+                        displayExpr: 'StaffFirstName',
                         disabled: false,
                     },
                     validationRules: [{

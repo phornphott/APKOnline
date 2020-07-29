@@ -17,6 +17,7 @@ namespace APKOnline.Models
         public string Document_Expect { get; set; }
         public string Document_Cus { get; set; }
         public string Document_Job { get; set; }
+        public int Document_Depid { get; set; }
         public string Document_Dep { get; set; }
         public string Document_Per { get; set; }
         public string Document_Doc { get; set; }

@@ -510,7 +510,7 @@ namespace APKOnline
             Result resData = new Result();
 
 
-            int id = repository.ApprovePR(Header.Document_Id,Header.Document_CreateUser, ref errMsg);
+            int id = repository.ApprovePR(Header.Document_Id,Header.Document_CreateUser, Header.Document_Depid, ref errMsg);
 
             //ds.Tables.Add(dtDocumentVnos);
             if (errMsg != "")

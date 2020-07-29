@@ -24,7 +24,7 @@ namespace APKOnline.DBHelper
         int DeleteTmpDetail(int Hid, ref string errMsg);
         DataTable GetPRData(int staffID, ref string errMsg);
         DataTable GetPRDataForApprove(int StaffID, int DeptID, ref string errMsg);
-        int ApprovePR(int Document_Id, int StaffID, ref string errMsg);
+        int ApprovePR(int Document_Id, int StaffID, int DeptID, ref string errMsg);
         DataTable GetPROverDataForApprove(int id, int DeptID, ref string errMsg);
         int ApprovePROverBudget(int Document_Id, int StaffID, ref string errMsg);
         bool UpdatePRDetail(PRDetailModels detail, ref string errMsg);
@@ -212,24 +212,28 @@ namespace APKOnline.DBHelper
             DataTable dt = new DataTable();
             string tablename = "DocumentPR_Header";
             decimal budget = 0;
+            decimal DocCog = 0;
+            int DEPid = 0;
            
             try
             {
+                //string strSQL = "\r\n  " +
+                //     " SELECT * " +
+                //     " FROM StaffAuthorize WHERE StaffID = " +staffid;
+                //DataTable staffauth = DBHelper.List(strSQL);
+                //foreach (DataRow dr in staffauth.Rows)
+                //{
+                //    budget = Convert.ToDecimal(dr["PositionLimit"]);
+                //}
+
+                //",CASE WHEN p.Document_Cog > " + budget + " THEN 'รับทราบ'ELSE 'อนุมัติ' END AS SaveText" +
+
+
                 string strSQL = "\r\n  " +
-                     " SELECT * " +
-                     " FROM StaffAuthorize WHERE StaffID = " +staffid;
-                DataTable staffauth = DBHelper.List(strSQL);
-                foreach (DataRow dr in staffauth.Rows)
-                {
-                    budget = Convert.ToDecimal(dr["PositionLimit"]);
-                }
-
-
-                 strSQL = "\r\n  " +
                       " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
                       " ,CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job ,g.GroupName AS 'Group'" +
                       " ,CAST(Objective_Name as NVARCHAR(max)) AS Objective,CAST(Category_Name as NVARCHAR(max)) AS Category" +
-                      ",CASE WHEN p.Document_Cog > "+ budget + " THEN 'รับทราบ'ELSE 'อนุมัติ' END AS SaveText" +
+                      " ,'อนุมัติ' AS SaveText" +
                       " FROM "+ tablename + " p LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job" +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
@@ -238,13 +242,33 @@ namespace APKOnline.DBHelper
                       " LEFT JOIN Document_Group g on g.id=p.Document_Group" +
                       " where Document_Delete=0 AND Document_Id =" + Document_id;
                 dt = DBHelper.List(strSQL);
-                //if (dt.Rows.Count > 0)
-                //{
-                //    foreach (DataRow dr in dt.Rows)
-                //    {
-                //        dr["Document_Date"] = Convert.ToDateTime(dr["Document_Date"]).ToString("dd-MM-yyyy");
-                //    }
-                //}
+
+
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        DEPid = Convert.ToInt32(dr["Document_Depid"]);
+                        DocCog = Convert.ToDecimal(dr["Document_Cog"]);
+                    }
+
+                    strSQL = "\r\n  " +
+                     " SELECT * " +
+                     " FROM StaffAuthorize WHERE StaffID = " + staffid + " and DEPid = " + DEPid;
+                    DataTable staffauth = DBHelper.List(strSQL);
+                    foreach (DataRow dr in staffauth.Rows)
+                    {
+                        budget = Convert.ToDecimal(dr["PositionLimit"]);
+                    }
+
+                    if (DocCog > budget)
+                    {
+                        dt.Rows[0]["SaveText"] = "รับทราบ";
+                    }
+
+                }
+
+                
 
             }
             catch (Exception e)
@@ -297,6 +321,8 @@ namespace APKOnline.DBHelper
             DataTable dt = new DataTable();
             string tablename = "DocumentPR_Header";
             int staffLevel = 0;
+            string Depin = "";
+
             try
             {
 
@@ -306,12 +332,28 @@ namespace APKOnline.DBHelper
                 {
                     foreach (DataRow dr in staff.Rows)
                     {
-                        staffLevel = Convert.ToInt32(dr["StaffLevelID"]) - 1;
+                        //staffLevel = Convert.ToInt32(dr["StaffLevelID"]) - 1;
+                        staffLevel = Convert.ToInt32(dr["StaffLevel"]) - 1;
                     }
                 }
 
 
-                    sql = "Select * from BudgetOfYearByDepartment WHERE DEPid = " + DeptID;
+                sql = " SELECT DEPid FROM StaffAuthorize WHERE StaffID = " + StaffID;
+                DataTable staffauth = DBHelper.List(sql);
+                foreach (DataRow dr in staffauth.Rows)
+                {
+                    if (Depin.Length == 0)
+                    {
+                        Depin = dr["DEPid"].ToString();
+                    }
+                    else
+                    {
+                        Depin = Depin + "," + dr["DEPid"].ToString();
+                    }
+                    //ApproveLevel = Convert.ToInt32(dr["PositionPermissionId"]);
+                }
+
+                sql = "Select * from BudgetOfYearByDepartment WHERE DEPid = " + DeptID;
                 DataTable depbudget = DBHelper.List(sql);
 
                 if (depbudget.Rows.Count > 0)
@@ -323,29 +365,49 @@ namespace APKOnline.DBHelper
                         Dep_Budget = Convert.ToDecimal(dr[monthcol]);
 
 
-                        string strSQL = "\r\n  SELECT distinct * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevelID ELSE a.Current_Level END AS Document_Level FROM  (" +
+                        //string strSQL = "\r\n  SELECT distinct * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevelID ELSE a.Current_Level END AS Document_Level FROM  (" +
+                        //  "(SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                        //  ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
+                        //  " FROM " + tablename + " p " +
+                        //  " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                        //  " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                        //  " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+                        //  " where Document_Delete=0 AND Document_Status<2 " +
+                        //  " AND Document_Cog <=" + Dep_Budget + " And p.Document_Dep= " + DeptID +
+                        //  ") UNION ALL (" +
+                        //  " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                        //  ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT" +
+                        //  " FROM " + tablename + " p " +
+                        //  " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                        //  " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                        //  " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+                        //  " LEFT JOIN ApprovePROverBudget a on a.Approve_Documen_Id=p.Document_Id " +
+                        //  " where Document_Delete=0 AND Document_Status < 2 AND a.Approve_Status = 2" +
+                        //  " AND Document_Cog > " + Dep_Budget + " And p.Document_Dep= " + DeptID+ ")) aa  " +
+                        //  " left join (SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
+                        //  " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level ="+ staffLevel;
+
+                        string strSQL = "\r\n  SELECT distinct * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevel ELSE a.Current_Level END AS Document_Level FROM  (" +
                           "(SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
+                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
                           " FROM " + tablename + " p " +
                           " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                           " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
                           " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
                           " where Document_Delete=0 AND Document_Status<2 " +
-                          " AND Document_Cog <=" + Dep_Budget + " And p.Document_Dep= " + DeptID +
+                          " AND Document_Cog <=" + Dep_Budget + " And p.Document_Dep in ( " + Depin + ")" +
                           ") UNION ALL (" +
                           " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT" +
+                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT" +
                           " FROM " + tablename + " p " +
                           " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                           " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
                           " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
                           " LEFT JOIN ApprovePROverBudget a on a.Approve_Documen_Id=p.Document_Id " +
                           " where Document_Delete=0 AND Document_Status < 2 AND a.Approve_Status = 2" +
-                          " AND Document_Cog > " + Dep_Budget + " And p.Document_Dep= " + DeptID+ ")) aa  " +
+                          " AND Document_Cog > " + Dep_Budget + " And p.Document_Dep in ( " + Depin + ")" + ")) aa  " +
                           " left join (SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
-                          " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level ="+ staffLevel;
-
-
+                          " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel;
 
 
                         dt = DBHelper.List(strSQL);
@@ -685,7 +747,7 @@ namespace APKOnline.DBHelper
 
             return document_id;
         }
-        public int ApprovePR(int Document_Id,int StaffID, ref string errMsg)
+        public int ApprovePR(int Document_Id,int StaffID, int DeptID, ref string errMsg)
         {
             int document_id = 0;
             string sqlQuery = "";
@@ -700,12 +762,22 @@ namespace APKOnline.DBHelper
             {
                 string strSQL = "\r\n  " +
               " SELECT * " +
-              " FROM StaffAuthorize WHERE StaffID = " + StaffID;
+              " FROM StaffAuthorize WHERE StaffID = " + StaffID + " and DEPid = " + DeptID;
                 DataTable staffauth = DBHelper.List(strSQL);
                 foreach (DataRow dr in staffauth.Rows)
                 {
                     budget = Convert.ToDecimal(dr["PositionLimit"]);
-                    ApproveLevel = Convert.ToInt32(dr["PositionPermissionId"]);
+                    //ApproveLevel = Convert.ToInt32(dr["PositionPermissionId"]);
+                }
+
+                string sql = "Select * from Staffs WHERE StaffID = " + StaffID;
+                DataTable staff = DBHelper.List(sql);
+                if (staff.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in staff.Rows)
+                    {
+                        ApproveLevel = Convert.ToInt32(dr["StaffLevel"]);
+                    }
                 }
 
                 strSQL = "\r\n  " +
@@ -715,7 +787,8 @@ namespace APKOnline.DBHelper
                 foreach (DataRow dr in docHeader.Rows)
                 {
                     doc_cog = Convert.ToDecimal(dr["Document_Cog"]);
-                    docLevel = Convert.ToInt32(dr["StaffLevelID"]);
+                    //docLevel = Convert.ToInt32(dr["StaffLevelID"]);
+                    docLevel = Convert.ToInt32(dr["StaffLevel"]);
                 }
                 SqlConnection conn = DBHelper.sqlConnection();
                 if (conn.State == ConnectionState.Closed)

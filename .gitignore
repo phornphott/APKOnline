@@ -1,7 +1,7 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
-
+.vs/config/applicationhost.config
 .vs/APKOnline/v15/Server/sqlite3
 .vs/APKOnline/v15/
 bin/

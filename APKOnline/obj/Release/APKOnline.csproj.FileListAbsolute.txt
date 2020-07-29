@@ -523,3 +523,4 @@ F:\Job\เมย์\APK\APKonline\Code\APKOnline\APKOnline\bin\zh-HANT\Microsoft
 F:\Job\เมย์\APK\APKonline\Code\APKOnline\APKOnline\obj\Release\APKOnline.csproj.CoreCompileInputs.cache
 F:\Job\เมย์\APK\APKonline\Code\APKOnline\APKOnline\obj\Release\APKOnline.dll
 F:\Job\เมย์\APK\APKonline\Code\APKOnline\APKOnline\obj\Release\APKOnline.pdb
+F:\Job\เมย์\APK\APKonline\Code\APKOnline\APKOnline\obj\Release\APKOnline.csprojResolveAssemblyReference.cache

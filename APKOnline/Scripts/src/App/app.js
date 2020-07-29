@@ -25,6 +25,7 @@ angular.module('ApkApp').controller('IndexController', function ($scope, $rootSc
 });
 
 angular.module('ApkApp').controller('DashboardController', function ($scope, $rootScope, LoginService, $http) {
+    console.log('DashboardController');
     $scope.MONTHDATE = new Date();
 
     let getDaysInMonth = function (month, year) {
@@ -37,7 +38,7 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
         $scope.MONTHS = String($scope.MONTHDATE.getMonth() + 1);
 
         $http.get("api/Report/DashBroad").then(function (data) {
-
+            console.log(data);
             $scope.ListReportBudgets = data.data.Results.DepAmount;
             $scope.piechartOptions = {
                 size: {

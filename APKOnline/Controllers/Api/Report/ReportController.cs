@@ -45,7 +45,38 @@ namespace APKOnline.Controllers.Api.Report
         }
         [HttpGet]
         [ActionName("DashBroad")]
-        public async Task<HttpResponseMessage> GETDashBroad()
+        public HttpResponseMessage GETDashBroad()
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+            try
+            {
+                ds =  Reportrepository.GetDashBroadData(ref errMsg);
+
+            }
+            catch (Exception ex) {
+                errMsg = ex.Message;
+            }
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+        [HttpGet]
+        [ActionName("DashBroadByDepartment")]
+        public HttpResponseMessage GETDashBroadByDepartment(int id)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
@@ -53,7 +84,7 @@ namespace APKOnline.Controllers.Api.Report
             Result resData = new Result();
 
 
-            ds = await Reportrepository.GetDashBroadData();
+            ds =  Reportrepository.GetDashBroadByDepartment(id, ref errMsg);
 
 
             if (errMsg != "")
@@ -72,34 +103,7 @@ namespace APKOnline.Controllers.Api.Report
         }
         [HttpGet]
         [ActionName("DashBroadByDepartment")]
-        public async Task<HttpResponseMessage> GETDashBroadByDepartment(int id)
-        {
-            string errMsg = "";
-            DataSet ds = new DataSet();
-            DataTable dt = new DataTable();
-            Result resData = new Result();
-
-
-            ds = await Reportrepository.GetDashBroadByDepartment(id);
-
-
-            if (errMsg != "")
-            {
-                resData.StatusCode = (int)(StatusCodes.Error);
-                resData.Messages = errMsg;
-            }
-            else
-            {
-                resData.StatusCode = (int)(StatusCodes.Succuss);
-                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
-            }
-
-            resData.Results = ds;
-            return Request.CreateResponse(HttpStatusCode.OK, resData);
-        }
-        [HttpGet]
-        [ActionName("DashBroadByDepartment")]
-        public async Task<HttpResponseMessage> GETDashBroadByDepartment(string dep)
+        public HttpResponseMessage GETDashBroadByDepartment(string dep)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
@@ -107,7 +111,7 @@ namespace APKOnline.Controllers.Api.Report
             Result resData = new Result();
 
             int id = Reportrepository.getdepid(dep);
-            ds = await Reportrepository.GetDashBroadByDepartment(id);
+            ds =  Reportrepository.GetDashBroadByDepartment(id,ref errMsg);
 
 
             if (errMsg != "")

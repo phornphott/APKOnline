@@ -74,15 +74,19 @@ namespace APKOnline.DBHelper
             //      " from DocumentPO_Header h " +
             //      " left join Department d on h.Document_Dep = d.DEPid " +
             //      " where Document_Date between  '" + date + "'  and '" + todate + "' group by Document_Dep,CAST(DEPcode as NVARCHAR(max)),CAST(DEPdescT as NVARCHAR(max))";
+            try
+            {
+                sql = " select SUM(Document_NetSUM) AS Amount,Document_Dep  ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,REPLACE(REPLACE(CAST(DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
+                      " from DocumentPO_Header h " +
+                      " left join Department d on h.Document_Dep = d.DEPid " +
+                      " where Document_Date between  '" + date + "'  and '" + todate + "' group by Document_Dep,CAST(DEPcode as NVARCHAR(max)),CAST(DEPdescT as NVARCHAR(max))";
 
-            sql = " select SUM(Document_NetSUM) AS Amount,Document_Dep  ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,REPLACE(REPLACE(CAST(DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
-                  " from DocumentPO_Header h " +
-                  " left join Department d on h.Document_Dep = d.DEPid " +
-                  " where Document_Date between  '" + date + "'  and '" + todate + "' group by Document_Dep,CAST(DEPcode as NVARCHAR(max)),CAST(DEPdescT as NVARCHAR(max))";
+                DataTable poDepAmount = DBHelper.List(sql);
+                poDepAmount.TableName = "DepAmount";
+                ds.Tables.Add(poDepAmount);
+            }
 
-            DataTable poDepAmount = DBHelper.List(sql);
-            poDepAmount.TableName = "DepAmount";
-            ds.Tables.Add(poDepAmount);
+            catch(Exception ex) { }
             return ds;
         }
         public async Task<DataSet> GetDashBroadByDepartment(int id)
@@ -151,7 +155,7 @@ namespace APKOnline.DBHelper
         public int getdepid(string dep)
         {
             int depid = 0;
-            string sql = "Select *  from Department Where REPLACE(REPLACE(trim(CAST(DEPdescT as NVARCHAR(max))), CHAR(13), ''), CHAR(10), '') = '" + dep + "'";
+            string sql = "Select *  from Department Where REPLACE(REPLACE((CAST(DEPdescT as NVARCHAR(max))), CHAR(13), ''), CHAR(10), '') = '" + dep + "'";
             DataTable dt = DBHelper.List(sql);
             dt.TableName = "Department";
             foreach (DataRow dr in dt.Rows)

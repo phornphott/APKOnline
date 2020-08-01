@@ -48,20 +48,40 @@
                     caption: "รหัสสินค้า"
                 }, {
                         
-                        dataField: "Document_Detail_Stk_Desc",
+                        dataField: "Document_Detail_Acc_Desc",
                     caption: "รายละเอียดสินค้า"
                 }, {
-                        dataField: "Document_Detail_Quan",
-                    caption: "จำนวน"
+                    dataField: "Document_Detail_Quan",
+                    caption: "Qty",
+                    alignment: "right",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Detail_Quan).toFixed(2));
+                        container.append(markup);
+                    },
                 }, {
-                        dataField: "Document_Detail_UnitPrice",
-                    caption: "ราคา/หน่วย"
+                    dataField: "Document_Detail_UnitPrice",
+                    caption: "ราคา/หน่วย",
+                    alignment: "right",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Detail_UnitPrice).toFixed(2));
+                        container.append(markup);
+                    },
+
                 }, {
-                        dataField: "Document_Detail_Cog",
-                        caption: "จำนวนเงิน",
-                        editorOptions: {
-                            disabled: true
-                        }
+                    dataField: "Document_Detail_Cog",
+                    caption: "จำนวนเงิน",
+                    alignment: "right",
+
+                    editorOptions: {
+                        disabled: true
+                    },
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Detail_Cog).toFixed(2));
+                        container.append(markup);
+                    },
                 }],
             };
             $scope.datafileGridOptions = {
@@ -103,6 +123,10 @@
             };
 
         });
+        var formatNumber = function (num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
+
         var onCellClickViewFile = function (e) {
             window.open("/Upload/" + e.data.path, "popup", "width=800,height=600,left=300,top=200");
         };

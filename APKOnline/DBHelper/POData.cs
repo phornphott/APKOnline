@@ -523,6 +523,7 @@ namespace APKOnline.DBHelper
                 foreach (DataRow dr in tmp.Rows)
                 {
                     amount = Convert.ToDecimal(dr[0]);
+                    Math.Round(amount, 2);
                 }
 
                 string sqlQuery = "INSERT INTO DocumentPO_Header(Document_Group,Document_Category,Document_Objective " +
@@ -556,9 +557,9 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_Desc", Header.Document_Desc);
                 cmd.Parameters.AddWithValue("@Document_Nolist", 0);
                 cmd.Parameters.AddWithValue("@Document_Cog", amount);
-                cmd.Parameters.AddWithValue("@Document_VatSUM", amount * (decimal)0.07);//()
+                cmd.Parameters.AddWithValue("@Document_VatSUM", Math.Round(amount * (decimal)0.07,2));//()
                 cmd.Parameters.AddWithValue("@Document_VatPer", 7);
-                cmd.Parameters.AddWithValue("@Document_NetSUM", amount * (decimal)1.07);//
+                cmd.Parameters.AddWithValue("@Document_NetSUM", Math.Round(amount * (decimal)1.07,2));//
                 cmd.Parameters.AddWithValue("@Document_Status", 0);
                 cmd.Parameters.AddWithValue("@Document_Tel", Header.Document_Tel == null ? "" : Header.Document_Tel);
                 cmd.Parameters.AddWithValue("@Document_PRID", prid);
@@ -677,7 +678,9 @@ namespace APKOnline.DBHelper
 
                 sqlQuery = "Update DocumentPO_Detail_tmp Set Document_Detail_Stk=@Document_Detail_Stk,Document_Detail_Stk_Desc=@Document_Detail_Stk_Desc" +
                     ",Document_Detail_Vat=@Document_Detail_Vat,Document_Detail_Sum=@Document_Detail_Sum,Document_Detail_UnitPrice=@Document_Detail_UnitPrice" +
-                    ",Document_Detail_Quan=@Document_Detail_Quan,Document_Detail_Cog=@Document_Detail_Cog WHERE Document_Detail_Id=@Document_Detail_Id  ";
+                    ",Document_Detail_Quan=@Document_Detail_Quan,Document_Detail_Cog=@Document_Detail_Cog" +
+                    ",Document_Detail_Acc=@Document_Detail_Acc,Document_Detail_Acc_Desc=@Document_Detail_Acc_Desc" +
+                    " WHERE Document_Detail_Id=@Document_Detail_Id  ";
 
                 cmd.CommandText = sqlQuery;
                 cmd.CommandTimeout = 30;
@@ -690,12 +693,15 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_Detail_Id", detail.Document_Detail_Id);
                 cmd.Parameters.AddWithValue("@Document_Detail_Stk", detail.Document_Detail_Stk == null ? "" : detail.Document_Detail_Stk);
                 cmd.Parameters.AddWithValue("@Document_Detail_Stk_Desc", detail.Document_Detail_Stk_Desc == null ? "" : detail.Document_Detail_Stk_Desc);
-                cmd.Parameters.AddWithValue("@Document_Detail_Quan", detail.Document_Detail_Quan);
-                cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", detail.Document_Detail_UnitPrice);
-                cmd.Parameters.AddWithValue("@Document_Detail_Cog", detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice);
+                cmd.Parameters.AddWithValue("@Document_Detail_Acc_Desc", detail.Document_Detail_Acc_Desc == null ? "" : detail.Document_Detail_Acc_Desc);
+                cmd.Parameters.AddWithValue("@Document_Detail_Acc", detail.Document_Detail_Acc == null ? "" : detail.Document_Detail_Acc);
 
-                cmd.Parameters.AddWithValue("@Document_Detail_Vat", (detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)0.07);
-                cmd.Parameters.AddWithValue("@Document_Detail_Sum", (detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07);
+                cmd.Parameters.AddWithValue("@Document_Detail_Quan", Math.Round(detail.Document_Detail_Quan,2));
+                cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", Math.Round(detail.Document_Detail_UnitPrice,2));
+                cmd.Parameters.AddWithValue("@Document_Detail_Cog", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice,2));
+
+                cmd.Parameters.AddWithValue("@Document_Detail_Vat", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)0.07,2));
+                cmd.Parameters.AddWithValue("@Document_Detail_Sum", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07,2));
                 cmd.ExecuteNonQuery();
 
                 //document_id = (int)shipperIdParam.Value;

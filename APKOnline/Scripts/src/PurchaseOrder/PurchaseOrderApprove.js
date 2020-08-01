@@ -48,8 +48,32 @@
                     dataField: "Document_Desc",
                     caption: "คำอธิบาย"
                 }, {
+                    dataField: "Document_Cog",
+                    alignment: "right",
+                    caption: "ยอดเงิน",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Cog).toFixed(2));
+                        container.append(markup);
+                    },
+                }, {
+                    dataField: "Document_VatSUM",
+                    alignment: "right",
+                    caption: "VAT",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_VatSUM).toFixed(2));
+                        container.append(markup);
+                    },
+                }, {
                     dataField: "Document_NetSUM",
-                    caption: "ยอดรวม"
+                    alignment: "right",
+                    caption: "ยอดเงินรวม VAT",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_NetSUM).toFixed(2));
+                        container.append(markup);
+                    },
                 }, {
                     dataField: "Dep",
                     caption: "แผนก"
@@ -67,7 +91,9 @@
                 }]
             };
         });
-
+        var formatNumber = function (num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
         var onCellClickViewPR = function (e) {
             console.log(e);
 

@@ -216,11 +216,29 @@
                     mode: "row",
                     allowUpdating: true,
                     allowAdding: true,
+                    allowDeleting: true,
                     texts: {
                         editRow: "แก้ไข",
                         saveRowChanges: "บันทึก",
                         cancelRowChanges: "ยกเลิก"
+                    },
+                    popup: {
+                        title: "รายการขออนุมัติ",
+                        showTitle: true,
+
+                        width: 700,
+                        height: 525,
+                        position: {
+                            my: "top",
+                            at: "top",
+                            of: window
+                        }
+                    },
+                    form: {
+
+                        items: ["Document_Detail_Acc", "Document_Detail_Acc_Desc", "Document_Detail_Quan", "Document_Detail_UnitPrice", "Document_Detail_Cog"]
                     }
+
                 },
                 columnAutoWidth: true,
                 columns: [{
@@ -238,24 +256,34 @@
                     dataField: "Document_Detail_Quan",
                     caption: "Qty",
                     alignment: "right",
-                    format: "#,##0.00",
-                    dataType: "number"
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Detail_Quan).toFixed(2));
+                        container.append(markup);
+                    },
                 }, {
                     dataField: "Document_Detail_UnitPrice",
                     caption: "ราคา/หน่วย",
                     alignment: "right",
-                    format: "#,##0.00",
-                    dataType: "number"
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Detail_UnitPrice).toFixed(2));
+                        container.append(markup);
+                    },
 
                 }, {
                     dataField: "Document_Detail_Cog",
                     caption: "จำนวนเงิน",
                     alignment: "right",
-                    format: "#,##0.00",
-                    dataType: "number",
+                   
                     editorOptions: {
                         disabled: true
-                    }
+                    },
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Detail_Cog).toFixed(2));
+                        container.append(markup);
+                    },
                 }],
                 //onContentReady: function (e) {
 
@@ -309,104 +337,177 @@
 
                     });             
                 },
-                //onRowUpdated: function (e) {
+                onEditorPrepared: function (e) {
+  
+                   
+                    if (e.parentType == 'dataRow' && e.dataField == 'Document_Detail_Quan') {
+                        $(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
+
+                          
+                            var event = args.jQueryEvent;
+                            console.log(event);
+                            if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+                                event.stopPropagation();
+                                event.preventDefault();  
+
+                            }
+                            //if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)
+                            //    || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37
+                            //    || event.keyCode == 39 || event.keyCode == 46) {
+                            //    var val = args.component.option("value");
+                            //    val += '';
+                            //    args.component.option("value", val);  
+                            //    event.stopPropagation();
+                            //    event.preventDefault();  
+                            //}
+
+                        });
 
 
-                //    //var MaterialDocCountDaily = [{
-                //    //    "DocumentID": e.key.DocumentID,
-                //    //    "KeyShopID": e.key.KeyShopID,
-                //    //    "DocDetailID": e.key.DocDetailID,
-                //    //    "ProductAmount": e.key.StartProductAmount,
-                //    //    "CurrentStockAmount": e.key.CurrentStockAmount,
-                //    //    "UnitName": e.key.UnitName,
-                //    //    "UnitSmallID": e.key.UnitSmallID,
-                //    //    "UnitLargeID": e.key.UnitLargeID,
-                //    //    "UnitRatio": e.key.UnitRatio,
-                //    //    "UnitLargeRatio": e.key.UnitLargeRatio
-                //    //}];
+                        $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
+                            var grid = $("#gridContainer").dxDataGrid("instance");
+                            var index = e.row.rowIndex;
+                            var data = grid.cellValue(index, "Document_Detail_UnitPrice");
+                            var result = 0;
+                            if (data == undefined) {
+                                result = 0;
 
-                //    //var checkStatusAdd = 0;
-                //    //$http.post("api/CountWeekly/AddMaterails", MaterialDocCountDaily).success(function (data, header, status, config) {
-                //    //    $rootScope.MaterialDocAll = data.Results;
-                //    //    if (data.StatusCode > 1) {
-                //    //        swal({
-                //    //            title: 'Information',
-                //    //            text: data.Messages,
-                //    //            type: "info",
-                //    //            showCancelButton: false,
-                //    //            confirmButtonColor: "#6EAA6F",
-                //    //            confirmButtonText: 'OK'
-                //    //        })
-                //    //        checkStatusAdd = 1;
-                //    //    }
-                //    //    $.get("api/CountWeekly/LoadDocument?documentTypeId=" + Number(localStorage.getItem('DocumentTypeID')) + "&documentId=" + $stateParams.DocumentID + "&keyShopId=" + $stateParams.KeyShopID + "&documentStatus=" + $stateParams.DocumentStatus).success(function (data) {
+                            }
+                            else {
+                                result = args.value * data;
+                                result = parseFloat(result).toFixed(2);
+                            }
 
-                //    //        if (data.StatusCode > 1) {
-                //    //            swal({
-                //    //                title: 'Information',
-                //    //                text: data.Messages,
-                //    //                type: "info",
-                //    //                showCancelButton: false,
-                //    //                confirmButtonColor: "#6EAA6F",
-                //    //                confirmButtonText: 'OK'
-                //    //            })
-                //    //            checkStatusAdd = 1;
-                //    //        }
-                //    //        else {
-                //    //            $scope.DocumentDetails = data.Results.DocumentDetails;
-                //    //            $scope.checkApprove = data.Results.checkApprove[0].check;
+                            var amount = args.value;
+                            grid.cellValue(index, "Document_Detail_Quan", amount);
+                            grid.cellValue(index, "Document_Detail_Cog", result);
 
-                //    //        }
-                //    //        if (checkStatusAdd == 1) {
-                //    //            $("#gridContainers").dxDataGrid({ dataSource: $scope.DocumentDetails });
-                //    //            $("#gridContainers").dxDataGrid("instance").refresh();
-                //    //        }
+                        });
+                    }
+                    else if (e.parentType == 'dataRow' && e.dataField == "Document_Detail_UnitPrice") {
+                        $(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
+
+                            var event = args.jQueryEvent;
+                            console.log(event);
+                            if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+                                event.stopPropagation();
+                                event.preventDefault();
+
+                            }
+                        });
+                        $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
+                            var grid = $("#gridContainer").dxDataGrid("instance");
+                            var index = e.row.rowIndex;
+                            var data = grid.cellValue(index, "Document_Detail_Quan");
+                            var result = 0;
+                            if (data == undefined) {
+                                result = 0;
+
+                            }
+                            else {
+                                result = args.value * data;
+                                result = parseFloat(result).toFixed(2);
+                            }
+
+                            var amount = parseFloat(args.value).toFixed(2);
+                            grid.cellValue(index, "Document_Detail_UnitPrice", amount);
+                            grid.cellValue(index, "Document_Detail_Cog", result);
+
+                        });
+                    }
+                },
+                onRowUpdated: function (e) {
+
+                    var detail = {
+                        "Document_Detail_Hid": $scope.Document_ID,
+                        "Document_Detail_Id": e.key.Document_Detail_Id,
+
+                        "Document_Detail_Vnos": '',
+                        "Document_Detail_Acc": e.key.Document_Detail_Acc,
+                        "Document_Detail_Acc_Desc": e.key.Document_Detail_Acc_Desc,
+                        "Document_Detail_Quan": e.key.Document_Detail_Quan,
+                        "Document_Detail_UnitPrice": e.key.Document_Detail_UnitPrice,
+                        "Document_Detail_CreateUser": localStorage.getItem('StaffID'),
+
+                    };
+                    console.log(detail);
+                    $http.post("api/PR/AddPRDetail?", detail).then(function successCallback(response) {
+
+                        if (response.data.StatusCode > 1) {
+                            swal({
+                                title: 'Information',
+                                text: data.Messages,
+                                type: "info",
+                                showCancelButton: false,
+                                confirmButtonColor: "#6EAA6F",
+                                confirmButtonText: 'OK'
+                            })
+
+                        }
+                        $scope.detailCount = $scope.detailCount + 1;
+                        $http.get("api/PR/PRDetailData/" + $scope.Document_ID + "?type=0").then(function (data) {
+                            console.log(data);
+                            if (data.data.StatusCode > 1) {
+                                swal({
+                                    title: 'Information',
+                                    text: data.Messages,
+                                    type: "info",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#6EAA6F",
+                                    confirmButtonText: 'OK'
+                                })
+
+                            }
+
+                            $("#gridContainer").dxDataGrid({ dataSource: data.data.Results.Detail });
+                            $("#gridContainer").dxDataGrid("instance").refresh();
+                        });
+
+                    });  
 
 
-                //    //        //if ($scope.DocumentDetails.length > 0) {
-                //    //        //    $scope.DocDetailsCountStock = [];
-                //    //        //    for (var a = 0; a < $scope.DocumentDetails.length; a++) {
-                //    //        //        var pushData = $scope.DocumentDetails[a];
-                //    //        //        if ($scope.DocumentDetails[a].ProductAmount == -1 && $scope.checkcopy == false) {
-                //    //        //            pushData.DiffCurrentAmount = 0 - $scope.DocumentDetails[a].CurrentStockAmount;
-                //    //        //            pushData.StartProductAmount = "";
-                //    //        //            pushData.ProductAmountQty = 0;
-                //    //        //            $scope.checkApprove = 0;
-                //    //        //        }
-                //    //        //        else if ($stateParams.DocumentStatus == 1 || $stateParams.DocumentStatus == 99) {
-                //    //        //            pushData.DiffCurrentAmount = $scope.DocumentDetails[a].ProductAmount - $scope.DocumentDetails[a].CurrentStockAmount;
-                //    //        //            pushData.StartProductAmount = numeral($scope.DocumentDetails[a].ProductAmount).format($scope.NumericFormat);
-                //    //        //            pushData.ProductAmountQty = $scope.DocumentDetails[a].ProductAmount;
-                //    //        //        }
-                //    //        //        else {
-                //    //        //            pushData.DiffCurrentAmount = $scope.DocumentDetails[a].DiffCurrentAmount;
-                //    //        //            pushData.StartProductAmount = $scope.DocumentDetails[a].StartProductAmount;
-                //    //        //            pushData.ProductAmountQty = $scope.DocumentDetails[a].ProductAmountQty;
-                //    //        //        }
+                },
+                onRowRemoved: function (e) {
+                    $http.post("api/PR/DeletePRDetailTmp/" + e.key.Document_Detail_Id).then(function successCallback(response) {
 
-                //    //        //        $scope.DocDetailsCountStock.push(pushData);
-                //    //        //    }
-                //    //        //}
+                        if (response.data.StatusCode > 1) {
+                            swal({
+                                title: 'Information',
+                                text: data.Messages,
+                                type: "info",
+                                showCancelButton: false,
+                                confirmButtonColor: "#6EAA6F",
+                                confirmButtonText: 'OK'
+                            })
 
+                        }
+                        $scope.detailCount = $scope.detailCount + 1;
+                        $http.get("api/PR/PRDetailData/" + $scope.Document_ID + "?type=0").then(function (data) {
+                            console.log(data);
+                            if (data.data.StatusCode > 1) {
+                                swal({
+                                    title: 'Information',
+                                    text: data.Messages,
+                                    type: "info",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#6EAA6F",
+                                    confirmButtonText: 'OK'
+                                })
 
+                            }
 
-                //    //        //$("#gridContainers").dxDataGrid({ dataSource: $scope.DocumentDetails});
-                //    //        //$("#gridContainers").dxDataGrid("instance").refresh();
+                            $("#gridContainer").dxDataGrid({ dataSource: data.data.Results.Detail });
+                            $("#gridContainer").dxDataGrid("instance").refresh();
+                        });
 
-                //    //        //$("#gridContainers").dxDataGrid("instance").selectRowsByIndexes([rowSelectIndex]);
+                    });  
 
-
-                //    //    });
-
-                //    //});
-                //},
-                //onRowRemoved: function (e) {
-                //    logEvent("RowRemoved");
-                //},
+                }
             };
         });
-      
-
+        var formatNumber = function (num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
         $scope.addFilePR = function () {
             console.log($scope.ListFilePR);
             $scope.ListFilePR.push({});

@@ -65,6 +65,33 @@
                         dataField: "JOBdescT",
                         caption: "โครงการ"
                     }, {
+                        dataField: "Document_Cog",
+                        alignment: "right",
+                        caption: "ยอดเงิน",
+                        cellTemplate: function (container, item) {
+                            var data = item.data,
+                                markup = formatNumber(parseFloat(data.Document_Cog).toFixed(2));
+                            container.append(markup);
+                        },
+                    }, {
+                        dataField: "Document_VatSUM",
+                        alignment: "right",
+                        caption: "VAT",
+                        cellTemplate: function (container, item) {
+                            var data = item.data,
+                                markup = formatNumber(parseFloat(data.Document_VatSUM).toFixed(2));
+                            container.append(markup);
+                        },
+                    }, {
+                        dataField: "Document_NetSUM",
+                        alignment: "right",
+                        caption: "ยอดเงินรวม VAT",
+                        cellTemplate: function (container, item) {
+                            var data = item.data,
+                                markup = formatNumber(parseFloat(data.Document_NetSUM).toFixed(2));
+                            container.append(markup);
+                        },
+                    }, {
                         dataField: "Staff",
                         caption: "พนักงาน"
                     }, {
@@ -75,32 +102,14 @@
                                 markup = "<a>อนุมัติ</a>";
                             container.append(markup);
                         }
-                        //}, {
-                        //    dataField: "ใบสั่งชื้อ",
-                        //    caption: "ใบสั่งชื้อ"
-                        //}, {
-                        //    dataField: "BOD",
-                        //    caption: "BOD"
-                        //}, {
-                        //    dataField: "Excom",
-                        //    caption: "Excom"
-                        //}, {
-                        //    dataField: "MD",
-                        //    caption: "MD"
-                        //}, {
-                        //    dataField: "DMD",
-                        //    caption: "DMD"
-                        //}, {
-                        //    dataField: "Dir",
-                        //    caption: "Dir"
-                        //}, {
-                        //    dataField: "Mgr",
-                        //    caption: "Mgr"
+
                     }]
                 };
             }
         });
-
+        var formatNumber = function (num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
         var onCellClickViewPR = function (e) {
 
             if (e.column.dataField === "Document_Vnos") {

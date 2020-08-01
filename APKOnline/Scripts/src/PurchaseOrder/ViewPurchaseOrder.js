@@ -67,21 +67,40 @@
                             valueExpr: "Code"
                         }
                     }, {
-                    dataField: "Document_Detail_Acc_Desc",
+                        dataField: "Document_Detail_Acc_Desc",
                     caption: "รายละเอียดสินค้า"
                 }, {
                     dataField: "Document_Detail_Quan",
                     caption: "Qty",
-
+                    alignment: "right",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Detail_Quan).toFixed(2));
+                        container.append(markup);
+                    },
                 }, {
                     dataField: "Document_Detail_UnitPrice",
-                    caption: "ราคา/หน่วย"
+                    caption: "ราคา/หน่วย",
+                    alignment: "right",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Detail_UnitPrice).toFixed(2));
+                        container.append(markup);
+                    },
+
                 }, {
                     dataField: "Document_Detail_Cog",
                     caption: "จำนวนเงิน",
+                    alignment: "right",
+
                     editorOptions: {
                         disabled: true
-                    }
+                    },
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Detail_Cog).toFixed(2));
+                        container.append(markup);
+                    },
                 }],
                 onEditorPrepared: function (e) {
 
@@ -134,6 +153,7 @@
                         "Document_Detail_Vnos": '',
                         "Document_Detail_Acc": e.key.Document_Detail_Acc,
                         "Document_Detail_Stk": e.key.Document_Detail_Stk,
+                        "Document_Detail_Acc_Desc": e.key.Document_Detail_Acc_Desc,
                         "Document_Detail_Stk_Desc": e.key.Document_Detail_Acc_Desc,
                         "Document_Detail_Quan": e.key.Document_Detail_Quan,
                         "Document_Detail_UnitPrice": e.key.Document_Detail_UnitPrice,
@@ -213,6 +233,9 @@
         var onCellClickViewFile = function (e) {
             window.open("/Upload/" + e.data.path, "popup", "width=800,height=600,left=300,top=200");
         };
+        var formatNumber = function (num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
 
         $scope.SaveDocuments = function () {
 

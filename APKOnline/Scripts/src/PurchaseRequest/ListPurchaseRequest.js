@@ -55,20 +55,32 @@
                     dataField: "JOBdescT",
                     caption: "รหัสโครงการ"
                 },  {
-                        dataField: "Document_Cog",
+                    dataField: "Document_Cog",
                     alignment: "right",
-                    format: "#,##0.00",
-                    caption: "ยอดเงิน"
+                    caption: "ยอดเงิน",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Cog).toFixed(2));
+                        container.append(markup);
+                    },
                 }, {
-                        dataField: "Document_VatSUM",
+                    dataField: "Document_VatSUM",
                     alignment: "right",
-                    format: "#,##0.00",
-                    caption: "VAT"
+                    caption: "VAT",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_VatSUM).toFixed(2));
+                        container.append(markup);
+                    },
                 }, {
                         dataField: "Document_NetSUM",
                     alignment: "right",
-                    format: "#,##0.00" ,
-                    caption: "ยอดเงินรวม VAT"
+                    caption: "ยอดเงินรวม VAT",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_NetSUM).toFixed(2));
+                        container.append(markup);
+                    },
                 }, {
                     dataField: "Staff",
                     caption: "พนักงาน"
@@ -149,7 +161,9 @@
                  }]
             };
         });
-
+        var formatNumber = function (num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
         var onCellClickViewPR = function (e) {
             console.log(e);
             if (e.column.dataField === "Document_Vnos") {

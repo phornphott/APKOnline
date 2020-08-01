@@ -54,7 +54,7 @@ namespace APKOnline.Models
         public string Document_Detail_Stk { get; set; }
         public string Document_Detail_Stk_Desc { get; set; }
         public int Document_Detail_ListNo { get; set; }
-        public int Document_Detail_Quan { get; set; }
+        public decimal Document_Detail_Quan { get; set; }
         public decimal Document_Detail_Cog { get; set; }
         public decimal Document_Detail_Vat { get; set; }
         public int Document_Detail_Sum { get; set; }

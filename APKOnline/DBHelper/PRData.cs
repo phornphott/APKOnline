@@ -29,7 +29,7 @@ namespace APKOnline.DBHelper
         int ApprovePROverBudget(int Document_Id, int StaffID, ref string errMsg);
         bool UpdatePRDetail(PRDetailModels detail, ref string errMsg);
         Task<bool> DeletePRData(int Document_Id);
-
+        int DeletePRDetail(int id, bool tmp, ref string errMsg);
         Task<bool> CheckDeletePRData(int Document_Id);
     }
 
@@ -509,6 +509,7 @@ namespace APKOnline.DBHelper
                 foreach (DataRow dr in tmp.Rows)
                 {
                     amount = Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
+                    Math.Round(amount, 2);
                 }
 
                 //จำนวนรายการ
@@ -553,9 +554,9 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_Desc", Header.Document_Desc==null? "" : Header.Document_Desc);
                 cmd.Parameters.AddWithValue("@Document_Nolist", NoList);
                 cmd.Parameters.AddWithValue("@Document_Cog", amount);
-                cmd.Parameters.AddWithValue("@Document_VatSUM", amount * (decimal)0.07);//()
+                cmd.Parameters.AddWithValue("@Document_VatSUM", Math.Round( amount * (decimal)0.07,2));//()
                 cmd.Parameters.AddWithValue("@Document_VatPer", 7);
-                cmd.Parameters.AddWithValue("@Document_NetSUM", amount * (decimal)1.07);//
+                cmd.Parameters.AddWithValue("@Document_NetSUM", Math.Round(amount * (decimal)1.07,2));//
                 cmd.Parameters.AddWithValue("@Document_Status", 0);
                 cmd.Parameters.AddWithValue("@Document_Tel", Header.Document_Tel == null ? "" : Header.Document_Tel);
                 cmd.Parameters.AddWithValue("@Document_CreateUser", Header.Document_CreateUser);
@@ -688,12 +689,12 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_Detail_Stk", detail.Document_Detail_Stk == null ? "" : detail.Document_Detail_Stk);
                 cmd.Parameters.AddWithValue("@Document_Detail_Stk_Desc", detail.Document_Detail_Stk_Desc == null ? "" : detail.Document_Detail_Stk_Desc);
                 cmd.Parameters.AddWithValue("@Document_Detail_ListNo", detail.Document_Detail_ListNo);
-                cmd.Parameters.AddWithValue("@Document_Detail_Quan", detail.Document_Detail_Quan);
-                cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", detail.Document_Detail_UnitPrice);
-                cmd.Parameters.AddWithValue("@Document_Detail_Cog", detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice);
+                cmd.Parameters.AddWithValue("@Document_Detail_Quan", Math.Round(detail.Document_Detail_Quan,2));
+                cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", Math.Round(detail.Document_Detail_UnitPrice,2));
+                cmd.Parameters.AddWithValue("@Document_Detail_Cog", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice,2));
                 
-                cmd.Parameters.AddWithValue("@Document_Detail_Vat", (detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice)*(decimal)0.07);
-                cmd.Parameters.AddWithValue("@Document_Detail_Sum", (detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07);
+                cmd.Parameters.AddWithValue("@Document_Detail_Vat", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice)*(decimal)0.07,2));
+                cmd.Parameters.AddWithValue("@Document_Detail_Sum", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07,2));
 
                 cmd.Parameters.AddWithValue("@Document_Detail_CreateUser", detail.Document_Detail_CreateUser);
 
@@ -712,6 +713,50 @@ namespace APKOnline.DBHelper
 
             return document_id;
         }
+        public int DeletePRDetail(int id,bool tmp, ref string errMsg)
+        {
+            int document_id = 0;
+            string sqlQuery = "";
+            string table = "";
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter shipperIdParam = null;
+            SqlConnection conn = DBHelper.sqlConnection();
+            if (conn.State == ConnectionState.Closed)
+                conn.Open();
+            cmd = conn.CreateCommand();
+            //myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
+            cmd.Connection = conn;
+            if (tmp)
+            {
+                table = "DocumentPR_Detail_tmp";
+            }
+            else {
+                table = "DocumentPR_Detail";
+
+            }
+            try
+            {
+
+                sqlQuery = "DELETE From " + table + " WHERE Document_Detail_Id=@Document_Detail_Id";
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@Document_Detail_Id", id);
+
+                cmd.ExecuteNonQuery();
+
+                //document_id = (int)shipperIdParam.Value;
+
+            }
+            catch (Exception ex)
+            {
+                errMsg = ex.Message;
+            }
+
+            return document_id;
+        }
+
         public int DeleteTmpDetail(int Hid, ref string errMsg)
         {
             int document_id = 0;
@@ -943,16 +988,26 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_Detail_Id", detail.Document_Detail_Id);
                 cmd.Parameters.AddWithValue("@Document_Detail_Acc", detail.Document_Detail_Acc);
                 cmd.Parameters.AddWithValue("@Document_Detail_Acc_Desc", detail.Document_Detail_Acc_Desc);
-                cmd.Parameters.AddWithValue("@Document_Detail_Quan", detail.Document_Detail_Quan);
-                cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", detail.Document_Detail_UnitPrice);
-                cmd.Parameters.AddWithValue("@Document_Detail_Cog", detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice);
+                cmd.Parameters.AddWithValue("@Document_Detail_Quan", Math.Round( detail.Document_Detail_Quan,2));
+                cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", Math.Round(detail.Document_Detail_UnitPrice,2));
+                cmd.Parameters.AddWithValue("@Document_Detail_Cog", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice,2));
 
-                cmd.Parameters.AddWithValue("@Document_Detail_Vat", (detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)0.07);
-                cmd.Parameters.AddWithValue("@Document_Detail_Sum", (detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07);
-
-
+                cmd.Parameters.AddWithValue("@Document_Detail_Vat", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)0.07,2));
+                cmd.Parameters.AddWithValue("@Document_Detail_Sum", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07,2));
 
                 cmd.ExecuteNonQuery();
+
+                string sql = "Select SUM(Document_Detail_Cog) From DocumentPR_Detail WHERE Document_Detail_Hid = " + detail.Document_Detail_Hid;
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+           
+                DataTable tmp = new DataTable();
+                da.Fill(tmp);
+                decimal amount = 0;
+                foreach (DataRow dr in tmp.Rows)
+                {
+                    amount = Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
+                    Math.Round(amount, 2);
+                }
 
                 sqlQuery = "Update DocumentPR_Header SET Document_Cog=@Document_Cog,Document_VatSUM=@Document_VatSUM,Document_NetSUM=@Document_NetSUM WHERE Document_Id=@Document_Detail_Hid";
                 cmd.CommandText = sqlQuery;
@@ -961,9 +1016,9 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.Clear();
                 cmd.Parameters.AddWithValue("@Document_Detail_Hid", detail.Document_Detail_Hid);
 
-                cmd.Parameters.AddWithValue("@Document_Cog", detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice);
-                cmd.Parameters.AddWithValue("@Document_VatSUM", detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice * (decimal)0.07);//()
-                cmd.Parameters.AddWithValue("@Document_NetSUM", detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice * (decimal)1.07);//
+                cmd.Parameters.AddWithValue("@Document_Cog", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice,2));
+                cmd.Parameters.AddWithValue("@Document_VatSUM", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice * (decimal)0.07,2));//()
+                cmd.Parameters.AddWithValue("@Document_NetSUM", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice * (decimal)1.07,2));//
                 cmd.ExecuteNonQuery();
 
             }

@@ -46,6 +46,7 @@
                 editing: {
                     mode: "popup",
                     allowUpdating: true,
+                    allowDeleting: true,
                     allowAdding: false,
                     texts: {
                         editRow: "แก้ไข",
@@ -65,7 +66,7 @@
                     },
                     form: {
 
-                            items: ["Document_Detail_Acc", "Document_Detail_Acc_Desc", "Document_Detail_Quan","Document_Detail_UnitPrice"]
+                        items: ["Document_Detail_Acc", "Document_Detail_Acc_Desc", "Document_Detail_Quan", "Document_Detail_UnitPrice", "Document_Detail_Cog"]
                     }
                 },
                 columns: [{
@@ -154,7 +155,8 @@
 
                     });             
                 },
-                onRowUpdated: function (e) {
+                onRowUpdated: function (e)
+                {
                     console.log(e);
                     var detail = {
                         "Document_Detail_Hid": $scope.Document_ID,
@@ -201,6 +203,109 @@
 
                     });             
                 },
+                onEditorPrepared: function (e) {
+
+
+                    if (e.parentType == 'dataRow' && e.dataField == 'Document_Detail_Quan') {
+                        $(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
+
+                            var event = args.jQueryEvent;
+                            console.log(event);
+                            if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+                                event.stopPropagation();
+                                event.preventDefault();
+
+                            }
+                        });
+
+
+                        $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
+                            var grid = $("#gridContainer").dxDataGrid("instance");
+                            var index = e.row.rowIndex;
+                            var data = grid.cellValue(index, "Document_Detail_UnitPrice");
+                            var result = 0;
+                            if (data == undefined) {
+                                result = 0;
+
+                            }
+                            else {
+                                result = args.value * data;
+                                result = parseFloat(result).toFixed(2);
+                            }
+
+                            var amount = args.value;
+                            grid.cellValue(index, "Document_Detail_Quan", amount);
+                            grid.cellValue(index, "Document_Detail_Cog", result);
+
+                        });
+                    }
+                    else if (e.parentType == 'dataRow' && e.dataField == "Document_Detail_UnitPrice") {
+                        $(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
+                            var event = args.jQueryEvent;
+                            console.log(event);
+                            if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+                                event.stopPropagation();
+                                event.preventDefault();
+
+                            }
+                        });
+                        $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
+                            var grid = $("#gridContainer").dxDataGrid("instance");
+                            var index = e.row.rowIndex;
+                            var data = grid.cellValue(index, "Document_Detail_Quan");
+                            var result = 0;
+                            if (data == undefined) {
+                                result = 0;
+
+                            }
+                            else {
+                                result = args.value * data;
+                                result = parseFloat(result).toFixed(2);
+                            }
+
+                            var amount = parseFloat(args.value).toFixed(2);
+                            grid.cellValue(index, "Document_Detail_UnitPrice", amount);
+                            grid.cellValue(index, "Document_Detail_Cog", result);
+
+                        });
+                    }
+                },
+                onRowRemoved: function (e) {
+                    $http.post("api/PR/DeletePRDetail/" + e.key.Document_Detail_Id).then(function successCallback(response) {
+
+                        if (response.data.StatusCode > 1) {
+                            swal({
+                                title: 'Information',
+                                text: data.Messages,
+                                type: "info",
+                                showCancelButton: false,
+                                confirmButtonColor: "#6EAA6F",
+                                confirmButtonText: 'OK'
+                            })
+
+                        }
+                        $scope.detailCount = $scope.detailCount + 1;
+                        $http.get("api/PR/PRDetailData/" + $scope.Document_ID + "?type=0").then(function (data) {
+                            console.log(data);
+                            if (data.data.StatusCode > 1) {
+                                swal({
+                                    title: 'Information',
+                                    text: data.Messages,
+                                    type: "info",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#6EAA6F",
+                                    confirmButtonText: 'OK'
+                                })
+
+                            }
+
+                            $("#gridContainer").dxDataGrid({ dataSource: data.data.Results.Detail });
+                            $("#gridContainer").dxDataGrid("instance").refresh();
+                        });
+
+                    });  
+
+                }
             };
             $scope.datafileGridOptions = {
                 dataSource: FileUpload,

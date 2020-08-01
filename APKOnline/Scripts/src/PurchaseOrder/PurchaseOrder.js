@@ -55,8 +55,32 @@
                     dataField: "Document_Desc",
                     caption: "คำอธิบาย"
                 }, {
-                        dataField: "Document_NetSUM",
-                    caption: "ยอดรวม"
+                    dataField: "Document_Cog",
+                    alignment: "right",
+                    caption: "ยอดเงิน",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_Cog).toFixed(2));
+                        container.append(markup);
+                    },
+                }, {
+                    dataField: "Document_VatSUM",
+                    alignment: "right",
+                    caption: "VAT",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_VatSUM).toFixed(2));
+                        container.append(markup);
+                    },
+                }, {
+                    dataField: "Document_NetSUM",
+                    alignment: "right",
+                    caption: "ยอดเงินรวม VAT",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = formatNumber(parseFloat(data.Document_NetSUM).toFixed(2));
+                        container.append(markup);
+                    },
                 }, {
                         dataField: "Dep",
                     caption: "แผนก"
@@ -122,10 +146,22 @@
                     caption: "รายละเอียด"
                 }, {
                         dataField: "Qty",
-                    caption: "จำนวน"
+                        caption: "จำนวน",
+                        cellTemplate: function (container, item) {
+                            var data = item.data,
+                                markup = formatNumber(parseFloat(data.Qty).toFixed(2));
+                            container.append(markup);
+                        },
+
                 }, {
                         dataField: "Document_NetSUM",
-                        caption: "ราคา"
+                        caption: "ราคา",
+                        cellTemplate: function (container, item) {
+                            var data = item.data,
+                                markup = formatNumber(parseFloat(data.Document_NetSUM).toFixed(2));
+                            container.append(markup);
+                        },
+
                 }, {
                     dataField: "POCreate",
                         caption: "สร้างเอกสารสั่งซื้อ",
@@ -176,6 +212,9 @@
             window.location = '#/PurchaseOrder/ListPurchaseOrder';
 
         };
+        var formatNumber = function (num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
 
     }
 ])

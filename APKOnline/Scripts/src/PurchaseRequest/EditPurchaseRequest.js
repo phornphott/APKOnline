@@ -12,6 +12,7 @@
         $scope.Objective = 0;
         $scope.Document_ID = $stateParams.id 
         $scope.Document_Vnos = "";
+        $scope.detailorg = [];
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
         $http.get("api/PR/ViewPRData/" + $scope.Document_ID + "?staffid=" + localStorage.getItem('StaffID')).then(function (data) {
@@ -19,6 +20,7 @@
             $scope.Header = data.data.Results.Header[0];
             var FileUpload = data.data.Results.FileUpload; 
             var Detail = data.data.Results.Detail;
+            $scope.detailorg = data.data.Results.Detail;
             $rootScope.Account = data.data.Results.Account;
             $scope.dataGridOptions = {
                 dataSource: Detail,
@@ -66,7 +68,7 @@
                     },
                     form: {
 
-                        items: ["Document_Detail_Acc", "Document_Detail_Acc_Desc", "Document_Detail_Quan", "Document_Detail_UnitPrice", "Document_Detail_Cog"]
+                        items: ["Document_Detail_Acc", "Document_Detail_Acc_Desc", "Document_Detail_Quan", "Document_Detail_UnitPrice"]
                     }
                 },
                 columns: [{
@@ -86,27 +88,38 @@
                     // editorOptions: {
                     //    disabled: true
                     //}
-                }, {
-                    dataField: "Document_Detail_Quan",
-                    caption: "Qty",
-                    alignment: "right",
-                    format: "#,##0.00",
-                    dataType: "number"
-                }, {
-                    dataField: "Document_Detail_UnitPrice",
-                    caption: "ราคา/หน่วย",
-                    alignment: "right",
-                    format: "#,##0.00",
-                    dataType: "number"
-                }, {
-                    dataField: "Document_Detail_Cog",
-                    caption: "จำนวนเงิน",
-                    alignment: "right",
-                    format: "#,##0.00",
-                    dataType: "number",
-                    editorOptions: {
-                        disabled: true
-                    }
+                    }, {
+                        dataField: "Document_Detail_Quan",
+                        caption: "Qty",
+                        alignment: "right",
+                        cellTemplate: function (container, item) {
+                            var data = item.data,
+                                markup = formatNumber(parseFloat(data.Document_Detail_Quan).toFixed(2));
+                            container.append(markup);
+                        },
+                    }, {
+                        dataField: "Document_Detail_UnitPrice",
+                        caption: "ราคา/หน่วย",
+                        alignment: "right",
+                        cellTemplate: function (container, item) {
+                            var data = item.data,
+                                markup = formatNumber(parseFloat(data.Document_Detail_UnitPrice).toFixed(2));
+                            container.append(markup);
+                        },
+
+                    }, {
+                        dataField: "Document_Detail_Cog",
+                        caption: "จำนวนเงิน",
+                        alignment: "right",
+
+                        editorOptions: {
+                            disabled: true
+                        },
+                        cellTemplate: function (container, item) {
+                            var data = item.data,
+                                markup = formatNumber(parseFloat(data.Document_Detail_Cog).toFixed(2));
+                            container.append(markup);
+                        },
                 }],
                 onRowInserted: function (e) {
                     var detail = {
@@ -158,34 +171,21 @@
                 onRowUpdated: function (e)
                 {
                     console.log(e);
-                    var detail = {
-                        "Document_Detail_Hid": $scope.Document_ID,
-                        "Document_Detail_Id": e.key.Document_Detail_Id,
-                        "Document_Detail_Acc": e.key.Document_Detail_Acc,
-                        "Document_Detail_Acc_Desc": e.key.Document_Detail_Acc_Desc,
-                        "Document_Detail_Quan": e.key.Document_Detail_Quan,
-                        "Document_Detail_UnitPrice": e.key.Document_Detail_UnitPrice,
-                        "Document_Detail_CreateUser": localStorage.getItem('StaffID'),
 
-                    };
-                    console.log(detail);
-                    $http.post("api/PR/UpdatePRDetail?", detail).then(function successCallback(response) {
+                        var detail = {
+                            "Document_Detail_Hid": $scope.Document_ID,
+                            "Document_Detail_Id": e.key.Document_Detail_Id,
+                            "Document_Detail_Acc": e.key.Document_Detail_Acc,
+                            "Document_Detail_Acc_Desc": e.key.Document_Detail_Acc_Desc,
+                            "Document_Detail_Quan": e.key.Document_Detail_Quan,
+                            "Document_Detail_UnitPrice": e.key.Document_Detail_UnitPrice,
+                            "Document_Detail_CreateUser": localStorage.getItem('StaffID'),
 
-                        if (response.data.StatusCode > 1) {
-                            swal({
-                                title: 'Information',
-                                text: data.Messages,
-                                type: "info",
-                                showCancelButton: false,
-                                confirmButtonColor: "#6EAA6F",
-                                confirmButtonText: 'OK'
-                            })
+                        };
+                        console.log(detail);
+                        $http.post("api/PR/UpdatePRDetail?", detail).then(function successCallback(response) {
 
-                        }
-                        $http.get("api/PR/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
-                            console.log(data.data.Results.Detail);
-                            console.log(data);
-                            if (data.data.StatusCode > 1) {
+                            if (response.data.StatusCode > 1) {
                                 swal({
                                     title: 'Information',
                                     text: data.Messages,
@@ -196,79 +196,31 @@
                                 })
 
                             }
+                            $http.get("api/PR/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
+                                console.log(data.data.Results.Detail);
+                                console.log(data);
+                                if (data.data.StatusCode > 1) {
+                                    swal({
+                                        title: 'Information',
+                                        text: data.Messages,
+                                        type: "info",
+                                        showCancelButton: false,
+                                        confirmButtonColor: "#6EAA6F",
+                                        confirmButtonText: 'OK'
+                                    })
 
-                            $("#gridContainer").dxDataGrid({ dataSource: data.data.Results.Detail });
-                            $("#gridContainer").dxDataGrid("instance").refresh();
-                        });
+                                }
 
-                    });             
-                },
-                onEditorPrepared: function (e) {
+                                $("#gridContainer").dxDataGrid({
+                                    dataSource: data.data.Results.Detail
 
-
-                    if (e.parentType == 'dataRow' && e.dataField == 'Document_Detail_Quan') {
-                        $(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
-
-                            var event = args.jQueryEvent;
-                            console.log(event);
-                            if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
-                                event.stopPropagation();
-                                event.preventDefault();
-
-                            }
-                        });
-
-
-                        $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
-                            var grid = $("#gridContainer").dxDataGrid("instance");
-                            var index = e.row.rowIndex;
-                            var data = grid.cellValue(index, "Document_Detail_UnitPrice");
-                            var result = 0;
-                            if (data == undefined) {
-                                result = 0;
-
-                            }
-                            else {
-                                result = args.value * data;
-                                result = parseFloat(result).toFixed(2);
-                            }
-
-                            var amount = args.value;
-                            grid.cellValue(index, "Document_Detail_Quan", amount);
-                            grid.cellValue(index, "Document_Detail_Cog", result);
+                                });
+                                $("#gridContainer").dxDataGrid("instance").refresh();
+                            });
 
                         });
-                    }
-                    else if (e.parentType == 'dataRow' && e.dataField == "Document_Detail_UnitPrice") {
-                        $(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
-                            var event = args.jQueryEvent;
-                            console.log(event);
-                            if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
-                                event.stopPropagation();
-                                event.preventDefault();
 
-                            }
-                        });
-                        $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
-                            var grid = $("#gridContainer").dxDataGrid("instance");
-                            var index = e.row.rowIndex;
-                            var data = grid.cellValue(index, "Document_Detail_Quan");
-                            var result = 0;
-                            if (data == undefined) {
-                                result = 0;
-
-                            }
-                            else {
-                                result = args.value * data;
-                                result = parseFloat(result).toFixed(2);
-                            }
-
-                            var amount = parseFloat(args.value).toFixed(2);
-                            grid.cellValue(index, "Document_Detail_UnitPrice", amount);
-                            grid.cellValue(index, "Document_Detail_Cog", result);
-
-                        });
-                    }
+                    
                 },
                 onRowRemoved: function (e) {
                     $http.post("api/PR/DeletePRDetail/" + e.key.Document_Detail_Id).then(function successCallback(response) {
@@ -305,7 +257,76 @@
 
                     });  
 
-                }
+                },
+                onEditorPrepared: function (e) {
+
+
+                    //if (e.parentType == 'dataRow' && e.dataField == 'Document_Detail_Quan') {
+                    //    $(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
+
+
+                    //        var event = args.jQueryEvent;
+                    //        console.log(event);
+                    //        if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+                    //            event.stopPropagation();
+                    //            event.preventDefault();
+
+                    //        }
+                    //    });
+
+
+                    //    $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
+                    //        var grid = $("#gridContainer").dxDataGrid("instance");
+                    //        var index = e.row.rowIndex;
+                    //        var data = grid.cellValue(index, "Document_Detail_UnitPrice");
+                    //        var result = 0;
+                    //        if (data == undefined) {
+                    //            result = 0;
+
+                    //        }
+                    //        else {
+                    //            result = args.value * data;
+                    //            result = parseFloat(result).toFixed(2);
+                    //        }
+
+                    //        var amount = args.value;
+                    //        grid.cellValue(index, "Document_Detail_Quan", amount);
+                    //        grid.cellValue(index, "Document_Detail_Cog", result);
+
+                    //    });
+                    //}
+                    //else if (e.parentType == 'dataRow' && e.dataField == "Document_Detail_UnitPrice") {
+                    //    $(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
+
+                    //        var event = args.jQueryEvent;
+                    //        console.log(event);
+                    //        if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+                    //            event.stopPropagation();
+                    //            event.preventDefault();
+
+                    //        }
+                    //    });
+                    //    $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
+                    //        var grid = $("#gridContainer").dxDataGrid("instance");
+                    //        var index = e.row.rowIndex;
+                    //        var data = grid.cellValue(index, "Document_Detail_Quan");
+                    //        var result = 0;
+                    //        if (data == undefined) {
+                    //            result = 0;
+
+                    //        }
+                    //        else {
+                    //            result = args.value * data;
+                    //            result = parseFloat(result).toFixed(2);
+                    //        }
+
+                    //        var amount = parseFloat(args.value).toFixed(2);
+                    //        grid.cellValue(index, "Document_Detail_UnitPrice", amount);
+                    //        grid.cellValue(index, "Document_Detail_Cog", result);
+
+                    //    });
+                    //}
+                },
             };
             $scope.datafileGridOptions = {
                 dataSource: FileUpload,
@@ -346,6 +367,9 @@
             };
 
         });
+        var formatNumber = function (num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
         var onCellClickViewFile = function (e) {
             window.open("/Upload/" + e.data.path, "popup", "width=800,height=600,left=300,top=200");
         };

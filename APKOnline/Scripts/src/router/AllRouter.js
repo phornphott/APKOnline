@@ -8,7 +8,7 @@
         //General Section
         .state('/', {
             name: "Dashboard",
-            url: "/",
+            url: "*",
             templateUrl: '\Home/Dashboard',
             controller: 'DashboardController'
         })

@@ -222,22 +222,6 @@
                         saveRowChanges: "บันทึก",
                         cancelRowChanges: "ยกเลิก"
                     },
-                    popup: {
-                        title: "รายการขออนุมัติ",
-                        showTitle: true,
-
-                        width: 700,
-                        height: 525,
-                        position: {
-                            my: "top",
-                            at: "top",
-                            of: window
-                        }
-                    },
-                    form: {
-
-                        items: ["Document_Detail_Acc", "Document_Detail_Acc_Desc", "Document_Detail_Quan", "Document_Detail_UnitPrice", "Document_Detail_Cog"]
-                    }
 
                 },
                 columnAutoWidth: true,
@@ -285,10 +269,7 @@
                         container.append(markup);
                     },
                 }],
-                //onContentReady: function (e) {
 
-                //    //e.component.selectRowsByIndexes(rowSelectIndex);
-                //},
                 onRowInserted: function (e) {
                     var detail = {
                         "Document_Detail_Hid": $scope.Document_ID,
@@ -351,16 +332,6 @@
                                 event.preventDefault();  
 
                             }
-                            //if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)
-                            //    || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37
-                            //    || event.keyCode == 39 || event.keyCode == 46) {
-                            //    var val = args.component.option("value");
-                            //    val += '';
-                            //    args.component.option("value", val);  
-                            //    event.stopPropagation();
-                            //    event.preventDefault();  
-                            //}
-
                         });
 
 

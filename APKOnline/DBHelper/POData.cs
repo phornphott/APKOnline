@@ -632,6 +632,12 @@ namespace APKOnline.DBHelper
 
             try
             {
+                sqlQuery = "DELETE FROM DocumentPO_Detail_tmp WHERE Document_PR_Hid = " + PRID;
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.ExecuteNonQuery();
 
                 sqlQuery = "INSERT INTO DocumentPO_Detail_tmp(Document_Detail_Hid,Document_Detail_Date,Document_Detail_Vnos" +
                     ",Document_Detail_Acc,Document_Detail_Acc_Desc,Document_Detail_Stk " +
@@ -676,34 +682,56 @@ namespace APKOnline.DBHelper
             try
             {
 
-                sqlQuery = "Update DocumentPO_Detail_tmp Set Document_Detail_Stk=@Document_Detail_Stk,Document_Detail_Stk_Desc=@Document_Detail_Stk_Desc" +
-                    ",Document_Detail_Vat=@Document_Detail_Vat,Document_Detail_Sum=@Document_Detail_Sum,Document_Detail_UnitPrice=@Document_Detail_UnitPrice" +
-                    ",Document_Detail_Quan=@Document_Detail_Quan,Document_Detail_Cog=@Document_Detail_Cog" +
-                    ",Document_Detail_Acc=@Document_Detail_Acc,Document_Detail_Acc_Desc=@Document_Detail_Acc_Desc" +
-                    " WHERE Document_Detail_Id=@Document_Detail_Id  ";
+                sqlQuery = "Select * from DocumentPO_Detail_tmp WHERE  Document_Detail_Id = "+ detail.Document_Detail_Id;
+                SqlDataAdapter sa = new SqlDataAdapter(sqlQuery, conn);
+                DataTable dt = new DataTable();
+                sa.Fill(dt);
+                decimal cog = 0;
 
-                cmd.CommandText = sqlQuery;
-                cmd.CommandTimeout = 30;
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Clear();
-                cmd.CommandText = sqlQuery;
-                cmd.CommandTimeout = 30;
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@Document_Detail_Id", detail.Document_Detail_Id);
-                cmd.Parameters.AddWithValue("@Document_Detail_Stk", detail.Document_Detail_Stk == null ? "" : detail.Document_Detail_Stk);
-                cmd.Parameters.AddWithValue("@Document_Detail_Stk_Desc", detail.Document_Detail_Stk_Desc == null ? "" : detail.Document_Detail_Stk_Desc);
-                cmd.Parameters.AddWithValue("@Document_Detail_Acc_Desc", detail.Document_Detail_Acc_Desc == null ? "" : detail.Document_Detail_Acc_Desc);
-                cmd.Parameters.AddWithValue("@Document_Detail_Acc", detail.Document_Detail_Acc == null ? "" : detail.Document_Detail_Acc);
+                foreach (DataRow dr in dt.Rows)
+                {
+                    cog = Convert.ToDecimal(dr["Document_Detail_Cog"]);
+                }
 
-                cmd.Parameters.AddWithValue("@Document_Detail_Quan", Math.Round(detail.Document_Detail_Quan,2));
-                cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", Math.Round(detail.Document_Detail_UnitPrice,2));
-                cmd.Parameters.AddWithValue("@Document_Detail_Cog", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice,2));
 
-                cmd.Parameters.AddWithValue("@Document_Detail_Vat", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)0.07,2));
-                cmd.Parameters.AddWithValue("@Document_Detail_Sum", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07,2));
-                cmd.ExecuteNonQuery();
 
+                if (cog > Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice, 2))
+                {
+
+
+
+                    sqlQuery = "Update DocumentPO_Detail_tmp Set Document_Detail_Stk=@Document_Detail_Stk,Document_Detail_Stk_Desc=@Document_Detail_Stk_Desc" +
+                        ",Document_Detail_Vat=@Document_Detail_Vat,Document_Detail_Sum=@Document_Detail_Sum,Document_Detail_UnitPrice=@Document_Detail_UnitPrice" +
+                        ",Document_Detail_Quan=@Document_Detail_Quan,Document_Detail_Cog=@Document_Detail_Cog" +
+                        ",Document_Detail_Acc=@Document_Detail_Acc,Document_Detail_Acc_Desc=@Document_Detail_Acc_Desc" +
+                        " WHERE Document_Detail_Id=@Document_Detail_Id  ";
+
+                    cmd.CommandText = sqlQuery;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    cmd.CommandText = sqlQuery;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@Document_Detail_Id", detail.Document_Detail_Id);
+                    cmd.Parameters.AddWithValue("@Document_Detail_Stk", detail.Document_Detail_Stk == null ? "" : detail.Document_Detail_Stk);
+                    cmd.Parameters.AddWithValue("@Document_Detail_Stk_Desc", detail.Document_Detail_Stk_Desc == null ? "" : detail.Document_Detail_Stk_Desc);
+                    cmd.Parameters.AddWithValue("@Document_Detail_Acc_Desc", detail.Document_Detail_Acc_Desc == null ? "" : detail.Document_Detail_Acc_Desc);
+                    cmd.Parameters.AddWithValue("@Document_Detail_Acc", detail.Document_Detail_Acc == null ? "" : detail.Document_Detail_Acc);
+
+                    cmd.Parameters.AddWithValue("@Document_Detail_Quan", Math.Round(detail.Document_Detail_Quan, 2));
+                    cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", Math.Round(detail.Document_Detail_UnitPrice, 2));
+                    cmd.Parameters.AddWithValue("@Document_Detail_Cog", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice, 2));
+
+                    cmd.Parameters.AddWithValue("@Document_Detail_Vat", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)0.07, 2));
+                    cmd.Parameters.AddWithValue("@Document_Detail_Sum", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07, 2));
+                    cmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    errMsg = "ราคาสินค้าที่แก้ไข มากกว่าราคาในเอกสารขอซื้อภายในไม่สามารถบันทึกได้ โปรดตรวจสอบ.";
+                }
                 //document_id = (int)shipperIdParam.Value;
 
             }

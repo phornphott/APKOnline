@@ -28,7 +28,10 @@ namespace APKOnline.Controllers
             dt = repository.Login(item.StaffLogin, item.StaffPassword, ref errMsg);
 
             ds.Tables.Add(dt);
-
+            if (dt.Rows.Count <= 0 && errMsg == "")
+            {
+                errMsg = "รหัสพนักงาน/หรัสผ่าน ไม่ถูกต้อง." + Environment.NewLine + "โปรดตรวจสอบ รหัสพนักงาน/หรัสผ่าน ก่อน login เข้าระบบอีกครั้ง";
+            }
             if (errMsg != "")
             {
                 resData.StatusCode = (int)(StatusCodes.Error);

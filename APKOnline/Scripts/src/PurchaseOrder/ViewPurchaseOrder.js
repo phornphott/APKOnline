@@ -15,7 +15,7 @@
             $rootScope.STK = data.data.Results.STK;
             //$scope.Header = data.data.Results.Document_Vnos[0].
             var FileUpload = data.data.Results.FileUpload;
-
+            $scope.detailorg   =data.data.Results.Detail;
             var Detail = data.data.Results.Detail;
             $scope.dataGridOptions = {
                 dataSource: Detail,
@@ -59,15 +59,15 @@
                         valueExpr: "Code"
                     }
                 }, {
-                        dataField: "Document_Detail_Stk",
-                        caption: "รหัสสินค้า",
-                        lookup: {
-                            dataSource: $rootScope.STK,
-                            displayExpr: "Name",
-                            valueExpr: "Code"
-                        }
-                    }, {
-                        dataField: "Document_Detail_Acc_Desc",
+                    dataField: "Document_Detail_Stk",
+                    caption: "รหัสสินค้า",
+                    lookup: {
+                        dataSource: $rootScope.STK,
+                        displayExpr: "Name",
+                        valueExpr: "Code"
+                    }
+                }, {
+                    dataField: "Document_Detail_Acc_Desc",
                     caption: "รายละเอียดสินค้า"
                 }, {
                     dataField: "Document_Detail_Quan",
@@ -103,8 +103,41 @@
                     },
                 }],
                 onEditorPrepared: function (e) {
+                    if (e.parentType == 'dataRow' && e.dataField == 'Document_Detail_Quan') {
+                        //$(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
+                        //let instance = e.editorElement.dxNumberBox("instance"); 
+                        //instance.option("keyPress", function (args) {
+                        //    var event = args.jQueryEvent;
+                        //    console.log(event);
+                        //    if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+                        //        event.stopPropagation();
+                        //        event.preventDefault();
 
-                    if (e.dataField == "Document_Detail_Quan") {
+                        //    }
+                        //});
+
+                        //instance.option("valueChanged", function (args) {
+
+                        //    var grid = $("#gridContainer").dxDataGrid("instance");
+                        //    console.log(grid);
+                        //    var index = e.row.rowIndex;
+                        //    var data = grid.cellValue(index, "Document_Detail_UnitPrice");
+                        //    var result = 0;
+                        //    if (data == undefined) {
+                        //        result = 0;
+
+                        //    }
+                        //    else {
+                        //        result = args.value * data;
+                        //        result = parseFloat(result).toFixed(2);
+                        //    }
+
+                        //    var amount = args.value;
+                        //    grid.cellValue(index, "Document_Detail_Quan", amount);
+                        //    grid.cellValue(index, "Document_Detail_Cog", result);
+
+                        //});
+
                         $(e.editorElement).dxNumberBox("instance").on("valueChanged", function (args) {
                             var grid = $("#gridContainer").dxDataGrid("instance");
                             var index = e.row.rowIndex;
@@ -116,6 +149,7 @@
                             }
                             else {
                                 result = args.value * data;
+                                result = parseFloat(result).toFixed(2);
                             }
 
                             var amount = args.value;
@@ -124,7 +158,18 @@
 
                         });
                     }
-                    else if (e.dataField == "Document_Detail_UnitPrice") {
+                    else if (e.parentType == 'dataRow' && e.dataField == "Document_Detail_UnitPrice") {
+                        //let instance = e.editorElement.dxNumberBox("instance");
+                        //instance.option("keyPress", function (args) {
+                        //    var event = args.jQueryEvent;
+                        //    console.log(event);
+                        //    if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+                        //        event.stopPropagation();
+                        //        event.preventDefault();
+
+                        //    }
+                        //});
+
                         $(e.editorElement).dxNumberBox("instance").on("valueChanged", function (args) {
                             var grid = $("#gridContainer").dxDataGrid("instance");
                             var index = e.row.rowIndex;
@@ -136,16 +181,21 @@
                             }
                             else {
                                 result = args.value * data;
+                                result = parseFloat(result).toFixed(2);
                             }
 
-                            var amount = args.value;
+                            var amount = parseFloat(args.value).toFixed(2);
                             grid.cellValue(index, "Document_Detail_UnitPrice", amount);
                             grid.cellValue(index, "Document_Detail_Cog", result);
 
                         });
+
                     }
                 },
                 onRowUpdated: function (e) {
+
+
+
                     var detail = {
 
                         "Document_Detail_Id": e.key.Document_Detail_Id,
@@ -162,6 +212,39 @@
                     };
                     console.log(detail);
                     $http.post("api/PO/UpdateDetailData/0", detail).then(function successCallback(response) {
+                        console.log(response)
+                        if (response.data.StatusCode > 1) {
+                            swal({
+                                title: 'Information',
+                                text: response.data.Messages,
+                                type: "info",
+                                showCancelButton: false,
+                                confirmButtonColor: "#6EAA6F",
+                                confirmButtonText: 'OK'
+                            })
+
+                        }
+                        $http.get("api/PO/PRDetailData/" + $stateParams.id + "?type=0").then(function (data) {
+                            console.log(data.data.Results.Detail);
+                            console.log(data);
+                            if (data.data.StatusCode > 1) {
+                                swal({
+                                    title: 'Information',
+                                    text: data.Messages,
+                                    type: "info",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#6EAA6F",
+                                    confirmButtonText: 'OK'
+                                })
+
+                            }
+                            $("#gridContainer").dxDataGrid({
+                                dataSource: data.data.Results.Detail
+
+                            });
+                            $("#gridContainer").dxDataGrid("instance").refresh();
+                        });
+
                     });
                 }
             };
@@ -206,6 +289,8 @@
             $scope.Header = data.data.Results.Header[0]
             $scope.Document_Vnos = data.data.Results.Document_Vnos[0].Column1
             $rootScope.Customer = data.data.Results.Customer;
+
+
             $rootScope.Customer.splice(0, 0, {
                 "ID": 0,
                 "Name": '- กรุณาเลือก -',
@@ -230,6 +315,10 @@
 
 
         });
+        var formatNumber = function (num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
+
         var onCellClickViewFile = function (e) {
             window.open("/Upload/" + e.data.path, "popup", "width=800,height=600,left=300,top=200");
         };

@@ -179,6 +179,7 @@
         var onCellClickViewPO = function (e) {
             console.log(e);
             if (e.column.dataField === "Document_Vnos") {
+                localStorage.setItem('polinkid', '1');
                 setTimeout(function () {
                     window.location = '#/PurchaseRequest/ViewPO/' + e.data.Document_Id;
                 }, 700);
@@ -202,6 +203,7 @@
             };
             if (e.column.dataField === "Document_Vnos") {
                 $('#ImportPRModal').modal('hide');
+                localStorage.setItem('prlinkid', '2');
                 setTimeout(function () {
                     window.location = '#/PurchaseRequest/ViewPurchaseRequest/' + e.data.Document_Id;
                 }, 700);

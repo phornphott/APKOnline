@@ -14,12 +14,15 @@
         $scope.Objective = 0;
         $scope.Document_ID = $stateParams.id 
         $scope.Document_Vnos = "";
+        $scope.showpreview = 0;
+        $scope.ispreview = true;
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
         $http.get("api/PR/ViewPRData/" + $scope.Document_ID + "?staffid=" + localStorage.getItem('StaffID') ).then(function (data) {
             console.log(data);
             $scope.Header = data.data.Results.Header[0];
             $scope.SaveText = data.data.Results.Header[0].SaveText;
+            $scope.showpreview = data.data.Results.Header[0].isPreview;
             $scope.Document_Depid = data.data.Results.Header[0].Document_Depid;
             console.log($scope.Document_Depid);
             var Detail = data.data.Results.Detail;
@@ -199,7 +202,13 @@
             };
         });
         $scope.ListFilePR = [{}];
-
+        $scope.checkpreview = {
+            value: $scope.ispreview,
+            text: "Preview",
+            onValueChanged: function (e) {
+                $scope.ispreview = e.value;
+            }
+        };
         $scope.addFilePR = function () {
             $scope.ListFilePR.push({});
         };
@@ -208,23 +217,9 @@
             
                 var Header = {
                     "Document_Id": $scope.Document_ID,
-                    //"Document_Group": $scope.Document_Group,
-                    //"Document_Category": $scope.Document_Category,
-                    //"Document_Objective": $scope.Objective,
-                    //"Document_Vnos": '',
-                    //"Document_Means": $scope.Document_Means,
-                    //"Document_Expect": $scope.Document_Expect,
-                    //"Document_Cus": '',
-                    //"Document_Job": $scope.Document_Job,
-                    //"Document_Dep": $scope.Document_Dep,
                     "Document_Depid": $scope.Document_Depid,
-                    //"Document_Per": '',
-                    //"Document_Doc": '',
-                    //"Document_Mec": '',
-                    //"Document_Desc": '',
-                    //"Document_Tel": $scope.Document_Tel,
+                    "isPreview": $scope.ispreview,
                     "Document_CreateUser": localStorage.getItem('StaffID'),
-
                 };
                 $http.post("api/PR/ApprovePRData?", Header).then(function successCallback(response) {
                     console.log(response);
@@ -237,16 +232,10 @@
                             confirmButtonColor: "#6EAA6F",
                             confirmButtonText: 'OK'
                         })
-
                     }
                     else { window.location = '#/PurchaseRequest/ListPRApprove'; }
                     //
                 });
-            
-
-
-
-
         };
         $scope.CancelDocuments = function () {
 

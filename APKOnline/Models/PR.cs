@@ -40,6 +40,7 @@ namespace APKOnline.Models
         public string folderUpload { get; set; }
         public int Document_Term { get; set; }
         public string Document_Project { get; set; }
+        public bool isPreview { get; set; }
     }
 
     public class PRDetailModels

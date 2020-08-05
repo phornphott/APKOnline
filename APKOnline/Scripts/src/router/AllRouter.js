@@ -8,7 +8,7 @@
         //General Section
         .state('/', {
             name: "Dashboard",
-            url: "*",
+            url: "/",
             templateUrl: '\Home/Dashboard',
             controller: 'DashboardController'
         })
@@ -264,6 +264,22 @@
                             name: 'AceApp',
                             files: [
                                 'Scripts/src/PurchaseRequest/ListPROverforApprove.js'
+                            ]
+                        }])
+                }]
+            }
+        })
+        .state('/PurchaseRequest/ListPreviewPurchaseRequest', {
+            url: "/PurchaseRequest/ListPreviewPurchaseRequest",
+            templateUrl: '\PurchaseRequest/ListPreviewPurchaseRequest',
+            controller: 'ListPreviewController',
+            resolve: {
+                lazyLoad: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'AceApp',
+                            files: [
+                                'Scripts/src/PurchaseRequest/ListPreview.js'
                             ]
                         }])
                 }]

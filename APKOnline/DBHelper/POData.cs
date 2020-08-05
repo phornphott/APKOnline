@@ -877,7 +877,7 @@ namespace APKOnline.DBHelper
                     }
 
                     sqlQuery = "Update DocumentPR_Header SET " +
-                                "Document_Vnos_PO = @Document_Vnos_PO,Document_PO=@Document_PO  WHERE Document_Id = @Document_Id";
+                                "Document_Vnos_PO = @Document_Vnos_PO,Document_PO=@Document_PO,Document_Status=@Document_Status  WHERE Document_Id = @Document_Id";
                     cmd.CommandText = sqlQuery;
                     cmd.CommandTimeout = 30;
                     cmd.CommandType = CommandType.Text;
@@ -885,6 +885,7 @@ namespace APKOnline.DBHelper
                     cmd.Parameters.AddWithValue("@Document_Id", PRID);
                     cmd.Parameters.AddWithValue("@Document_Vnos_PO", DocPO);
                     cmd.Parameters.AddWithValue("@Document_PO", 1);
+                    cmd.Parameters.AddWithValue("@Document_Status",4);
                     cmd.ExecuteNonQuery();
 
                 }

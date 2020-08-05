@@ -162,7 +162,15 @@
         };
 
         $scope.CancelDocuments = function () {
+            var polinkid = localStorage.getItem('polinkid');
+            console.log(polinkid);
+            if (polinkid == 1) {
                 window.location = '#/PurchaseOrder/ListPurchaseOrder';
+            }
+            else if (polinkid == 2) {
+                window.location = '#/PurchaseRequest/ListPreviewPurchaseRequest';
+
+            }
         };
 
     }

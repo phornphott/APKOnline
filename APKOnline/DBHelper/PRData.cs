@@ -24,13 +24,16 @@ namespace APKOnline.DBHelper
         int DeleteTmpDetail(int Hid, ref string errMsg);
         DataTable GetPRData(int staffID, ref string errMsg);
         DataTable GetPRDataForApprove(int StaffID, int DeptID, ref string errMsg);
-        int ApprovePR(int Document_Id, int StaffID, int DeptID, ref string errMsg);
+        int ApprovePR(int Document_Id, int StaffID, int DeptID, bool isPreview, ref string errMsg);
         DataTable GetPROverDataForApprove(int id, int DeptID, ref string errMsg);
         int ApprovePROverBudget(int Document_Id, int StaffID, ref string errMsg);
         bool UpdatePRDetail(PRDetailModels detail, ref string errMsg);
         Task<bool> DeletePRData(int Document_Id);
         int DeletePRDetail(int id, bool tmp, ref string errMsg);
         Task<bool> CheckDeletePRData(int Document_Id);
+        DataTable GetListPreview(int StaffID, int DeptID, ref string errMsg);
+
+        bool LogPreview(int logId, ref string errMsg);
     }
 
     public class PRData : IPRData
@@ -233,7 +236,7 @@ namespace APKOnline.DBHelper
                       " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
                       " ,CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job ,g.GroupName AS 'Group'" +
                       " ,CAST(Objective_Name as NVARCHAR(max)) AS Objective,CAST(Category_Name as NVARCHAR(max)) AS Category" +
-                      " ,'อนุมัติ' AS SaveText" +
+                      " ,'อนุมัติ' AS SaveText,0 AS isPreview" +
                       " FROM "+ tablename + " p LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job" +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
@@ -259,11 +262,13 @@ namespace APKOnline.DBHelper
                     foreach (DataRow dr in staffauth.Rows)
                     {
                         budget = Convert.ToDecimal(dr["PositionLimit"]);
+                        dt.Rows[0]["isPreview"] = Convert.ToInt32(dr["isPreview"]);
                     }
 
                     if (DocCog > budget)
                     {
                         dt.Rows[0]["SaveText"] = "รับทราบ";
+                        dt.Rows[0]["isPreview"] = 0;
                     }
 
                 }
@@ -292,7 +297,8 @@ namespace APKOnline.DBHelper
                 strSQL = "\r\n  " +
                 " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
                 ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
-                ",CASE WHEN p.Document_Status = 0 THEN 'รออนุมัติ' WHEN p.Document_Status = 1 THEN 'รับทราบ' WHEN p.Document_Status = 2 THEN 'อนุมัติ' ELSE 'ไม่อนุมัติ' END AS DocStatus" +
+                ",CASE WHEN p.Document_Status = 0 THEN 'รออนุมัติ' WHEN p.Document_Status = 1 THEN 'รับทราบ' WHEN p.Document_Status = 2 THEN 'อนุมัติ' " +
+                " WHEN p.Document_Status = 3 THEN 'สร้างเอกสารสั่งซื้อ' WHEN p.Document_Status = 4 THEN 'อนุมัติเอกสารสั่งซื้อ' ELSE 'ไม่อนุมัติ' END AS DocStatus" +
                 " FROM " + tablename + " p " +
                 " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                 " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
@@ -514,6 +520,36 @@ namespace APKOnline.DBHelper
 
             return dtPR;
         }
+        public DataTable GetListPreview(int StaffID, int DeptID, ref string errMsg)
+        {
+            DataTable dt = new DataTable();
+
+            try
+            {
+
+                string strSQL = "SELECT l.*,pr.Document_Vnos AS PRNo,pr.Document_Cog AS PRAmount,po.Document_Vnos AS PONo,po.Document_Cog AS POAmount " +
+                    ",po.Document_EditDate AS POapprove,po.Document_EditUser AS POapproveBy,po.Document_Id AS POID" +
+                    " FROM LogPreview l " +
+                    " Left Join DocumentPR_Header pr on pr.Document_Id = Document_PRId" +
+                    " Left Join DocumentPO_Header po on po.Document_PRID = pr.Document_Id" +
+                    " WHERE l.Document_PreviewUser = " + StaffID + " AND l.logSatus = 0";
+
+
+                dt = DBHelper.List(strSQL);
+
+
+
+            }
+            catch (Exception e)
+            {
+                errMsg = e.Message;
+            }
+
+            dt.TableName = "ListPRData";
+
+            return dt;
+        }
+
         public DataTable GetPROverDataForApprove(int id,int DeptID, ref string errMsg)
         {
             DataTable dt = new DataTable();
@@ -842,6 +878,7 @@ namespace APKOnline.DBHelper
             return document_id;
         }
 
+
         public int DeleteTmpDetail(int Hid, ref string errMsg)
         {
             int document_id = 0;
@@ -877,7 +914,7 @@ namespace APKOnline.DBHelper
 
             return document_id;
         }
-        public int ApprovePR(int Document_Id,int StaffID, int DeptID, ref string errMsg)
+        public int ApprovePR(int Document_Id,int StaffID, int DeptID,bool isPreview, ref string errMsg)
         {
             int document_id = 0;
             string sqlQuery = "";
@@ -965,6 +1002,20 @@ namespace APKOnline.DBHelper
                     cmd.Parameters.AddWithValue("@Document_Id", Document_Id);
                     cmd.Parameters.AddWithValue("@Document_EditUser", StaffID);
                     cmd.ExecuteNonQuery();
+
+                    if (isPreview)
+                    {
+                        sqlQuery = "Insert into LogPreview (Document_PRId,Document_PreviewUser,logSatus,logCreateDate) Values (" +
+                            "@Document_PRId,@Document_PreviewUser,0,GETDATE())";
+
+                        cmd.CommandText = sqlQuery;
+                        cmd.CommandTimeout = 30;
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@Document_PRId", Document_Id);
+                        cmd.Parameters.AddWithValue("@Document_PreviewUser", StaffID);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
                 //document_id = (int)shipperIdParam.Value;
 
@@ -1111,6 +1162,40 @@ namespace APKOnline.DBHelper
             { }
 
             return ret;
+        }
+        public bool LogPreview(int logId, ref string errMsg)
+        {
+            bool result = false;
+            string sqlQuery = "";
+            SqlCommand cmd = new SqlCommand();
+            SqlConnection conn = DBHelper.sqlConnection();
+            if (conn.State == ConnectionState.Closed)
+                conn.Open();
+            cmd = conn.CreateCommand();
+            //myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
+            cmd.Connection = conn;
+
+            try
+            {
+
+                sqlQuery = "Update LogPreview Set logSatus=1  WHERE logId=@logId";
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@logId", logId);
+
+                cmd.ExecuteNonQuery();
+
+                //document_id = (int)shipperIdParam.Value;
+
+            }
+            catch (Exception ex)
+            {
+                errMsg = ex.Message;
+            }
+
+            return result;
         }
         public async Task<bool> DeletePRData(int id)
         {

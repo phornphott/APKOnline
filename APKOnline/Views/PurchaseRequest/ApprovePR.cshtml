@@ -151,8 +151,17 @@
                 </div>
                 <div class="box-footer">
                     <center>
-                        <button class="btn btn-success btn-lg" style="width:120px;" ng-click="SaveDocuments()">{{SaveText}}</button>&nbsp;&nbsp;&nbsp;
-                        <button class="btn btn-warning btn-lg" style="width:120px;" ng-click="CancelDocuments()">ยกเลิก</button>
+                        <div class="row">
+                            <label >Preview เอกสารสั่งซื้อ    </label>
+                            <div ng-show="showpreview=1" id="checkpreview" dx-check-box="Preview"> Preview  </div>
+
+                        </div>
+                        <br>        <br>   <br>
+                        <div class="row">
+
+                            <button class="btn btn-success btn-lg" style="width:120px;" ng-click="SaveDocuments()">{{SaveText}}</button>&nbsp;&nbsp;&nbsp;
+                            <button class="btn btn-warning btn-lg" style="width:120px;" ng-click="CancelDocuments()">ยกเลิก</button>
+                        </div>
                     </center>
                 </div>
             </div>

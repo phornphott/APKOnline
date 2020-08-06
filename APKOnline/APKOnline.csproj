@@ -138,6 +138,7 @@
     <Content Include="Scripts\angular-upload.js" />
     <Content Include="Scripts\angular-upload.min.js" />
     <Content Include="Scripts\src\PurchaseRequest\EditPurchaseRequest.js" />
+    <Content Include="Scripts\src\PurchaseRequest\ListPreview.js" />
     <Content Include="UploadPage\popupUploadfile.aspx" />
     <Content Include="Reports\PrintPreview.aspx" />
     <Content Include="Scripts\angular-ui-router.js" />
@@ -7420,6 +7421,7 @@
     <Content Include="Views\PurchaseRequest\ApprovePROver.cshtml" />
     <Content Include="Views\PurchaseOrder\ViewPO.cshtml" />
     <Content Include="Views\PurchaseRequest\EditPurchaseRequest.cshtml" />
+    <Content Include="Views\PurchaseRequest\ListPreviewPurchaseRequest.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -282,11 +282,20 @@
 
         };
         $scope.CancelDocuments = function () {
-
-            $http.get("api/PR/CancelPRTmpDetail/" + $scope.Document_ID).then(function (data) {
-                    console.log(data);
-                    window.location = '#/PurchaseRequest/ListPurchaseRequest';
-                });
+            var prlinkid = localStorage.getItem('prlinkid');
+            if (prlinkid == 1) {
+                window.location = '#/PurchaseRequest/ListPurchaseRequest';
+            }
+            else if (prlinkid == 2) {
+                window.location = '#/PurchaseOrder/ListPurchaseOrder';
+            }
+            else if (prlinkid == 3) {
+                window.location = '#/PurchaseRequest/ListPROverBudgetApprove';
+            }
+            else if (prlinkid == 4) {
+                window.location = '#/PurchaseRequest/ListPRApprove';
+            }
+     
         };
 
         $scope.removeFilePR = function (index) {

@@ -261,6 +261,34 @@ namespace APKOnline
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
         [HttpGet]
+        [ActionName("ListPreview")]
+        public HttpResponseMessage GETListPreview(int id, int deptid)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+            dt = repository.GetListPreview(id, deptid, ref errMsg);
+
+
+            ds.Tables.Add(dt);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+        [HttpGet]
         [ActionName("ListPROverForApprove")]
         public HttpResponseMessage GETListPROverForApprove(int id,int depid)
         {
@@ -565,7 +593,7 @@ namespace APKOnline
             Result resData = new Result();
 
 
-            int id = repository.ApprovePR(Header.Document_Id,Header.Document_CreateUser, Header.Document_Depid, ref errMsg);
+            int id = repository.ApprovePR(Header.Document_Id,Header.Document_CreateUser, Header.Document_Depid,Header.isPreview, ref errMsg);
 
             //ds.Tables.Add(dtDocumentVnos);
             if (errMsg != "")
@@ -736,6 +764,33 @@ namespace APKOnline
             return Request.CreateResponse(HttpStatusCode.OK, resData);
 
 
+        }
+        [HttpGet]
+        [ActionName("LogPreview")]
+        public HttpResponseMessage GetLogPreview(int id)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+
+            repository.LogPreview(id, ref errMsg);
+
+            //ds.Tables.Add(dtDocumentVnos);
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
 
     }

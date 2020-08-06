@@ -113,6 +113,7 @@
         var onCellClickViewPR = function (e) {
 
             if (e.column.dataField === "Document_Vnos") {
+                localStorage.setItem('prlinkid', '3');
                 window.location = '#/PurchaseRequest/ViewPurchaseRequest/' + e.data.Document_Id;
             };
             if (e.column.dataField === "Approve") {

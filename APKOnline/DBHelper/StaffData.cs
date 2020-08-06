@@ -153,8 +153,8 @@ namespace APKOnline.DBHelper
 
             try
             {
-                strSQL = "\r\n SELECT * FROM Staffs " +
-                         "\r\n WHERE Deleted=0 order by StaffCode;";
+                strSQL = "\r\n SELECT *,CONCAT(StaffFirstName,' ',StaffLastName) AS StaffName FROM Staffs " +
+                         "\r\n WHERE Deleted=0 order by StaffFirstName;";
                 dt = DBHelper.List(strSQL);
 
                 foreach (DataRow dr in dt.Rows)
@@ -292,7 +292,7 @@ namespace APKOnline.DBHelper
             try
             {
                 //strSQL = "\r\n SELECT * FROM PermissionGroup ";
-                strSQL = "\r\n SELECT * FROM StaffAuthorize order by StaffCode,DEPid ";
+                strSQL = "\r\n SELECT a.*,CONCAT(b.StaffFirstName,' ',b.StaffLastName) AS StaffName FROM StaffAuthorize a inner join Staffs b on a.StaffID=b.StaffID order by StaffCode,DEPid ";
                 dt = DBHelper.List(strSQL);
 
 
@@ -585,7 +585,7 @@ namespace APKOnline.DBHelper
 
             if (item.Authorizeid == 0)
             {
-                strSQL = "Insert Into StaffAuthorize (StaffID,StaffCode,DEPid,DEPdescT,PositionPermissionId,PositionCode,PositionLimit,isPreview) VALUES (@StaffID,@StaffCode,@DEPid,@DEPdescT,@PositionPermissionId,@PositionCode,@PositionLimit,@isPreview)";
+                strSQL = "Insert Into StaffAuthorize (StaffID,StaffCode,DEPid,DEPdescT,PositionPermissionId,PositionCode,PositionLimit,AuthorizeLevel,isPreview) VALUES (@StaffID,@StaffCode,@DEPid,@DEPdescT,@PositionPermissionId,@PositionCode,@PositionLimit,@AuthorizeLevel,@isPreview)";
                 List<SqlParameter> sp = new List<SqlParameter>()
                 {
                     new SqlParameter() {ParameterName = "@StaffID", SqlDbType = SqlDbType.Int, Value= item.StaffID},
@@ -595,13 +595,14 @@ namespace APKOnline.DBHelper
                     new SqlParameter() {ParameterName = "@PositionPermissionId", SqlDbType = SqlDbType.Int, Value = item.PositionPermissionId},
                     new SqlParameter() {ParameterName = "@PositionCode", SqlDbType = SqlDbType.NVarChar, Value= item.PositionCode.ToUpper()},
                     new SqlParameter() {ParameterName = "@PositionLimit", SqlDbType = SqlDbType.Decimal, Value = item.PositionLimit},
+                    new SqlParameter() {ParameterName = "@AuthorizeLevel", SqlDbType = SqlDbType.TinyInt, Value = item.AuthorizeLevel},
                     new SqlParameter() {ParameterName = "@isPreview", SqlDbType = SqlDbType.Bit, Value = item.isPreview}
                 };
                 DBHelper.Execute(strSQL, sp);
             }
             else
             {
-                strSQL = "UPDATE StaffAuthorize SET StaffID=@StaffID,StaffCode=@StaffCode,DEPid=@DEPid,DEPdescT=@DEPdescT,PositionPermissionId=@PositionPermissionId,PositionCode=@PositionCode,PositionLimit=@PositionLimit,isPreview=@isPreview WHERE Authorizeid=@Authorizeid";
+                strSQL = "UPDATE StaffAuthorize SET StaffID=@StaffID,StaffCode=@StaffCode,DEPid=@DEPid,DEPdescT=@DEPdescT,PositionPermissionId=@PositionPermissionId,PositionCode=@PositionCode,PositionLimit=@PositionLimit,AuthorizeLevel=@AuthorizeLevel,isPreview=@isPreview WHERE Authorizeid=@Authorizeid";
 
                 List<SqlParameter> sp = new List<SqlParameter>()
                 {
@@ -613,6 +614,7 @@ namespace APKOnline.DBHelper
                     new SqlParameter() {ParameterName = "@PositionPermissionId", SqlDbType = SqlDbType.Int, Value = item.PositionPermissionId},
                     new SqlParameter() {ParameterName = "@PositionCode", SqlDbType = SqlDbType.NVarChar, Value= item.PositionCode.ToUpper()},
                     new SqlParameter() {ParameterName = "@PositionLimit", SqlDbType = SqlDbType.Decimal, Value = item.PositionLimit},
+                    new SqlParameter() {ParameterName = "@AuthorizeLevel", SqlDbType = SqlDbType.TinyInt, Value = item.AuthorizeLevel},
                     new SqlParameter() {ParameterName = "@isPreview", SqlDbType = SqlDbType.Bit, Value = item.isPreview}
                 };
                 DBHelper.Execute(strSQL, sp);

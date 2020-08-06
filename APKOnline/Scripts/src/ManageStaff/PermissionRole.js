@@ -217,7 +217,7 @@
                     editorOptions: {
                         items: $scope.USER,
                         valueExpr: 'StaffID',
-                        displayExpr: 'StaffFirstName',
+                        displayExpr: 'StaffName',
                         disabled: false,
                     },
                     validationRules: [{
@@ -270,6 +270,33 @@
                         message: "โปรดระบุยอดอนุมัติ"
                     }]
                 },{
+                        dataField: "AuthorizeLevel",
+
+                    label: {
+                        text: "ระดับ ",
+                    },
+                    editorType: "dxSelectBox",
+                    editorOptions: {
+                        items: [{
+                            "ID": 2,
+                            "NAME": "ระดับ 2"
+                        }, {
+                            "ID": 3,
+                            "NAME": "ระดับ 3"
+                        }, {
+                            "ID": 4,
+                            "NAME": "ระดับ 4"
+                        }, {
+                            "ID": 5,
+                            "NAME": "ระดับ 5"
+                        }],
+                        valueExpr: 'ID',
+                        displayExpr: 'NAME',
+                        disabled: false
+
+                    },
+                },
+                {
                     dataField: "isPreview",
                     label: {
                         text: "Preview",
@@ -352,6 +379,9 @@
                     caption: "รหัสพนักงาน",
 
                 }, {
+                    dataField: "StaffName",
+                    caption: "ชื่อพนักงาน",
+                }, {
                     dataField: "DEPdescT",
                     caption: "แผนก"
                 }, {
@@ -363,7 +393,11 @@
                     dataType: "number",
                     format: "currency",
                     alignment: "right",
-                },{
+                }, {
+                    dataField: "AuthorizeLevel",
+                    caption: "ระดับ",
+                    alignment: "center",
+                }, {
                     dataField: "isPreview",
                     caption: "Preview",                   
                    
@@ -492,6 +526,7 @@
                     "PositionPermissionId": obj.PositionPermissionId,
                     "PositionCode": "",
                     "PositionLimit": obj.PositionLimit,
+                    "AuthorizeLevel": obj.AuthorizeLevel,
                     "isPreview": obj.isPreview,
                 };
                 $.post("api/Staffs/SetStaffAuthorize?", Autho
@@ -546,6 +581,7 @@
                     "PositionPermissionId": obj.PositionPermissionId,
                     "PositionCode": "",
                     "PositionLimit": obj.PositionLimit,
+                    "AuthorizeLevel": obj.AuthorizeLevel,
                     "isPreview": obj.isPreview,
                 };
                 $.post("api/Staffs/SetStaffAuthorize?", Autho

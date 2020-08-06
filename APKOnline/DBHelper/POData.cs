@@ -415,22 +415,28 @@ namespace APKOnline.DBHelper
         }
         public DataTable GetListPOForApprove(int id,ref string errMsg)
         {
+            DataTable dtPO = new DataTable("PO");
             DataTable dt = new DataTable();
             string tablename = "DocumentPO_Header";
             int staffLevel = 0;
+            string Depin = "";
+            int irow = 0;
+
             try
             {
 
-                string sql = "Select * from Staffs WHERE StaffID = " + id;
-                DataTable staff = DBHelper.List(sql);
-                if (staff.Rows.Count > 0)
-                {
-                    foreach (DataRow dr in staff.Rows)
-                    {
-                        //staffLevel = Convert.ToInt32(dr["StaffLevelID"]) - 1;
-                        staffLevel = Convert.ToInt32(dr["StaffLevel"]) - 1;
-                    }
-                }
+                //string sql = "Select * from Staffs WHERE StaffID = " + id;
+                //DataTable staff = DBHelper.List(sql);
+                //if (staff.Rows.Count > 0)
+                //{
+                //    foreach (DataRow dr in staff.Rows)
+                //    {
+                //        //staffLevel = Convert.ToInt32(dr["StaffLevelID"]) - 1;
+                //        staffLevel = Convert.ToInt32(dr["StaffLevel"]) - 1;
+                //    }
+                //}
+
+
                 //string strSQL = "\r\n   SELECT * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevelID ELSE a.Current_Level END AS Document_Level FROM " +
                 //      " (SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,s.StaffLevelID" +
                 //      ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff" +
@@ -446,20 +452,29 @@ namespace APKOnline.DBHelper
                 //      " left join(SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
                 //          " FROM ApprovePO GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel; 
 
+                string sql = " SELECT DEPid,AuthorizeLevel FROM StaffAuthorize WHERE StaffID = " + id;
+                DataTable staffauth = DBHelper.List(sql);
+                foreach (DataRow drow in staffauth.Rows)
+                {
+                    irow++;
+                    staffLevel = Convert.ToInt32(drow["AuthorizeLevel"]) - 1;
+                }
+
+
                 string strSQL = "\r\n   SELECT * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevel ELSE a.Current_Level END AS Document_Level FROM " +
-                      " (SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,s.StaffLevel" +
-                      ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff" +
-                      " ,g.GroupName AS 'Group', Objective_Name AS Objective,Category_Name AS Category" +
-                      " FROM " + tablename + " p " +
-                      " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
-                      " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
-                      " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
-                      " LEFT JOIN Category c on c.Category_Id = p.Document_Category" +
-                      " LEFT JOIN Objective o on o.Objective_Id = p.Document_Objective" +
-                      " LEFT JOIN Document_Group g on g.id=p.Document_Group" +
-                      " where Document_Delete=0 AND Document_Status < 2) aa " +
-                      " left join(SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
-                          " FROM ApprovePO GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel;
+                    " (SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,s.StaffLevel" +
+                    ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff" +
+                    " ,g.GroupName AS 'Group', Objective_Name AS Objective,Category_Name AS Category" +
+                    " FROM " + tablename + " p " +
+                    " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                    " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                    " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
+                    " LEFT JOIN Category c on c.Category_Id = p.Document_Category" +
+                    " LEFT JOIN Objective o on o.Objective_Id = p.Document_Objective" +
+                    " LEFT JOIN Document_Group g on g.id=p.Document_Group" +
+                    " where Document_Delete=0 AND Document_Status < 2) aa " +
+                    " left join(SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
+                        " FROM ApprovePO GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel;
 
                 dt = DBHelper.List(strSQL);
             }
@@ -468,7 +483,7 @@ namespace APKOnline.DBHelper
                 errMsg = e.Message;
             }
 
-            dt.TableName = "ListPRData";
+            dt.TableName = "ListPOData";
 
             return dt;
         }

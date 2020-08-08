@@ -218,6 +218,7 @@
                         items: $scope.USER,
                         valueExpr: 'StaffID',
                         displayExpr: 'StaffName',
+                        searchEnabled: true,
                         disabled: false,
                     },
                     validationRules: [{
@@ -234,6 +235,7 @@
                         items: $scope.DEP,
                         valueExpr: 'DEPid',
                         displayExpr: 'DEPdescT',
+                        searchEnabled: true,
                         disabled: false,
                     },
                     validationRules: [{
@@ -250,6 +252,7 @@
                         items: $scope.POS,
                         valueExpr: 'Positionid',
                         displayExpr: 'PositionCode',
+                        searchEnabled: true,
                         disabled: false,
                     },
                     validationRules: [{

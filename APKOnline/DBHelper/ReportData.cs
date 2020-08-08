@@ -55,6 +55,7 @@ namespace APKOnline.DBHelper
                       " LEFT JOIN BudgetOfYearByDepartment b on d.DEPcode=b.DEPcode" +
                       " where Document_Delete=0 AND p.Document_Date BETWEEN '" + date + "' AND '" + todate + "'" + Addition + ";";
                 dt = DBHelper.List(strSQL);
+                errMsg = strSQL;
             }
             catch (Exception e)
             {

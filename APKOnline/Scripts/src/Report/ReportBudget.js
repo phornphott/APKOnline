@@ -39,7 +39,9 @@
             //    console.log($scope.ListReportBudgets);
             //});
 
-            $http.get("api/Report/ListReportBudget?Year=" + $scope.MONTHDATE.getFullYear() + "&month=" + $scope.MONTHDATE.getMonth() + "&StaffCode=" + localStorage.getItem('StaffID') + "&DEPcode=" + localStorage.getItem('StaffDepartmentID')).then(function (data) {
+            $http.get("api/Report/ListReportBudget?Year=" + $scope.MONTHDATE.getFullYear() + "&month=" + $scope.MONTHS + "&StaffCode=" + localStorage.getItem('StaffID') + "&DEPcode=" + localStorage.getItem('StaffDepartmentID')).then(function (data) {
+                console.log(data);
+
                 $scope.ListReportBudgets = data.data.Results.ReportBudget;
                 $('#myModal').modal('hide');
                 console.log($scope.ListReportBudgets);

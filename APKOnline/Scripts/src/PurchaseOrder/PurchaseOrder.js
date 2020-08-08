@@ -161,7 +161,9 @@
                                 markup = formatNumber(parseFloat(data.Document_NetSUM).toFixed(2));
                             container.append(markup);
                         },
-
+                    }, {
+                        dataField: "Staff",
+                        caption: "พนักงานที่ขอ"
                 }, {
                     dataField: "POCreate",
                         caption: "สร้างเอกสารสั่งซื้อ",

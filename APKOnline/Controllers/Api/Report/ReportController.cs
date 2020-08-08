@@ -17,7 +17,7 @@ namespace APKOnline.Controllers.Api.Report
 
         [HttpGet]
         [ActionName("ListReportBudget")]
-        public HttpResponseMessage GETListReportBudget(string STARTDATE, string ENDDATE, string MONTHS, int StaffCode, int DEPcode)
+        public HttpResponseMessage GETListReportBudget(int year, int month, int StaffCode, int DEPcode)
          {
             string errMsg = "";
             DataSet ds = new DataSet();
@@ -25,7 +25,7 @@ namespace APKOnline.Controllers.Api.Report
             Result resData = new Result();
 
 
-            DataTable dtHeaderData = Reportrepository.GetReportBudget(STARTDATE, ENDDATE, MONTHS, StaffCode, DEPcode, ref errMsg);
+            DataTable dtHeaderData = Reportrepository.GetReportBudget(year,  month, StaffCode, DEPcode, ref errMsg);
 
             ds.Tables.Add(dtHeaderData);
 

@@ -12,7 +12,7 @@ namespace APKOnline.DBHelper
 {
     interface IReportData
     {
-        DataTable GetReportBudget(string STARTDATE, string ENDDATE, string MONTHS, int StaffCode, int DEPcode, ref string errMsg);
+        DataTable GetReportBudget(int year,int month, int StaffCode, int DEPcode, ref string errMsg);
         DataSet GetDashBroadData(ref string errMsg);
         DataSet GetDashBroadByDepartment(int id, ref string errMsg);
         int getdepid(string dep);
@@ -20,13 +20,18 @@ namespace APKOnline.DBHelper
 
     public class ReportData: IReportData
     {
-        public DataTable GetReportBudget(string STARTDATE, string ENDDATE, string MONTHS, int StaffCode, int DEPcode, ref string errMsg)
+        public DataTable GetReportBudget(int year, int month, int StaffCode, int DEPcode, ref string errMsg)
         {
             string Addition = null;
             DataTable dt = new DataTable();
 
             try
             {
+                string date = new DateTime(year, month, 1).ToString("yyyy-MM-dd", new CultureInfo("en-US"));
+                int LastdayofMonth = DateTime.DaysInMonth(year, month);
+                string todate = new DateTime(year, month, LastdayofMonth).ToString("yyyy-MM-dd", new CultureInfo("en-US"));
+
+
                 //if (StaffCode != null && StaffCode != "undefined")
                 if (StaffCode != 0)
                 {
@@ -39,15 +44,16 @@ namespace APKOnline.DBHelper
                     Addition += " AND p.Document_Dep=" + DEPcode;
                 }
 
-                string strSQL = "\r\n SELECT distinct p.*, b.DEPmonth" + MONTHS + " as SumMonth, s.StaffCode, s.StaffFirstName, s.StaffLastName" +
-                    " , d.DEPcode, CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job, Objective_Name AS Objective, Category_Name AS Category FROM DocumentPR_Header p " +
+                string strSQL = "\r\n SELECT distinct p.*, b.DEPmonth" + month + " as SumMonth, s.StaffCode, s.StaffFirstName, s.StaffLastName" +
+                    " , d.DEPcode, CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job, Objective_Name AS Objective, Category_Name AS Category " +
+                    " FROM DocumentPR_Header p " +
                       "\r\n LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job " +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep " +
                       " LEFT JOIN Category c on c.Category_Id = p.Document_Category " +
                       " LEFT JOIN Objective o on o.Objective_Id = p.Document_Objective " +
                       " LEFT JOIN BudgetOfYearByDepartment b on d.DEPcode=b.DEPcode" +
-                      " where Document_Delete=0 AND p.Document_Date BETWEEN '" + STARTDATE + "' AND '" + ENDDATE + "'" + Addition + ";";
+                      " where Document_Delete=0 AND p.Document_Date BETWEEN '" + date + "' AND '" + todate + "'" + Addition + ";";
                 dt = DBHelper.List(strSQL);
             }
             catch (Exception e)

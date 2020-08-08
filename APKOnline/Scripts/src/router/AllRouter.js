@@ -61,8 +61,8 @@
             }
         })
 
-        .state('/PurchaseRequest/ApprovePurchaseRequest', {
-            url: "/PurchaseRequest/ApprovePurchaseRequest",
+        .state('/PurchaseRequest/CreatePurchaseRequest', {
+            url: "/PurchaseRequest/CreatePurchaseRequest",
             templateUrl: '\PurchaseRequest/ApprovePurchaseRequest',
             controller: 'ApprovePurchaseRequestController',
             resolve: {

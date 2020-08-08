@@ -409,7 +409,11 @@
                 }, {
                     dataField: "StaffPosition",
                     caption: "ตำแหน่ง"
-                },{
+                }, {
+                    dataField: "DEPdescT",
+                    caption: "แผนก",
+
+                }, {
                     dataField: "StaffLogin",
                     caption: "Login",
                     

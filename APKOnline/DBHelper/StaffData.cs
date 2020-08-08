@@ -153,8 +153,8 @@ namespace APKOnline.DBHelper
 
             try
             {
-                strSQL = "\r\n SELECT *,CONCAT(StaffFirstName,' ',StaffLastName) AS StaffName FROM Staffs " +
-                         "\r\n WHERE Deleted=0 order by StaffFirstName;";
+                strSQL = "\r\n SELECT a.*,CONCAT(a.StaffFirstName,' ',a.StaffLastName) AS StaffName,b.DEPdescT FROM Staffs a inner join Department b on a.StaffDepartmentID = b.DEPid " +
+                         "\r\n WHERE a.Deleted=0 order by a.StaffFirstName;";
                 dt = DBHelper.List(strSQL);
 
                 foreach (DataRow dr in dt.Rows)

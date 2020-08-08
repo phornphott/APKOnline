@@ -325,7 +325,7 @@
                         displayExpr: 'NAME',
                         disabled: false
 
-                },
+                    },
                 }
 
                 ]

@@ -39,12 +39,14 @@ namespace APKOnline.Models
     {
         public int Authorizeid { get; set; }
         public int StaffID { get; set; }
+        public string StaffName { get; set; }
         public int DEPid { get; set; }
         public int PositionPermissionId { get; set; }
         public string StaffCode { get; set; }
         public string DEPdescT { get; set; }
         public string PositionCode { get; set; }
         public decimal PositionLimit { get; set; }
+        public int AuthorizeLevel { get; set; }
         public bool isPreview { get; set; }
     }
 

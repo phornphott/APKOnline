@@ -37,7 +37,7 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
         $scope.ENDDATE = new Date($scope.MONTHDATE.getFullYear(), $scope.MONTHDATE.getMonth(), getDaysInMonth(($scope.MONTHDATE.getMonth() + 1), $scope.MONTHDATE.getFullYear()));
         $scope.MONTHS = String($scope.MONTHDATE.getMonth() + 1);
 
-        $http.get("api/Report/DashBroad").then(function (data) {
+        $http.get("api/Report/DashBroad/" + localStorage.getItem("StaffID") + "?").then(function (data) {
             console.log(data);
             $scope.ListReportBudgets = data.data.Results.DepAmount;
             $scope.piechartOptions = {

@@ -45,7 +45,7 @@ namespace APKOnline.Controllers.Api.Report
         }
         [HttpGet]
         [ActionName("DashBroad")]
-        public HttpResponseMessage GETDashBroad()
+        public HttpResponseMessage GETDashBroad(int  id)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
@@ -54,7 +54,7 @@ namespace APKOnline.Controllers.Api.Report
 
             try
             {
-                ds =  Reportrepository.GetDashBroadData(ref errMsg);
+                ds =  Reportrepository.GetDashBroadData(id,ref errMsg);
 
             }
             catch (Exception ex) {

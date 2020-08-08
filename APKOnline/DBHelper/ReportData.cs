@@ -13,7 +13,7 @@ namespace APKOnline.DBHelper
     interface IReportData
     {
         DataTable GetReportBudget(int year,int month, int StaffCode, int DEPcode, ref string errMsg);
-        DataSet GetDashBroadData(ref string errMsg);
+        DataSet GetDashBroadData(int id, ref string errMsg);
         DataSet GetDashBroadByDepartment(int id, ref string errMsg);
         int getdepid(string dep);
     }
@@ -65,7 +65,7 @@ namespace APKOnline.DBHelper
             dt.TableName = "ReportBudget";
             return dt;
         }
-        public  DataSet GetDashBroadData(ref string  errMsg)
+        public  DataSet GetDashBroadData(int id, ref string  errMsg)
         {
             string Addition = null;
             DataSet ds = new DataSet();
@@ -77,17 +77,27 @@ namespace APKOnline.DBHelper
             //todate = "2020-04-30";
 
             string sql = "";
+            int depid = 0;
 
-            //sql = " select SUM(Document_NetSUM) AS Amount,Document_Dep  ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,REPLACE(REPLACE(trim(CAST(DEPdescT as NVARCHAR(max))), CHAR(13), ''), CHAR(10), '') As DEP " +
-            //      " from DocumentPO_Header h " +
-            //      " left join Department d on h.Document_Dep = d.DEPid " +
-            //      " where Document_Date between  '" + date + "'  and '" + todate + "' group by Document_Dep,CAST(DEPcode as NVARCHAR(max)),CAST(DEPdescT as NVARCHAR(max))";
+            sql = "Select * from staffs where StaffID = " + id;
+            DataTable dt = new DataTable();
+             dt = DBHelper.List(sql);
+            foreach (DataRow dr in dt.Rows)
+            {
+                depid = Convert.ToInt32(dr["StaffDepartmentID"]);
+            }
             try
             {
                 sql = " select SUM(Document_NetSUM) AS Amount,Document_Dep  ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,REPLACE(REPLACE(CAST(DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
                       " from DocumentPO_Header h " +
                       " left join Department d on h.Document_Dep = d.DEPid " +
-                      " where Document_Date between  '" + date + "'  and '" + todate + "' group by Document_Dep,CAST(DEPcode as NVARCHAR(max)),CAST(DEPdescT as NVARCHAR(max))";
+                      " where Document_Date between  '" + date + "'  and '" + todate + "' ";
+                if (depid != 99)
+                {
+                    sql += " and (h.Document_Dep = " + depid +
+                        " or h.Document_Dep in (select  DEPid from StaffAuthorize where StaffID = " + id + "))";
+                }
+                sql +=   " group by Document_Dep,CAST(DEPcode as NVARCHAR(max)),CAST(DEPdescT as NVARCHAR(max))";
                 errMsg = sql;
 DataTable poDepAmount = DBHelper.List(sql);
                 poDepAmount.TableName = "DepAmount";

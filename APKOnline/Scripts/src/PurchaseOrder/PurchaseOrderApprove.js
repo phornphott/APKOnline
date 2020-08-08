@@ -5,7 +5,7 @@
         $scope.showBorders = true;
         $scope.rowAlternationEnabled = true;
         $http.get("api/PO/ListPOApprove/" + localStorage.getItem("StaffID") + "?").then(function (data) {
-            var ListPRData = data.data.Results.ListPRData;
+            var ListPRData = data.data.Results.ListPOData;
             $scope.dataGridOptions = {
                 dataSource: ListPRData,
                 loadPanel: {

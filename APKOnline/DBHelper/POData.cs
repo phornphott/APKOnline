@@ -265,8 +265,10 @@ namespace APKOnline.DBHelper
             try
             {
                 string strSQL = "\r\n  " +
-                      " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job ,g.GroupName AS 'Group'" +
-                      " , Objective_Name AS Objective,Category_Name AS Category" +
+                      " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,CAST(d.DEPdescT as NVARCHAR(max)) AS Dep" +
+                      ",CAST(j.JOBdescT as NVARCHAR(max)) As Job ,g.GroupName AS 'Group'" +
+                      " ,CAST(Objective_Name as NVARCHAR(max)) AS Objective,CAST(Category_Name as NVARCHAR(max)) AS Category " +
+                      " ,CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff" +
                       " FROM "+ tablename + " p LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job" +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
@@ -316,10 +318,12 @@ namespace APKOnline.DBHelper
 
                 string strSQL = "\r\n  " +
                       " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job,g.GroupName AS 'Group'" +
-                      " , Objective_Name AS Objective,Category_Name AS Category " +
+                      " ,CAST(Objective_Name as NVARCHAR(max)) AS Objective,CAST(Category_Name as NVARCHAR(max)) AS Category " +
+                      " ,CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff" +
                       " ,'อนุมัติ' AS SaveText " +
                       " ,CONCAT(CREcode,' : ',CAST(cus.CREnameT as NVARCHAR(max))) AS Customer " +
-                      " FROM " + tablename + " p LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                      " FROM " + tablename + " p " +
+                      " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job" +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
                       " LEFT JOIN Category c on c.Category_Id = p.Document_Category" +

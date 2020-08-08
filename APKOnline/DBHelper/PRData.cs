@@ -96,7 +96,7 @@ namespace APKOnline.DBHelper
             try
             {
                 strSQL = "\r\n  " +
-                    "(SELECT Category_Id AS ID, Category_Name AS Name FROM Category)";
+                    " SELECT Category_Id AS ID, Category_Name AS Name FROM Category group by Category_Id,Category_Name";
                 dt = DBHelper.List(strSQL);
 
                
@@ -123,9 +123,9 @@ namespace APKOnline.DBHelper
                 {
                     strSQL += " WHERE Objective_Category_Id =  " + id;
                 }
+                strSQL += " Group By Objective_Id,Objective_Name ";
 
-               
-                dt = DBHelper.List(strSQL);
+          dt = DBHelper.List(strSQL);
 
               
             }

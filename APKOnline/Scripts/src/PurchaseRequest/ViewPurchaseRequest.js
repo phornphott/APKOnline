@@ -295,7 +295,9 @@
             else if (prlinkid == 4) {
                 window.location = '#/PurchaseRequest/ListPRApprove';
             }
-     
+            else if (prlinkid == 5) {
+                window.location = '#/PurchaseRequest/ListPreviewPurchaseRequest';
+            }
         };
 
         $scope.removeFilePR = function (index) {

@@ -793,5 +793,33 @@ namespace APKOnline
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
 
+        [HttpPost]
+        [ActionName("PostLogPreview")]
+        public  HttpResponseMessage PostLogPreview(int id)
+        {
+            string errMsg = "";
+            bool ret = false;
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result response = new Result();
+
+
+
+            repository.LogPreview(id, ref errMsg);
+            if (errMsg != "")
+            {
+                response.StatusCode = (int)(StatusCodes.Error);
+                response.Messages = errMsg;
+            }
+            else
+            {
+                response.StatusCode = (int)(StatusCodes.Succuss);
+                response.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+
+
+            return Request.CreateResponse(HttpStatusCode.OK, response);
+        }
     }
 }

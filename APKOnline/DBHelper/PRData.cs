@@ -528,7 +528,7 @@ namespace APKOnline.DBHelper
             {
 
                 string strSQL = "SELECT l.*,pr.Document_Vnos AS PRNo,pr.Document_Cog AS PRAmount,po.Document_Vnos AS PONo,po.Document_Cog AS POAmount " +
-                    ",po.Document_EditDate AS POapprove,po.Document_EditUser AS POapproveBy,po.Document_Id AS POID" +
+                    ",po.Document_EditDate AS POapprove,po.Document_EditUser AS POapproveBy,po.Document_Id AS POID,pr.Document_Id AS PRID" +
                     " FROM LogPreview l " +
                     " Left Join DocumentPR_Header pr on pr.Document_Id = Document_PRId" +
                     " Left Join DocumentPO_Header po on po.Document_PRID = pr.Document_Id" +

@@ -594,5 +594,34 @@ namespace APKOnline
 
             return i;
         }
+
+        [HttpPost]
+        [ActionName("UpdatePreviewDetailData")]
+        public HttpResponseMessage UpdatePreviewDetailData(PRDetailModels detail, int id)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+            detail.Document_Detail_Hid = id;
+             repository.UpdatePreviewDetail(detail, ref errMsg);
+
+            //ds.Tables.Add(dtDocumentVnos);
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+
     }
 }

@@ -117,13 +117,13 @@ namespace APKOnline.DBHelper
             try
             {
                 strSQL = "\r\n  " +
-                    " SELECT Objective_Id AS ID, Objective_Name AS Name,Objective_Category_Id " +
+                    " SELECT distinct Objective_Id AS ID, Objective_Name AS Name,Objective_Category_Id " +
                     " FROM Objective ";
                 if (id > 0)
                 {
                     strSQL += " WHERE Objective_Category_Id =  " + id;
                 }
-                strSQL += " Group By Objective_Id,Objective_Name ";
+              
 
           dt = DBHelper.List(strSQL);
 
@@ -532,7 +532,7 @@ namespace APKOnline.DBHelper
                     " FROM LogPreview l " +
                     " Left Join DocumentPR_Header pr on pr.Document_Id = Document_PRId" +
                     " Left Join DocumentPO_Header po on po.Document_PRID = pr.Document_Id" +
-                    " WHERE l.Document_PreviewUser = " + StaffID + " AND l.logSatus = 0";
+                    " WHERE l.Document_PreviewUser = " + StaffID + " AND l.logSatus = 0 and po.Document_Status < 2";
 
 
                 dt = DBHelper.List(strSQL);

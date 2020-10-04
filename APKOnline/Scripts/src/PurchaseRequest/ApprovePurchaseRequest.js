@@ -217,11 +217,11 @@
                     allowUpdating: true,
                     allowAdding: true,
                     allowDeleting: true,
-                    texts: {
-                        editRow: "แก้ไข",
-                        saveRowChanges: "บันทึก",
-                        cancelRowChanges: "ยกเลิก"
-                    },
+                    //texts: {
+                    //    editRow: "แก้ไข",
+                    //    saveRowChanges: "บันทึก",
+                    //    cancelRowChanges: "ยกเลิก"
+                    //},
 
                 },
                 columnAutoWidth: true,

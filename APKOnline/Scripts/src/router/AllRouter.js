@@ -301,6 +301,22 @@
                 }]
             }
         })
+        .state('/PurchaseRequest/PreviewEdit/:id', {
+            url: "/PurchaseRequest/PreviewEdit/:id",
+            templateUrl: '\PurchaseOrder/EditPreviewPO',
+            controller: 'EditPreviewPOController',
+            resolve: {
+                lazyLoad: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'AceApp',
+                            files: [
+                                'Scripts/src/PurchaseOrder/EditPreviewPO.js'
+                            ]
+                        }])
+                }]
+            }
+        })
         .state('/PurchaseRequest/ViewPO/:id', {
             url: "/PurchaseRequest/ViewPO/:id",
             templateUrl: '\PurchaseOrder/ViewPO',

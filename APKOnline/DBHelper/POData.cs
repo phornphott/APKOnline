@@ -31,6 +31,7 @@ namespace APKOnline.DBHelper
         DataTable GetDetailData(int Document_Detail_Hid, ref string errMsg);
         DataTable GetCustomer(int id, ref string errMsg);
         DataTable GetSTKData(ref string errMsg);
+        bool UpdatePreviewDetail(PRDetailModels detail, ref string errMsg);
     }
 
     public class POData : IPOData
@@ -714,7 +715,7 @@ namespace APKOnline.DBHelper
 
 
 
-                if (cog > Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice, 2))
+                if (cog >= Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice, 2))
                 {
 
 
@@ -964,6 +965,77 @@ namespace APKOnline.DBHelper
 
             return str;
         }
+        public bool UpdatePreviewDetail(PRDetailModels detail, ref string errMsg)
+        {
+            bool ret = false;
+            string sqlQuery = "";
+            SqlCommand cmd = new SqlCommand();
+            SqlConnection conn = DBHelper.sqlConnection();
+            if (conn.State == ConnectionState.Closed)
+                conn.Open();
+            cmd = conn.CreateCommand();
+            //myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
+            cmd.Connection = conn;
+
+            try
+            {
+                sqlQuery = "UPDATE DocumentPO_Detail SET " +
+                            "Document_Detail_UnitPrice=@Document_Detail_UnitPrice" +
+                             ",Document_Detail_Acc_Desc=@Document_Detail_Acc_Desc" +
+                            ",Document_Detail_Quan=@Document_Detail_Quan,Document_Detail_Cog=@Document_Detail_Cog" +
+                            ",Document_Detail_Vat=@Document_Detail_Vat,Document_Detail_Sum=@Document_Detail_Sum " +
+                            ",Document_Detail_PreviewEditUser = @Document_Detail_PreviewEditUser ,Document_Detail_PreviewEditDate = GETDATE()" +
+                            " WHERE Document_Detail_Id=@Document_Detail_Id";
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@Document_Detail_Id", detail.Document_Detail_Id);
+                cmd.Parameters.AddWithValue("@Document_Detail_Acc_Desc", detail.Document_Detail_Acc_Desc);
+                cmd.Parameters.AddWithValue("@Document_Detail_Quan", Math.Round(detail.Document_Detail_Quan, 2));
+                cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", Math.Round(detail.Document_Detail_UnitPrice, 2));
+                cmd.Parameters.AddWithValue("@Document_Detail_Cog", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice, 2));
+                                                                                       
+                cmd.Parameters.AddWithValue("@Document_Detail_Vat", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)0.07, 2));
+                cmd.Parameters.AddWithValue("@Document_Detail_Sum", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07, 2));
+                cmd.Parameters.AddWithValue("@Document_Detail_PreviewEditUser", detail.Document_Detail_EditUser);
+                cmd.ExecuteNonQuery();
+
+                string sql = "Select SUM(Document_Detail_Cog) From DocumentPO_Detail WHERE Document_Detail_Hid = " + detail.Document_Detail_Hid;
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+
+                DataTable tmp = new DataTable();
+                da.Fill(tmp);
+                decimal amount = 0;
+                foreach (DataRow dr in tmp.Rows)
+                {
+                    amount = Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
+                    Math.Round(amount, 2);
+                }
+
+                sqlQuery = "Update DocumentPO_Header SET Document_Cog=@Document_Cog,Document_VatSUM=@Document_VatSUM,Document_NetSUM=@Document_NetSUM " +
+                            ",Document_PreviewEditUser = @Document_PreviewEditUser ,Document_PreviewEditDate = GETDATE()" +
+                    "WHERE Document_Id=@Document_Detail_Hid";
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@Document_Detail_Hid", detail.Document_Detail_Hid);
+
+                cmd.Parameters.AddWithValue("@Document_Cog", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice, 2));
+                cmd.Parameters.AddWithValue("@Document_VatSUM", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice * (decimal)0.07, 2));//()
+                cmd.Parameters.AddWithValue("@Document_NetSUM", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice * (decimal)1.07, 2));//
+                cmd.Parameters.AddWithValue("@Document_PreviewEditUser", detail.Document_Detail_EditUser);
+
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            { }
+
+            return ret;
+        }
+
         #endregion
 
     }

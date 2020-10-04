@@ -5,11 +5,12 @@
     $scope.submitLogin = function () {
         $http.post("../api/Staffs/login", { StaffLogin: $scope.username, StaffPassword: $scope.password })
             .then(function (data) {
-                console.log(data);
+                
                 if (data.data.StatusCode === 2) {
+                    console.log(data.data.Messages);
                     swal({
                         title: 'Information',
-                        text: data.Messages,
+                        text: data.data.Messages,
                         type: "info",
                         showCancelButton: false,
                         confirmButtonColor: "#6EAA6F",

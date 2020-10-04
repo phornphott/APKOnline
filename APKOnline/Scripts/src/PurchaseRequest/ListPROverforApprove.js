@@ -12,13 +12,12 @@
             if (data.data.StatusCode > 1) {
                 console.log(data.data.StatusCode);
                 swal({
-                    title: 'information',
+                    title: 'Information',
                     text: data.data.Messages,
                     type: "info",
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",
                     confirmButtonText: 'OK'
-                }, function () {
                 })
             }
             else {

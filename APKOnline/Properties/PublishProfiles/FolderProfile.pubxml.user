@@ -10,10 +10,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="bin/APKOnline.dll">
-      <publishTime>07/29/2020 21:33:20</publishTime>
+      <publishTime>08/09/2020 21:22:17</publishTime>
     </File>
     <File Include="bin/APKOnline.pdb">
-      <publishTime>07/29/2020 21:33:20</publishTime>
+      <publishTime>08/09/2020 21:22:17</publishTime>
     </File>
     <File Include="bin/de/Microsoft.ReportViewer.Common.resources.dll">
       <publishTime>07/20/2020 12:40:37</publishTime>
@@ -194,6 +194,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="bin/pt/Microsoft.ReportViewer.WinForms.resources.dll">
       <publishTime>07/20/2020 12:40:37</publishTime>
+    </File>
+    <File Include="bin/Report_PO.rdlc">
+      <publishTime>07/20/2020 12:40:22</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>07/20/2020 12:40:37</publishTime>
@@ -441,6 +444,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Reports/PrintPreview.aspx">
       <publishTime>07/20/2020 12:40:22</publishTime>
     </File>
+    <File Include="Report_PO.rdlc">
+      <publishTime>07/20/2020 12:40:22</publishTime>
+    </File>
     <File Include="Scripts/angular-ui-router.js">
       <publishTime>07/20/2020 12:40:25</publishTime>
     </File>
@@ -664,67 +670,70 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/20/2020 12:40:25</publishTime>
     </File>
     <File Include="Scripts/src/App/app.js">
-      <publishTime>07/20/2020 12:40:25</publishTime>
+      <publishTime>08/09/2020 08:13:08</publishTime>
     </File>
     <File Include="Scripts/src/Login/Login.js">
-      <publishTime>07/20/2020 12:40:25</publishTime>
+      <publishTime>08/02/2020 21:02:51</publishTime>
     </File>
     <File Include="Scripts/src/ManageStaff/ManageRole.js">
       <publishTime>07/20/2020 12:40:25</publishTime>
     </File>
     <File Include="Scripts/src/ManageStaff/ManageStaff.js">
-      <publishTime>07/29/2020 17:10:56</publishTime>
+      <publishTime>08/08/2020 19:40:52</publishTime>
     </File>
     <File Include="Scripts/src/ManageStaff/PermissionRole.js">
-      <publishTime>07/29/2020 09:07:34</publishTime>
+      <publishTime>08/08/2020 21:35:56</publishTime>
     </File>
     <File Include="Scripts/src/ManageStaff/PermissionStaff.js">
       <publishTime>07/20/2020 12:40:25</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseOrder/ApprovePO.js">
-      <publishTime>07/29/2020 18:08:42</publishTime>
+      <publishTime>08/01/2020 17:35:39</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseOrder/PurchaseOrder.js">
-      <publishTime>07/20/2020 12:40:25</publishTime>
+      <publishTime>08/08/2020 12:32:17</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseOrder/PurchaseOrderApprove.js">
-      <publishTime>07/20/2020 12:40:25</publishTime>
+      <publishTime>08/06/2020 16:56:04</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseOrder/ViewPO.js">
-      <publishTime>07/20/2020 12:40:25</publishTime>
+      <publishTime>08/06/2020 08:45:59</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseOrder/ViewPurchaseOrder.js">
-      <publishTime>07/20/2020 12:40:25</publishTime>
+      <publishTime>08/08/2020 12:32:17</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseRequest/ApprovePR.js">
-      <publishTime>07/29/2020 15:25:36</publishTime>
+      <publishTime>08/06/2020 08:45:59</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseRequest/ApprovePROverBudget.js">
-      <publishTime>07/20/2020 12:40:25</publishTime>
+      <publishTime>08/01/2020 17:35:39</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseRequest/ApprovePurchaseRequest.js">
-      <publishTime>07/29/2020 10:16:01</publishTime>
+      <publishTime>08/02/2020 21:02:51</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseRequest/EditPurchaseRequest.js">
-      <publishTime>07/29/2020 07:58:26</publishTime>
+      <publishTime>08/02/2020 21:02:51</publishTime>
+    </File>
+    <File Include="Scripts/src/PurchaseRequest/ListPreview.js">
+      <publishTime>08/09/2020 21:21:00</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseRequest/ListPRforApprove.js">
-      <publishTime>07/29/2020 19:57:12</publishTime>
+      <publishTime>08/06/2020 08:45:59</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseRequest/ListPROverforApprove.js">
-      <publishTime>07/20/2020 12:40:25</publishTime>
+      <publishTime>08/06/2020 08:45:59</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseRequest/ListPurchaseRequest.js">
-      <publishTime>07/29/2020 07:58:26</publishTime>
+      <publishTime>08/06/2020 08:45:59</publishTime>
     </File>
     <File Include="Scripts/src/PurchaseRequest/ViewPurchaseRequest.js">
-      <publishTime>07/20/2020 12:40:25</publishTime>
+      <publishTime>08/09/2020 21:21:00</publishTime>
     </File>
     <File Include="Scripts/src/Report/ReportBudget.js">
-      <publishTime>07/20/2020 12:40:25</publishTime>
+      <publishTime>08/08/2020 21:35:56</publishTime>
     </File>
     <File Include="Scripts/src/router/AllRouter.js">
-      <publishTime>07/20/2020 12:40:26</publishTime>
+      <publishTime>08/08/2020 12:32:17</publishTime>
     </File>
     <File Include="Scripts/sweetalert.min.js">
       <publishTime>07/20/2020 12:40:26</publishTime>
@@ -21973,7 +21982,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/20/2020 12:40:27</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>07/20/2020 12:40:27</publishTime>
+      <publishTime>08/08/2020 12:32:17</publishTime>
     </File>
     <File Include="Views/Home/Login.cshtml">
       <publishTime>07/20/2020 12:40:27</publishTime>
@@ -21991,7 +22000,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/20/2020 12:40:27</publishTime>
     </File>
     <File Include="Views/PurchaseOrder/ApprovePO.cshtml">
-      <publishTime>07/29/2020 07:58:26</publishTime>
+      <publishTime>08/08/2020 12:32:17</publishTime>
     </File>
     <File Include="Views/PurchaseOrder/ListPurchaseOrder.cshtml">
       <publishTime>07/20/2020 12:40:29</publishTime>
@@ -22000,13 +22009,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/20/2020 12:40:29</publishTime>
     </File>
     <File Include="Views/PurchaseOrder/ViewPO.cshtml">
-      <publishTime>07/29/2020 07:58:26</publishTime>
+      <publishTime>08/08/2020 12:32:17</publishTime>
     </File>
     <File Include="Views/PurchaseOrder/ViewPurchaseOrder.cshtml">
-      <publishTime>07/29/2020 07:58:26</publishTime>
+      <publishTime>08/08/2020 12:32:17</publishTime>
     </File>
     <File Include="Views/PurchaseRequest/ApprovePR.cshtml">
-      <publishTime>07/29/2020 07:58:26</publishTime>
+      <publishTime>08/06/2020 08:45:59</publishTime>
     </File>
     <File Include="Views/PurchaseRequest/ApprovePROver.cshtml">
       <publishTime>07/29/2020 07:58:26</publishTime>
@@ -22023,11 +22032,14 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/PurchaseRequest/ListOverBGPurchaseRequest.cshtml">
       <publishTime>07/20/2020 12:40:29</publishTime>
     </File>
+    <File Include="Views/PurchaseRequest/ListPreviewPurchaseRequest.cshtml">
+      <publishTime>08/06/2020 08:45:59</publishTime>
+    </File>
     <File Include="Views/PurchaseRequest/ListPurchaseRequest.cshtml">
       <publishTime>07/20/2020 12:40:29</publishTime>
     </File>
     <File Include="Views/PurchaseRequest/ViewPurchaseRequest.cshtml">
-      <publishTime>07/29/2020 07:58:26</publishTime>
+      <publishTime>08/06/2020 08:45:59</publishTime>
     </File>
     <File Include="Views/Report/ReportBudget.cshtml">
       <publishTime>07/20/2020 12:40:29</publishTime>
@@ -22042,7 +22054,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/20/2020 12:40:29</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>07/29/2020 22:13:12</publishTime>
+      <publishTime>08/09/2020 21:24:48</publishTime>
     </File>
   </ItemGroup>
 </Project>

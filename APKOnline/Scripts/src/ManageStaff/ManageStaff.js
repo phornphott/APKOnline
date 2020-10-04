@@ -337,9 +337,7 @@
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
         $scope.showBorders = true;
-        $scope.rowAlternationEnabled = true;
-
-        
+        $scope.rowAlternationEnabled = true;     
 
         var api = "api/Staffs/StaffData"
         $http.get(api).then(function (data) {
@@ -644,11 +642,8 @@
                                 $("#gridContainer").dxDataGrid("instance").refresh();
                             });
                         }
-
                     });
             }
-
-
         }
 
         $scope.ShowForm = function (id) {
@@ -672,9 +667,7 @@
                     $("#loadIndicator").dxLoadIndicator({
                         visible: false
                     });
-
                 }
-
             });
         }
 

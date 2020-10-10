@@ -370,8 +370,6 @@ D:\Repository\APK\APKOnline\bin\zh-CHT\Microsoft.ReportViewer.WinForms.resources
 D:\Repository\APK\APKOnline\bin\zh-HANS\Microsoft.ReportViewer.WinForms.resources.dll
 D:\Repository\APK\APKOnline\bin\zh-HANT\Microsoft.ReportViewer.WinForms.resources.dll
 D:\Repository\APK\APKOnline\obj\Release\APKOnline.csprojAssemblyReference.cache
-D:\Repository\APK\APKOnline\obj\Release\RdlCompile.cache
-D:\Repository\APK\APKOnline\obj\Release\RdlCompile.compiled
 D:\Repository\APK\APKOnline\obj\Release\APKOnline.csproj.CoreCompileInputs.cache
 D:\Repository\APK\APKOnline\obj\Release\APKOnline.csproj.CopyComplete
 D:\Repository\APK\APKOnline\obj\Release\APKOnline.dll
@@ -525,3 +523,4 @@ F:\Job\เมย์\APK\APKonline\Code\APKOnline\APKOnline\obj\Release\APKOnline
 F:\Job\เมย์\APK\APKonline\Code\APKOnline\APKOnline\obj\Release\APKOnline.pdb
 F:\Job\เมย์\APK\APKonline\Code\APKOnline\APKOnline\obj\Release\APKOnline.csprojResolveAssemblyReference.cache
 F:\Job\เมย์\APK\APKonline\Code\APKOnline\APKOnline\bin\Report_PO.rdlc
+D:\Repository\APK\APKOnline\bin\Report_PO.rdlc

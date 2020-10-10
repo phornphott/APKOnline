@@ -597,8 +597,24 @@
                 console.log(Header);
                 $http.post("api/PR/SavePRData?", Header).then(function successCallback(response) {
 
-
-                    window.location = '#/PurchaseRequest/ListPurchaseRequest';
+                    console.log(response);
+                    if (response.data.StatusCode === 2) {
+                        swal({
+                            title: 'info',
+                            text: response.data.Messages,
+                            type: "info",
+                            showCancelButton: false,
+                            confirmButtonColor: "#6EAA6F",
+                            confirmButtonText: 'OK'
+                        })
+                    }
+                    else {
+                        swal("บันทึกรายการสำเร็จ")
+                            .then((value) => {
+                                window.location = '#/PurchaseRequest/ListPurchaseRequest';
+                            });
+                        
+                    }
                 });
 
 
@@ -608,7 +624,10 @@
         };
 
         $scope.CancelDocuments = function () {
-            $scope.DeleteFile();
+            $http.post("api/PR/DeleteFiles?tmppath=" + $scope.tmpfolder).then(function (data) {
+
+            });
+
             $http.get("api/PR/CancelPRTmpDetail/" + $scope.Document_ID).then(function (data) {
 
                     window.location = '#/PurchaseRequest/ListPurchaseRequest';

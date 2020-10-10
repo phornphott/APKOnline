@@ -363,8 +363,9 @@ namespace APKOnline.DBHelper
                     Depin = drow["DEPid"].ToString();
                     staffLevel = Convert.ToInt32(drow["AuthorizeLevel"]) - 1;
 
+                    int year = DateTime.Now.Year;
 
-                    sql = "Select * from BudgetOfYearByDepartment WHERE DEPid = " + Convert.ToInt32(drow["DEPid"]);
+                    sql = "Select * from BudgetOfYearByDepartment WHERE  BudgetYear = " + year + " AND DEPid = " + Convert.ToInt32(drow["DEPid"]);
                     DataTable depbudget = DBHelper.List(sql);
 
                     if (depbudget.Rows.Count > 0)
@@ -621,8 +622,24 @@ namespace APKOnline.DBHelper
             {
                 decimal amount = 0;
                 int NoList = 0;
+                decimal Dep_Budget = 0;
+                int year = DateTime.Now.Year;
 
-                string sql = "Select SUM(Document_Detail_Cog) From DocumentPR_Detail_tmp WHERE Document_Detail_Hid = " + Header.Document_Id;
+                string sql = "Select * from BudgetOfYearByDepartment WHERE  BudgetYear = " + year + " AND DEPid = " + Convert.ToInt32(Header.Document_Dep);
+                DataTable depbudget = DBHelper.List(sql);
+
+                if (depbudget.Rows.Count > 0)
+                {
+                    
+                    string monthcol = "DEPmonth" + DateTime.Now.Month.ToString();
+                    foreach (DataRow dr in depbudget.Rows)
+                    {
+                        Dep_Budget = Convert.ToDecimal(dr[monthcol]);
+                    }
+                }
+
+
+                         sql = "Select SUM(Document_Detail_Cog) From DocumentPR_Detail_tmp WHERE Document_Detail_Hid = " + Header.Document_Id;
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 da.SelectCommand.Transaction = myTran;
                 DataTable tmp = new DataTable();
@@ -630,125 +647,129 @@ namespace APKOnline.DBHelper
                 foreach (DataRow dr in tmp.Rows)
                 {
                     amount = Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
-                    Math.Round(amount, 2);
+                    amount =Math.Round(amount, 2);
                 }
 
-                //จำนวนรายการ
-                sql = "Select * From DocumentPR_Detail_tmp WHERE Document_Detail_Hid = " + Header.Document_Id;
-                da = new SqlDataAdapter(sql, conn);
-                da.SelectCommand.Transaction = myTran;
-                tmp = new DataTable();
-                da.Fill(tmp);
-                NoList = tmp.Rows.Count;
 
-
-                string sqlQuery = "INSERT INTO DocumentPR_Header(Document_Group,Document_ExpenseType,Document_Category,Document_Objective " +
-                                      ",Document_Vnos,Document_Date ,Document_Means,Document_Expect,Document_Cus,Document_Job,Document_Depid,Document_Dep,Document_Per" +
-                                      ",Document_Doc,Document_Mec,Document_Desc,Document_Nolist,Document_Cog,Document_VatSUM,Document_VatPer" +
-                                      " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete,Document_Term,Document_Project) VALUES " +
-                                      " (@Document_Group,@Document_ExpenseType,@Document_Category,@Document_Objective " +
-                                      ",dbo.GeneratePRID(@Document_Group),GETDATE() ,@Document_Means,@Document_Expect,@Document_Cus,@Document_Job,@Document_Depid,@Document_Dep,@Document_Per" +
-                                      ",@Document_Doc,@Document_Mec,@Document_Desc,@Document_Nolist,@Document_Cog,@Document_VatSUM,@Document_VatPer" +
-                                      " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0,@Document_Term,@Document_Project) SET @Document_Id=SCOPE_IDENTITY()";
-                cmd.CommandText = sqlQuery;
-                cmd.CommandTimeout = 30;
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Clear();
-                shipperIdParam = new SqlParameter("@Document_Id", SqlDbType.Int);
-                shipperIdParam.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(shipperIdParam);
-
-                cmd.Parameters.AddWithValue("@Document_Group", Header.Document_Group);
-                cmd.Parameters.AddWithValue("@Document_ExpenseType", Header.Document_Group);
-                cmd.Parameters.AddWithValue("@Document_Category", Header.Document_Category);
-                cmd.Parameters.AddWithValue("@Document_Objective", Header.Document_Objective);
-                cmd.Parameters.AddWithValue("@Document_Means", Header.Document_Means == null ? "" : Header.Document_Means);
-                cmd.Parameters.AddWithValue("@Document_Expect", Header.Document_Expect == null ? "" : Header.Document_Expect);
-
-                cmd.Parameters.AddWithValue("@Document_Cus", "");
-                cmd.Parameters.AddWithValue("@Document_Job", Header.Document_Job);
-                cmd.Parameters.AddWithValue("@Document_Depid", Header.Document_Dep);
-                cmd.Parameters.AddWithValue("@Document_Dep", Header.Document_Dep);
-                cmd.Parameters.AddWithValue("@Document_Per", "");
-                cmd.Parameters.AddWithValue("@Document_Doc", "");
-                cmd.Parameters.AddWithValue("@Document_Mec", "");
-                cmd.Parameters.AddWithValue("@Document_Desc", Header.Document_Desc==null? "" : Header.Document_Desc);
-                cmd.Parameters.AddWithValue("@Document_Nolist", NoList);
-                cmd.Parameters.AddWithValue("@Document_Cog", amount);
-                cmd.Parameters.AddWithValue("@Document_VatSUM", Math.Round( amount * (decimal)0.07,2));//()
-                cmd.Parameters.AddWithValue("@Document_VatPer", 7);
-                cmd.Parameters.AddWithValue("@Document_NetSUM", Math.Round(amount * (decimal)1.07,2));//
-                cmd.Parameters.AddWithValue("@Document_Status", 0);
-                cmd.Parameters.AddWithValue("@Document_Tel", Header.Document_Tel == null ? "" : Header.Document_Tel);
-                cmd.Parameters.AddWithValue("@Document_CreateUser", Header.Document_CreateUser);
-                cmd.Parameters.AddWithValue("@Document_Term", Header.Document_Term);
-                cmd.Parameters.AddWithValue("@Document_Project", Header.Document_Project);
-
-                cmd.Transaction = myTran;
-                cmd.ExecuteNonQuery();
-
-                document_id = (int)shipperIdParam.Value;
-
-
-                sql = " INSERT INTO DocumentPR_Detail(Document_Detail_Hid,Document_Detail_Date,Document_Detail_Vnos" +
-                        " ,Document_Detail_Acc,Document_Detail_Acc_Desc,Document_Detail_Stk " +
-                        " ,Document_Detail_Stk_Desc,Document_Detail_ListNo ,Document_Detail_Quan,Document_Detail_Cog,Document_Detail_Vat,Document_Detail_Sum" +
-                        " ,Document_Detail_CreateUser,Document_Detail_CreateDate,Document_Detail_UnitPrice,Document_Detail_Delete)" +
-                        " SELECT " + document_id + ",Document_Detail_Date,Document_Detail_Vnos" +
-                        " ,Document_Detail_Acc,Document_Detail_Acc_Desc,Document_Detail_Stk " +
-                        " ,Document_Detail_Stk_Desc,Document_Detail_ListNo ,Document_Detail_Quan,Document_Detail_Cog,Document_Detail_Vat,Document_Detail_Sum" +
-                        " ,Document_Detail_CreateUser,Document_Detail_CreateDate,Document_Detail_UnitPrice,0 FROM DocumentPR_Detail_tmp" +
-                        "  WHERE Document_Detail_Hid = " + Header.Document_Id;
-                cmd.CommandText = sql;
-                cmd.CommandTimeout = 30;
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Clear();
-                cmd.Transaction = myTran;
-                cmd.ExecuteNonQuery();
-
-                sql = " DELETE FROM  DocumentPR_Detail_tmp" +
-                       "  WHERE Document_Detail_Hid = " + Header.Document_Id;
-                cmd.CommandText = sql;
-                cmd.CommandTimeout = 30;
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Clear();
-                cmd.Transaction = myTran;
-                cmd.ExecuteNonQuery();
-
-                myTran.Commit();
-
-                string sourcePath = System.Web.Hosting.HostingEnvironment .MapPath("~/tmpUpload/" + Header.folderUpload + "/");
-                string targetpath = System.Web.Hosting.HostingEnvironment.MapPath("~/Upload/" + document_id.ToString() + "/");
-                if (System.IO.Directory.Exists(sourcePath))
+                if (Dep_Budget < amount)
                 {
-                    if (!System.IO.Directory.Exists(targetpath))
-                    { System.IO.Directory.CreateDirectory(targetpath); }
+                    errMsg = "ไม่สามารถบันทึกได้เนื่องจากยอดรวมมากกว่างบประมาณอนุมัติของแผนกในเดือนปัจจุบัน.";
+                }
+                else
+                {
+                    //จำนวนรายการ
+                    sql = "Select * From DocumentPR_Detail_tmp WHERE Document_Detail_Hid = " + Header.Document_Id;
+                    da = new SqlDataAdapter(sql, conn);
+                    da.SelectCommand.Transaction = myTran;
+                    tmp = new DataTable();
+                    da.Fill(tmp);
+                    NoList = tmp.Rows.Count;
 
-                    string[] files = System.IO.Directory.GetFiles(sourcePath);
 
-                    // Copy the files and overwrite destination files if they already exist.
-                    foreach (string s in files)
-                    {
-                        // Use static Path methods to extract only the file name from the path.
-                        string fileName = System.IO.Path.GetFileName(s);
-                        string destFile = System.IO.Path.Combine(targetpath, fileName);
-                        System.IO.File.Copy(s, destFile, true);
+                    string sqlQuery = "INSERT INTO DocumentPR_Header(Document_Group,Document_ExpenseType,Document_Category,Document_Objective " +
+                                          ",Document_Vnos,Document_Date ,Document_Means,Document_Expect,Document_Cus,Document_Job,Document_Depid,Document_Dep,Document_Per" +
+                                          ",Document_Doc,Document_Mec,Document_Desc,Document_Nolist,Document_Cog,Document_VatSUM,Document_VatPer" +
+                                          " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete,Document_Term,Document_Project) VALUES " +
+                                          " (@Document_Group,@Document_ExpenseType,@Document_Category,@Document_Objective " +
+                                          ",dbo.GeneratePRID(@Document_Group),GETDATE() ,@Document_Means,@Document_Expect,@Document_Cus,@Document_Job,@Document_Depid,@Document_Dep,@Document_Per" +
+                                          ",@Document_Doc,@Document_Mec,@Document_Desc,@Document_Nolist,@Document_Cog,@Document_VatSUM,@Document_VatPer" +
+                                          " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0,@Document_Term,@Document_Project) SET @Document_Id=SCOPE_IDENTITY()";
+                    cmd.CommandText = sqlQuery;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    shipperIdParam = new SqlParameter("@Document_Id", SqlDbType.Int);
+                    shipperIdParam.Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add(shipperIdParam);
 
-                    }
-                    System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(sourcePath);
-                    foreach (System.IO.FileInfo file in di.GetFiles())
+                    cmd.Parameters.AddWithValue("@Document_Group", Header.Document_Group);
+                    cmd.Parameters.AddWithValue("@Document_ExpenseType", Header.Document_Group);
+                    cmd.Parameters.AddWithValue("@Document_Category", Header.Document_Category);
+                    cmd.Parameters.AddWithValue("@Document_Objective", Header.Document_Objective);
+                    cmd.Parameters.AddWithValue("@Document_Means", Header.Document_Means == null ? "" : Header.Document_Means);
+                    cmd.Parameters.AddWithValue("@Document_Expect", Header.Document_Expect == null ? "" : Header.Document_Expect);
+
+                    cmd.Parameters.AddWithValue("@Document_Cus", "");
+                    cmd.Parameters.AddWithValue("@Document_Job", Header.Document_Job);
+                    cmd.Parameters.AddWithValue("@Document_Depid", Header.Document_Dep);
+                    cmd.Parameters.AddWithValue("@Document_Dep", Header.Document_Dep);
+                    cmd.Parameters.AddWithValue("@Document_Per", "");
+                    cmd.Parameters.AddWithValue("@Document_Doc", "");
+                    cmd.Parameters.AddWithValue("@Document_Mec", "");
+                    cmd.Parameters.AddWithValue("@Document_Desc", Header.Document_Desc == null ? "" : Header.Document_Desc);
+                    cmd.Parameters.AddWithValue("@Document_Nolist", NoList);
+                    cmd.Parameters.AddWithValue("@Document_Cog", amount);
+                    cmd.Parameters.AddWithValue("@Document_VatSUM", Math.Round(amount * (decimal)0.07, 2));//()
+                    cmd.Parameters.AddWithValue("@Document_VatPer", 7);
+                    cmd.Parameters.AddWithValue("@Document_NetSUM", Math.Round(amount * (decimal)1.07, 2));//
+                    cmd.Parameters.AddWithValue("@Document_Status", 0);
+                    cmd.Parameters.AddWithValue("@Document_Tel", Header.Document_Tel == null ? "" : Header.Document_Tel);
+                    cmd.Parameters.AddWithValue("@Document_CreateUser", Header.Document_CreateUser);
+                    cmd.Parameters.AddWithValue("@Document_Term", Header.Document_Term);
+                    cmd.Parameters.AddWithValue("@Document_Project", Header.Document_Project);
+
+                    cmd.Transaction = myTran;
+                    cmd.ExecuteNonQuery();
+
+                    document_id = (int)shipperIdParam.Value;
+
+
+                    sql = " INSERT INTO DocumentPR_Detail(Document_Detail_Hid,Document_Detail_Date,Document_Detail_Vnos" +
+                            " ,Document_Detail_Acc,Document_Detail_Acc_Desc,Document_Detail_Stk " +
+                            " ,Document_Detail_Stk_Desc,Document_Detail_ListNo ,Document_Detail_Quan,Document_Detail_Cog,Document_Detail_Vat,Document_Detail_Sum" +
+                            " ,Document_Detail_CreateUser,Document_Detail_CreateDate,Document_Detail_UnitPrice,Document_Detail_Delete)" +
+                            " SELECT " + document_id + ",Document_Detail_Date,Document_Detail_Vnos" +
+                            " ,Document_Detail_Acc,Document_Detail_Acc_Desc,Document_Detail_Stk " +
+                            " ,Document_Detail_Stk_Desc,Document_Detail_ListNo ,Document_Detail_Quan,Document_Detail_Cog,Document_Detail_Vat,Document_Detail_Sum" +
+                            " ,Document_Detail_CreateUser,Document_Detail_CreateDate,Document_Detail_UnitPrice,0 FROM DocumentPR_Detail_tmp" +
+                            "  WHERE Document_Detail_Hid = " + Header.Document_Id;
+                    cmd.CommandText = sql;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    cmd.Transaction = myTran;
+                    cmd.ExecuteNonQuery();
+
+                    sql = " DELETE FROM  DocumentPR_Detail_tmp" +
+                           "  WHERE Document_Detail_Hid = " + Header.Document_Id;
+                    cmd.CommandText = sql;
+                    cmd.CommandTimeout = 30;
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Parameters.Clear();
+                    cmd.Transaction = myTran;
+                    cmd.ExecuteNonQuery();
+
+                    myTran.Commit();
+
+                    string sourcePath = System.Web.Hosting.HostingEnvironment.MapPath("~/tmpUpload/" + Header.folderUpload + "/");
+                    string targetpath = System.Web.Hosting.HostingEnvironment.MapPath("~/Upload/" + document_id.ToString() + "/");
+                    if (System.IO.Directory.Exists(sourcePath))
                     {
-                        file.Delete();
-                    }
-                    foreach (System.IO.DirectoryInfo dir in di.GetDirectories())
-                    {
-                        dir.Delete(true);
+                        if (!System.IO.Directory.Exists(targetpath))
+                        { System.IO.Directory.CreateDirectory(targetpath); }
+
+                        string[] files = System.IO.Directory.GetFiles(sourcePath);
+
+                        // Copy the files and overwrite destination files if they already exist.
+                        foreach (string s in files)
+                        {
+                            // Use static Path methods to extract only the file name from the path.
+                            string fileName = System.IO.Path.GetFileName(s);
+                            string destFile = System.IO.Path.Combine(targetpath, fileName);
+                            System.IO.File.Copy(s, destFile, true);
+
+                        }
+                        System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(sourcePath);
+                        foreach (System.IO.FileInfo file in di.GetFiles())
+                        {
+                            file.Delete();
+                        }
+                        foreach (System.IO.DirectoryInfo dir in di.GetDirectories())
+                        {
+                            dir.Delete(true);
+                        }
                     }
                 }
-
-
-
-
             }
             catch (Exception ex)
             {

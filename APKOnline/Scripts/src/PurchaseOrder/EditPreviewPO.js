@@ -7,6 +7,7 @@
         $scope.rowAlternationEnabled = true;
         console.log($stateParams);
         $scope.Document_Dep = 0;
+        $scope.listupdate = [];
         $http.get("api/PO/GETApprovePO/" + $stateParams.id + "?StaffID=" + localStorage.getItem("StaffID")).then(function (data) {
             console.log(data);
             //$scope.Header = data.data.Results.Document_Vnos[0].Column1
@@ -122,6 +123,15 @@
                         "Document_Detail_EditUser": localStorage.getItem('StaffID'),
 
                     };
+                    $scope.listupdate.push(detail);
+
+                    var qty = e.key.Document_Detail_Quan;
+                    var unitprice = e.key.Document_Detail_UnitPrice;
+
+                    result = qty * unitprice;
+                    result = parseFloat(result).toFixed(2);
+
+                    e.key.Document_Detail_Cog = result;
                     console.log(detail);
                     $http.post("api/PO/UpdatePreviewDetailData/"+ $stateParams.id , detail).then(function successCallback(response) {
 
@@ -136,27 +146,27 @@
                             })
 
                         }
-                        $http.get("api/PO/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
-                            console.log(data.data.Results.Detail);
-                            console.log(data);
-                            if (data.data.StatusCode > 1) {
-                                swal({
-                                    title: 'Information',
-                                    text: data.Messages,
-                                    type: "info",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#6EAA6F",
-                                    confirmButtonText: 'OK'
-                                })
+                        //$http.get("api/PO/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
+                        //    console.log(data.data.Results.Detail);
+                        //    console.log(data);
+                        //    if (data.data.StatusCode > 1) {
+                        //        swal({
+                        //            title: 'Information',
+                        //            text: data.Messages,
+                        //            type: "info",
+                        //            showCancelButton: false,
+                        //            confirmButtonColor: "#6EAA6F",
+                        //            confirmButtonText: 'OK'
+                        //        })
 
-                            }
+                        //    }
 
-                            $("#gridContainer").dxDataGrid({
-                                dataSource: data.data.Results.Detail
+                        //    $("#gridContainer").dxDataGrid({
+                        //        dataSource: data.data.Results.Detail
 
-                            });
-                            $("#gridContainer").dxDataGrid("instance").refresh();
-                        });
+                        //    });
+                        //    $("#gridContainer").dxDataGrid("instance").refresh();
+                        //});
 
                     });
 
@@ -212,36 +222,66 @@
         };
 
         $scope.SaveDocuments = function () {
-            
-       
-                var Header = {
-                    "Document_Id": $stateParams.id,
-                    "Document_Group": $scope.Header.Document_Group,
-                    "Document_Category": $scope.Header.Document_Category,
-                    "Document_Objective": $scope.Header.Objective,
-                    "Document_Vnos": '',
-                    "Document_Means": $scope.Header.Document_Means,
-                    "Document_Expect": $scope.Header.Document_Expect,
-                    "Document_Cus": '',
-                    "Document_Job": $scope.Header.Document_Job,
-                    "Document_Dep": $scope.Header.Document_Dep,
-                    "Document_Per": '',
-                    "Document_Doc": '',
-                    "Document_Mec": '',
-                    "Document_Desc": '',
-                    "Document_Tel": $scope.Document_Tel,
-                    "Document_CreateUser": localStorage.getItem('StaffID'),
+            if ($scope.listupdate.length > 0) {
 
-                };
-                $http.post("api/PO/ApprovePOData", Header).then(function successCallback(response) {
-                    console.log(response);
-                    window.location = '#/PurchaseOrder/ListPOApprove';
-                });
-            
+                swal({
+                    title: "ยืนยันการบันทึกข้อมูล?",
+                    text: "ต้องการบันทึกข้อมูลรายการสั่งซื้อ!",
+                    icon: "info",
+                    buttons: true,
+                    dangerMode: false,
+                })
+                    .then((willSave) => {
+                        console.log(willSave)
+                        if (willSave) {
 
+                            $http.post("api/PO/UpdatePreviewDetailData?", $scope.listupdate).then(function successCallback(response) {
 
+                                if (response.data.StatusCode > 1) {
+                                    swal({
+                                        title: 'Information',
+                                        text: data.Messages,
+                                        type: "info",
+                                        showCancelButton: false,
+                                        confirmButtonColor: "#6EAA6F",
+                                        confirmButtonText: 'OK'
+                                    })
+                                } else {
+                                    swal("บันทึกข้อมูลสำเร็จ", {
+                                        icon: "success",
+                                    });
+                                    $scope.listupdate = [];
+                                    $http.get("api/PO/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
+                                        console.log(data.data.Results.Detail);
+                                        console.log(data);
+                                        if (data.data.StatusCode > 1) {
+                                            swal({
+                                                title: 'Information',
+                                                text: data.Messages,
+                                                type: "info",
+                                                showCancelButton: false,
+                                                confirmButtonColor: "#6EAA6F",
+                                                confirmButtonText: 'OK'
+                                            })
 
+                                        }
 
+                                        $("#gridContainer").dxDataGrid({
+                                            dataSource: data.data.Results.Detail
+
+                                        });
+                                        $("#gridContainer").dxDataGrid("instance").refresh();
+                                    });
+
+                                }
+
+                            });
+                        }
+                    });
+            }
+            else {
+                swal("ไม่มีการแก้ไขรายการขออนุมัติ");
+            }
         };
         $scope.CancelDocuments = function () {
             window.location = '#/PurchaseRequest/ListPreviewPurchaseRequest';

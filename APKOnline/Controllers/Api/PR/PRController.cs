@@ -480,6 +480,34 @@ namespace APKOnline
             resData.Results = ds;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
+        [HttpPost]
+        [ActionName("UpdateEditPRDetail")]
+        public HttpResponseMessage UpdatePRDetail(List<PRDetailModels> detail)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+            //foreach (PRDetailModels item in detail)
+            //{
+                repository.UpdatePRDetail(detail, ref errMsg);
+            //}
+            //ds.Tables.Add(dtDocumentVnos);
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
 
         [HttpPost]
         [ActionName("SavePRData")]

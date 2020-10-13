@@ -610,9 +610,9 @@
                     }
                     else {
                         swal("บันทึกรายการสำเร็จ")
-                            .then((value) => {
-                                window.location = '#/PurchaseRequest/ListPurchaseRequest';
-                            });
+                            //.then((value) => {
+                        window.location = '#/PurchaseRequest/ListPurchaseRequest';
+                            //});
                         
                     }
                 });

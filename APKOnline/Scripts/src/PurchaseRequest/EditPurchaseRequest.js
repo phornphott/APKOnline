@@ -13,6 +13,7 @@
         $scope.Document_ID = $stateParams.id 
         $scope.Document_Vnos = "";
         $scope.detailorg = [];
+        $scope.listupdate = [];
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
         $http.get("api/PR/ViewPRData/" + $scope.Document_ID + "?staffid=" + localStorage.getItem('StaffID')).then(function (data) {
@@ -51,9 +52,9 @@
                     allowDeleting: true,
                     allowAdding: false,
                     texts: {
-                        editRow: "แก้ไข",
-                        saveRowChanges: "บันทึก",
-                        cancelRowChanges: "ยกเลิก"
+                        //editRow: "แก้ไข",
+                        //saveRowChanges: "บันทึก",
+                        //cancelRowChanges: "ยกเลิก"
                     },
                     popup: {
                         title: "รายการขออนุมัติ",
@@ -168,59 +169,32 @@
 
                     });             
                 },
-                onRowUpdated: function (e)
-                {
+                onRowUpdated: function (e) {
                     console.log(e);
 
-                        var detail = {
-                            "Document_Detail_Hid": $scope.Document_ID,
-                            "Document_Detail_Id": e.key.Document_Detail_Id,
-                            "Document_Detail_Acc": e.key.Document_Detail_Acc,
-                            "Document_Detail_Acc_Desc": e.key.Document_Detail_Acc_Desc,
-                            "Document_Detail_Quan": e.key.Document_Detail_Quan,
-                            "Document_Detail_UnitPrice": e.key.Document_Detail_UnitPrice,
-                            "Document_Detail_CreateUser": localStorage.getItem('StaffID'),
+                    var detail = {
+                        "Document_Detail_Hid": $scope.Document_ID,
+                        "Document_Detail_Id": e.key.Document_Detail_Id,
+                        "Document_Detail_Acc": e.key.Document_Detail_Acc,
+                        "Document_Detail_Acc_Desc": e.key.Document_Detail_Acc_Desc,
+                        "Document_Detail_Quan": e.key.Document_Detail_Quan,
+                        "Document_Detail_UnitPrice": e.key.Document_Detail_UnitPrice,
+                        "Document_Detail_CreateUser": localStorage.getItem('StaffID'),
 
-                        };
-                        console.log(detail);
-                        $http.post("api/PR/UpdatePRDetail?", detail).then(function successCallback(response) {
+                    };
+                    $scope.listupdate.push(detail);
 
-                            if (response.data.StatusCode > 1) {
-                                swal({
-                                    title: 'Information',
-                                    text: data.Messages,
-                                    type: "info",
-                                    showCancelButton: false,
-                                    confirmButtonColor: "#6EAA6F",
-                                    confirmButtonText: 'OK'
-                                })
+                    //var grid = $("#gridContainer").dxDataGrid("instance");
+                    //var index = e.row.rowIndex;
+                    var qty = e.key.Document_Detail_Quan;
+                    var unitprice = e.key.Document_Detail_UnitPrice;
 
-                            }
-                            $http.get("api/PR/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
-                                console.log(data.data.Results.Detail);
-                                console.log(data);
-                                if (data.data.StatusCode > 1) {
-                                    swal({
-                                        title: 'Information',
-                                        text: data.Messages,
-                                        type: "info",
-                                        showCancelButton: false,
-                                        confirmButtonColor: "#6EAA6F",
-                                        confirmButtonText: 'OK'
-                                    })
+                    result = qty * unitprice;
+                    result = parseFloat(result).toFixed(2);
 
-                                }
+                    e.key.Document_Detail_Cog = result;
 
-                                $("#gridContainer").dxDataGrid({
-                                    dataSource: data.data.Results.Detail
 
-                                });
-                                $("#gridContainer").dxDataGrid("instance").refresh();
-                            });
-
-                        });
-
-                    
                 },
                 onRowRemoved: function (e) {
                     $http.post("api/PR/DeletePRDetail/" + e.key.Document_Detail_Id).then(function successCallback(response) {
@@ -380,11 +354,75 @@
         };
         $scope.CancelDocuments = function () {
 
-            $http.get("api/PR/CancelPRTmpDetail/" + $scope.Document_ID).then(function (data) {
-                    window.location = '#/PurchaseRequest/ListPurchaseRequest';
-                });
+            window.location = '#/PurchaseRequest/ListPurchaseRequest';
         };
+        $scope.SaveDocuments = function () {
+            if ($scope.listupdate.length > 0) {
 
+                swal({
+                    title: "ยืนยันการบันทึกข้อมูล?",
+                    text: "ต้องการบันทึกข้อมูลรายการขอซื้อ!",
+                    icon: "info",
+                    buttons: true,
+                    dangerMode: false,
+                })
+                    .then((willSave) => {
+                        console.log(willSave)
+                        if (willSave) {
+                            
+                            $http.post("api/PR/UpdateEditPRDetail?", $scope.listupdate).then(function successCallback(response) {
+
+                                if (response.data.StatusCode > 1) {
+                                    swal({
+                                        title: 'Information',
+                                        text: data.Messages,
+                                        type: "info",
+                                        showCancelButton: false,
+                                        confirmButtonColor: "#6EAA6F",
+                                        confirmButtonText: 'OK'
+                                    })
+                                } else {
+                                    swal("บันทึกข้อมูลสำเร็จ", {
+                                        icon: "success",
+                                    });
+                                    $scope.listupdate = [];
+                                    $http.get("api/PR/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
+                                        console.log(data.data.Results.Detail);
+                                        console.log(data);
+                                        if (data.data.StatusCode > 1) {
+                                            swal({
+                                                title: 'Information',
+                                                text: data.Messages,
+                                                type: "info",
+                                                showCancelButton: false,
+                                                confirmButtonColor: "#6EAA6F",
+                                                confirmButtonText: 'OK'
+                                            })
+
+                                        }
+
+                                        $("#gridContainer").dxDataGrid({
+                                            dataSource: data.data.Results.Detail
+
+                                        });
+                                        $("#gridContainer").dxDataGrid("instance").refresh();
+                                    });
+
+                                }
+
+                            });
+                        }
+                    });
+
+              
+            }
+            else {
+                swal("ไม่มีการแก้ไขรายการขออนุมัติ");
+            }
+
+
+
+        };
         $scope.removeFilePR = function (index) {
             $scope.ListFilePR.splice(index, 1);
         };

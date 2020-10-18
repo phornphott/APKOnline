@@ -68,46 +68,48 @@
                             container.append(markup);
                         },
               
-                //}, {
-                //    dataField: "Preview",
-                //    caption: "ยืนยัน Preview ข้อมูล",
-                //        alignment: 'center',
-                //        allowFiltering: false,
-                //        width: 100,
-                //        cellTemplate: function (container, options) {
-                //            $("<div />").dxButton({
-                //                icon: 'fa fa-check-square',
-                //                type: 'success',
-                //                disabled: false,
-                //                onClick: function (e) {
-                //                    var r = confirm("ต้องการยืนยันการ Preview เอกสารขอซื้อภายในและเอกสารสั่งซื้อ ใช่หรือไม่ ?");
-                //                    if (r === true) {
-                //                        $http.post("api/PR/PostLogPreview/" + options.key.logId).then(function successCallback(response) {
-                //                            if (response.data.StatusCode > 1) {
-                //                                $("#loadIndicator").dxLoadIndicator({
-                //                                    visible: false
-                //                                });
-                //                                DevExpress.ui.notify(response.data.Messages);
+                }, {
+                    dataField: "Preview",
+                    caption: "ยืนยัน Preview ข้อมูล",
+                        alignment: 'center',
+                        allowFiltering: false,
+                        width: 100,
+                        cellTemplate: function (container, options) {
+                            if (options.key.logSatus == 0) {
+                                $("<div />").dxButton({
+                                    icon: 'fa fa-check-square',
+                                    type: 'success',
+                                    disabled: false,
+                                    onClick: function (e) {
+                                        var r = confirm("ต้องการยืนยันการ Preview เอกสารขอซื้อภายในและเอกสารสั่งซื้อ ใช่หรือไม่ ?");
+                                        if (r === true) {
+                                            $http.post("api/PR/PostLogPreview/" + options.key.logId).then(function successCallback(response) {
+                                                if (response.data.StatusCode > 1) {
+                                                    $("#loadIndicator").dxLoadIndicator({
+                                                        visible: false
+                                                    });
+                                                    DevExpress.ui.notify(response.data.Messages);
 
-                //                            } else {
-                //                                DevExpress.ui.notify(response.data.Messages);
-                //                                $("#loadIndicator").dxLoadIndicator({
-                //                                    visible: false
-                //                                });
-                //                                $("#gridContainer").show();
-                //                                //var api = "api/Staffs/StaffData"
-                //                                $http.get("api/PR/ListPreview/" + localStorage.getItem('StaffID') + "?deptid=" + localStorage.getItem('StaffDepartmentID')).then(function (data) {
-                //                                    var Datasource = data.data.Results.ListPRData;
-                //                                    $("#gridContainer").dxDataGrid("instance").option("dataSource", Datasource);
-                //                                    $("#gridContainer").dxDataGrid("instance").refresh();
-                //                                });
-                //                            }
+                                                } else {
+                                                    DevExpress.ui.notify(response.data.Messages);
+                                                    $("#loadIndicator").dxLoadIndicator({
+                                                        visible: false
+                                                    });
+                                                    $("#gridContainer").show();
+                                                    //var api = "api/Staffs/StaffData"
+                                                    $http.get("api/PR/ListPreview/" + localStorage.getItem('StaffID') + "?deptid=" + localStorage.getItem('StaffDepartmentID')).then(function (data) {
+                                                        var Datasource = data.data.Results.ListPRData;
+                                                        $("#gridContainer").dxDataGrid("instance").option("dataSource", Datasource);
+                                                        $("#gridContainer").dxDataGrid("instance").refresh();
+                                                    });
+                                                }
 
-                //                        });
-                //                    }
-                //                }
-                            //}).appendTo(container);
-                        //}
+                                            });
+                                        }
+                                    }
+                                }).appendTo(container);
+                            }
+                        }
 
                 }]
             };

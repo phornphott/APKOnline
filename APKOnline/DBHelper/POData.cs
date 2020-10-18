@@ -238,7 +238,9 @@ namespace APKOnline.DBHelper
             DataTable dt = new DataTable();
             string tablename = "DocumentPO_Detail";
             if (tmp == 0)
-            { tablename = "DocumentPO_Detail_tmp"; }
+            {
+                tablename = "DocumentPO_Detail_tmp"; 
+            }
             try
             {
                 string strSQL = "\r\n  " +
@@ -334,12 +336,16 @@ namespace APKOnline.DBHelper
                       " LEFT JOIN CRE cus on cus.CREcode=p.Document_Cus" +
                       " where Document_Delete=0 AND Document_Id =" + Document_id;
                 dt = DBHelper.List(strSQL);
+                dt.Columns.Add("CheckPreview", typeof(Boolean));
                 if (dt.Rows.Count > 0)
                 {
                     foreach (DataRow dr in dt.Rows)
                     {
                         DEPid = DBInt(dr["Document_Dep"]);
                         DocCog = Convert.ToDecimal(dr["Document_Cog"]);
+
+                        dr["CheckPreview"] = VerifyAcceptReview(Convert.ToInt32(dr["Document_PRID"]));
+
                     }
 
                     strSQL = "\r\n  " +
@@ -356,6 +362,8 @@ namespace APKOnline.DBHelper
                     {
                         dt.Rows[0]["SaveText"] = "รับทราบ";
                     }
+
+
                 }
 
 
@@ -1115,6 +1123,30 @@ namespace APKOnline.DBHelper
             {
                 myTran.Rollback();
                 errMsg = ex.Message;
+            }
+
+            return ret;
+        }
+
+        private bool VerifyAcceptReview(int PRid)
+        {
+            bool ret = false;
+            string strSQL = null;
+            DataTable dt = new DataTable();
+
+            strSQL = "\r\n  " +
+                " select * from LogPreview " +
+                " Where Document_PRid = " + PRid;
+
+
+            dt = DBHelper.List(strSQL);
+
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                if (dr["logSatus"].ToString().Trim() == "1") {
+                    ret = true;
+                }
             }
 
             return ret;

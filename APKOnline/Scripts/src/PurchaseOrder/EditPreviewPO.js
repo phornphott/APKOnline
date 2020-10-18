@@ -8,11 +8,13 @@
         console.log($stateParams);
         $scope.Document_Dep = 0;
         $scope.listupdate = [];
+        $scope.btnsaveShow = false;
         $http.get("api/PO/GETApprovePO/" + $stateParams.id + "?StaffID=" + localStorage.getItem("StaffID")).then(function (data) {
             console.log(data);
             //$scope.Header = data.data.Results.Document_Vnos[0].Column1
             $scope.Header = data.data.Results.Header[0]
-            $scope.SaveText = $scope.Header.SaveText; 
+            $scope.btnsaveShow = $scope.Header.CheckPreview;
+            //$scope.SaveText = $scope.Header.SaveText; 
             $scope.Document_Dep = $scope.Header.Document_Dep;
             var FileUpload = data.data.Results.FileUpload; 
 
@@ -70,9 +72,9 @@
                         
                         dataField: "Document_Detail_Acc_Desc",
                         caption: "รายละเอียดสินค้า",
-                        editorOptions: {
-                            disabled: true
-                        },
+                        //editorOptions: {
+                        //    disabled: true
+                        //},
 
                 }, {
                     dataField: "Document_Detail_Quan",
@@ -114,7 +116,7 @@
                     console.log(e);
 
                     var detail = {
-                        "Document_Detail_Hid": $scope.Document_ID,
+                        "Document_Detail_Hid": $stateParams.id,
                         "Document_Detail_Id": e.key.Document_Detail_Id,
                         "Document_Detail_Acc": e.key.Document_Detail_Acc,
                         "Document_Detail_Acc_Desc": e.key.Document_Detail_Acc_Desc,
@@ -132,43 +134,43 @@
                     result = parseFloat(result).toFixed(2);
 
                     e.key.Document_Detail_Cog = result;
-                    console.log(detail);
-                    $http.post("api/PO/UpdatePreviewDetailData/"+ $stateParams.id , detail).then(function successCallback(response) {
+                    console.log($scope.listupdate);
+                    //$http.post("api/PO/UpdatePreviewDetailData/"+ $stateParams.id , detail).then(function successCallback(response) {
 
-                        if (response.data.StatusCode > 1) {
-                            swal({
-                                title: 'Information',
-                                text: data.Messages,
-                                type: "info",
-                                showCancelButton: false,
-                                confirmButtonColor: "#6EAA6F",
-                                confirmButtonText: 'OK'
-                            })
+                    //    if (response.data.StatusCode > 1) {
+                    //        swal({
+                    //            title: 'Information',
+                    //            text: data.Messages,
+                    //            type: "info",
+                    //            showCancelButton: false,
+                    //            confirmButtonColor: "#6EAA6F",
+                    //            confirmButtonText: 'OK'
+                    //        })
 
-                        }
-                        //$http.get("api/PO/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
-                        //    console.log(data.data.Results.Detail);
-                        //    console.log(data);
-                        //    if (data.data.StatusCode > 1) {
-                        //        swal({
-                        //            title: 'Information',
-                        //            text: data.Messages,
-                        //            type: "info",
-                        //            showCancelButton: false,
-                        //            confirmButtonColor: "#6EAA6F",
-                        //            confirmButtonText: 'OK'
-                        //        })
+                    //    }
+                    //    //$http.get("api/PO/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
+                    //    //    console.log(data.data.Results.Detail);
+                    //    //    console.log(data);
+                    //    //    if (data.data.StatusCode > 1) {
+                    //    //        swal({
+                    //    //            title: 'Information',
+                    //    //            text: data.Messages,
+                    //    //            type: "info",
+                    //    //            showCancelButton: false,
+                    //    //            confirmButtonColor: "#6EAA6F",
+                    //    //            confirmButtonText: 'OK'
+                    //    //        })
 
-                        //    }
+                    //    //    }
 
-                        //    $("#gridContainer").dxDataGrid({
-                        //        dataSource: data.data.Results.Detail
+                    //    //    $("#gridContainer").dxDataGrid({
+                    //    //        dataSource: data.data.Results.Detail
 
-                        //    });
-                        //    $("#gridContainer").dxDataGrid("instance").refresh();
-                        //});
+                    //    //    });
+                    //    //    $("#gridContainer").dxDataGrid("instance").refresh();
+                    //    //});
 
-                    });
+                    //});
 
 
                 },
@@ -251,7 +253,7 @@
                                         icon: "success",
                                     });
                                     $scope.listupdate = [];
-                                    $http.get("api/PO/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
+                                    $http.get("api/PO/PRDetailData/" + $stateParams.id + "?").then(function (data) {
                                         console.log(data.data.Results.Detail);
                                         console.log(data);
                                         if (data.data.StatusCode > 1) {

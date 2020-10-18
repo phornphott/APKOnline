@@ -635,3 +635,4 @@ D:\Repository\APK\APKOnline\obj\Debug\APKOnline.csproj.CoreCompileInputs.cache
 D:\Repository\APK\APKOnline\obj\Debug\APKOnline.csproj.CopyComplete
 D:\Repository\APK\APKOnline\obj\Debug\APKOnline.dll
 D:\Repository\APK\APKOnline\obj\Debug\APKOnline.pdb
+D:\Repository\APK\APKOnline\obj\Debug\APKOnline.csprojAssemblyReference.cache

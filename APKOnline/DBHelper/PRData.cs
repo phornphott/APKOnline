@@ -535,7 +535,7 @@ namespace APKOnline.DBHelper
                     " FROM LogPreview l " +
                     " Left Join DocumentPR_Header pr on pr.Document_Id = Document_PRId" +
                     " Left Join DocumentPO_Header po on po.Document_PRID = pr.Document_Id" +
-                    " WHERE l.Document_PreviewUser = " + StaffID + " AND l.logSatus = 0 and po.Document_Status < 2";
+                    " WHERE l.Document_PreviewUser = " + StaffID + "  and po.Document_Status < 2";
 
 
                 dt = DBHelper.List(strSQL);

@@ -127,7 +127,34 @@ namespace APKOnline
             resData.Results = ds;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
-       
+        [HttpGet]
+        [ActionName("PRDetailData")]
+        public HttpResponseMessage GETPRDetailData(int id)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+            DataTable dtDetail = repository.GetDetailData(id, ref errMsg);
+
+
+            ds.Tables.Add(dtDetail);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
         [HttpGet]
         [ActionName("CreatePOData")]
         public HttpResponseMessage GETCreatePOData(int id,int tmpid)
@@ -597,7 +624,7 @@ namespace APKOnline
 
         [HttpPost]
         [ActionName("UpdatePreview")]
-        public HttpResponseMessage UpdatePreviewDetailData(PRDetailModels detail, int id)
+        public HttpResponseMessage UpdatePreview(PRDetailModels detail, int id)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
@@ -624,17 +651,17 @@ namespace APKOnline
         }
         [HttpPost]
         [ActionName("UpdatePreviewDetailData")]
-        public HttpResponseMessage UpdatePreviewDetailData(List<PRDetailModels> detail, int id)
+        public HttpResponseMessage UpdatePreviewDetailData(List<PRDetailModels> detail)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             Result resData = new Result();
 
-            foreach (PRDetailModels item in detail) {
-                item.Document_Detail_Hid = id;
+            //foreach (PRDetailModels item in detail) {
+            //    item.Document_Detail_Hid = id;
 
-            }
+            //}
            
             repository.UpdatePreviewDetail(detail, ref errMsg);
 
@@ -653,6 +680,8 @@ namespace APKOnline
             resData.Results = ds;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
+
+
 
     }
 }

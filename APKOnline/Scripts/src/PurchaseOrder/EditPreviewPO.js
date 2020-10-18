@@ -123,7 +123,7 @@
                         "Document_Detail_Quan": e.key.Document_Detail_Quan,
                         "Document_Detail_UnitPrice": e.key.Document_Detail_UnitPrice,
                         "Document_Detail_EditUser": localStorage.getItem('StaffID'),
-
+                        "Document_PreviewNote": "",
                     };
                     $scope.listupdate.push(detail);
 

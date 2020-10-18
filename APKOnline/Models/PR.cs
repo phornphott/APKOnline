@@ -67,5 +67,6 @@ namespace APKOnline.Models
         public int Document_Detail_DeleteUser { get; set; }
         public string Document_Detail_DeleteDate { get; set; }
         public decimal Document_Detail_UnitPrice { get; set; }
+        public string Document_PreviewNote { get; set; }
     }
 }

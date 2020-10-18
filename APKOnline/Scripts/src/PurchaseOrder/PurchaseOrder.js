@@ -34,7 +34,7 @@
                 onCellClick: onCellClickViewPO,
                 columnAutoWidth: true,
                 columns: [{
-                   
+
                     dataField: "Document_Vnos",
                     caption: "เลขที่ใบสำคัญ",
                     cellTemplate: function (container, item) {
@@ -43,13 +43,13 @@
                         container.append(markup);
                     },
                 }, {
-                        dataField: "DocDate",
+                    dataField: "DocDate",
                     caption: "วันที่"
                 }, {
-                        dataField: "Group",
+                    dataField: "Group",
                     caption: "ลักษณะค่าใช้จ่าย"
                 }, {
-                        dataField: "Category",
+                    dataField: "Category",
                     caption: "ประเภทการจัดซื้อ"
                 }, {
                     dataField: "Document_Desc",
@@ -82,22 +82,25 @@
                         container.append(markup);
                     },
                 }, {
-                        dataField: "Dep",
+                    dataField: "Dep",
                     caption: "แผนก"
                 }, {
                     dataField: "Staff",
                     caption: "พนักงาน"
                 }, {
-                        dataField: "Document_Status",
-                        caption: "พิมพ์",
-                        cellTemplate: function (container, item) {
-                            var data = item.data,
-                                markup = "<a > พิมพ์เอกสาร </a>";
-                            if (data.Document_Status < 2) {
-                                markup = "<a > </a>";
-                            }
-                            container.append(markup);
-                        },
+                    dataField: "Document_Status",
+                    caption: "พิมพ์",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = "<a > พิมพ์เอกสาร </a>";
+                        if (data.Document_Status < 2) {
+                            markup = "<a > </a>";
+                        }
+                        container.append(markup);
+                    },
+                    }, {
+                        dataField: "Document_PreviewNote",
+                        caption: "Note",
                 }]
             };
         });

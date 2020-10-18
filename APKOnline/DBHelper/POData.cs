@@ -1101,8 +1101,8 @@ namespace APKOnline.DBHelper
                 }
 
                 sqlQuery = "Update DocumentPO_Header SET Document_Cog=@Document_Cog,Document_VatSUM=@Document_VatSUM,Document_NetSUM=@Document_NetSUM " +
-                            ",Document_PreviewEditUser = @Document_PreviewEditUser ,Document_PreviewEditDate = GETDATE()" +
-                    "WHERE Document_Id=@Document_Detail_Hid";
+                            ",Document_PreviewEditUser = @Document_PreviewEditUser ,Document_PreviewEditDate = GETDATE(),Document_PreviewNote=@Document_PreviewNote" +
+                    " WHERE Document_Id=@Document_Detail_Hid";
                 cmd.CommandText = sqlQuery;
                 cmd.CommandTimeout = 30;
                 cmd.CommandType = CommandType.Text;
@@ -1113,6 +1113,7 @@ namespace APKOnline.DBHelper
                 cmd.Parameters.AddWithValue("@Document_VatSUM", Math.Round(amount * (decimal)0.07, 2));//()
                 cmd.Parameters.AddWithValue("@Document_NetSUM", Math.Round(amount * (decimal)1.07, 2));//
                 cmd.Parameters.AddWithValue("@Document_PreviewEditUser", list[0].Document_Detail_EditUser);
+                cmd.Parameters.AddWithValue("@Document_PreviewNote", "Edit By Preview "+ list[0].Document_PreviewNote +" : " + DateTime.Now.ToString("dd-MM-yyyy HH:mm"));
                 cmd.Transaction = myTran;
                 cmd.ExecuteNonQuery();
 

@@ -79,7 +79,10 @@
                     caption: "แผนก"
                 }, {
                     dataField: "Staff",
-                    caption: "พนักงาน"
+                        caption: "พนักงาน"
+                    }, {
+                        dataField: "Document_PreviewNote",
+                        caption: "Note",
                 }, {
                     dataField: "Approve",
                     caption: "อนุมัติ",

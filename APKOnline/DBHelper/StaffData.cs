@@ -62,10 +62,12 @@ namespace APKOnline.DBHelper
 
             try
             {
-                strSQL = "\r\n SELECT * FROM Staffs " +
-                         "\r\n WHERE StaffLogin='" + username + "'" +
-                         "\r\n AND StaffPassword='" + Base64Encode(password) + "'" +
-                         "\r\n AND Deleted=0;";
+                strSQL = "\r\n SELECT s.*, isPreview " +
+                         "\r\n FROM Staffs s " +
+                         "\r\n Left join StaffAuthorize a on a.StaffID = s.StaffID" +
+                         "\r\n WHERE s.StaffLogin='" + username + "'" +
+                         "\r\n AND s.StaffPassword='" + Base64Encode(password) + "'" +
+                         "\r\n AND s.Deleted=0;";
                 dt = DBHelper.List(strSQL);
             }
             catch (Exception e)

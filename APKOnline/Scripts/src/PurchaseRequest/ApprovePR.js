@@ -15,7 +15,7 @@
         $scope.Document_ID = $stateParams.id 
         $scope.Document_Vnos = "";
         $scope.showpreview = 0;
-        $scope.ispreview = true;
+        $scope.ispreview = localStorage.getItem('isPreview');
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
         $http.get("api/PR/ViewPRData/" + $scope.Document_ID + "?staffid=" + localStorage.getItem('StaffID') ).then(function (data) {

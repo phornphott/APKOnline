@@ -37,6 +37,7 @@
                         localStorage.setItem('StaffDepartmentID', $scope.login.StaffDepartmentID);
                         localStorage.setItem('StaffLevelID', $scope.login.StaffLevelID);
                         localStorage.setItem('StaffLevel', $scope.login.StaffLevel);
+                        localStorage.setItem('isPreview', $scope.login.isPreview);
                         window.location = '../../#/';
                     }
                     else {

@@ -220,7 +220,8 @@
                     "Document_Depid": $scope.Document_Depid,
                     "isPreview": $scope.ispreview,
                     "Document_CreateUser": localStorage.getItem('StaffID'),
-                };
+            };
+            console.log(Header);
                 $http.post("api/PR/ApprovePRData?", Header).then(function successCallback(response) {
                     console.log(response);
                     if (response.data.StatusCode > 1) {

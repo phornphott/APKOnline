@@ -149,6 +149,7 @@ namespace APKOnline
 
             DataTable dtAccount = repository.GetAccountData(ref errMsg);
             DataTable dtHeaderData = repository.GetHeaderData(id, staffid, ref errMsg);
+            
             DataTable dtDetail = repository.GetDetailData(id, 1, ref errMsg);
             ds.Tables.Add(dtAccount);
             ds.Tables.Add(dtHeaderData);

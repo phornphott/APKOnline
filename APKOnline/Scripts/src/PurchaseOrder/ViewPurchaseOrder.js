@@ -328,8 +328,22 @@
 
         $scope.SaveDocuments = function () {
 
-            if ($scope.Document_Cus == 0)
+
+            const result = $("#gridContainer").dxDataGrid("instance").getDataSource()._items.filter(x => x.Document_Detail_Stk == "");
+            console.log(result.length);
+            //console.log($("#gridContainer").dxDataGrid("instance").getDataSource()._items);
+            if (result.length > 0)
             {
+                swal({
+                    title: 'Information',
+                    text: "กรุณาเลือกรหัสสินค้าในรายการขออนุมัติสั่งซื้อก่อนบันทึก",
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                })
+            }
+            else if ($scope.Document_Cus == 0) {
                 swal({
                     title: 'Information',
                     text: "กรุณาเลือกรหัสเจ้าหนี้ก่อนบันทึกข้อมูล",
@@ -337,7 +351,8 @@
                     showCancelButton: false,
                     confirmButtonColor: "#6EAA6F",
                     confirmButtonText: 'OK'
-                })}
+                })
+            }
             else {
 
                 var Header = {

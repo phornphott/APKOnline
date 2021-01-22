@@ -52,6 +52,27 @@ namespace APKOnline.DBHelper
             return conn;
         }
 
+        public static SqlConnection SqlConnectionDbMAC5()
+        {
+            string connStrFmt = "Data Source={0}; Initial Catalog={1};User ID={2}; Password={3};";
+            connStrFmt = string.Format(connStrFmt, ConfigurationManager.AppSettings["DBServer"]
+                , "M5CM-MA-01", ConfigurationManager.AppSettings["DBUser"], ConfigurationManager.AppSettings["DBPassword"]);
+            SqlConnection conn = new SqlConnection();
+            try
+            {
+
+                conn = new SqlConnection(connStrFmt);
+
+                conn.Open();
+
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+            }
+            return conn;
+        }
+
         public static DataTable List(string query)
         {
             var dt = new DataTable();
@@ -135,6 +156,29 @@ namespace APKOnline.DBHelper
             conn.Close();
 
             return dt;
+        }
+
+        public static void ConnectionSQL(ref SqlConnection conn)
+        {
+            try
+            {
+                if (conn.State != ConnectionState.Closed)
+                    conn.Close();
+                conn.ConnectionString = GetSQLconStr(ConfigurationManager.AppSettings["DBServer"], "M5CM-MA-01", ConfigurationManager.AppSettings["DBUser"], ConfigurationManager.AppSettings["DBPassword"] + ";Connection Timeout=600");
+                conn.Open();
+            }
+            catch
+            {
+            }
+        }
+
+        public static string GetSQLconStr(string servername, string dbname, string username, string password)
+        {
+            string ret = "";
+            ret = "Data Source=" + servername + ";Initial Catalog=" + dbname + ";User Id=" + username;
+            if (password.TrimStart(Convert.ToChar(31)).Length > 0)
+                ret += ";Password=" + password;
+            return ret;
         }
     }
 }

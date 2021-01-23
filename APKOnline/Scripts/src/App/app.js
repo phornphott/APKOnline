@@ -6,7 +6,9 @@
         'dx',
         'ui.router',
         'ui.bootstrap',
-        'oc.lazyLoad'
+        'oc.lazyLoad',
+        'chieffancypants.loadingBar',
+        'ngAnimate'
     ]);
 
 angular.module('ApkApp').controller('IndexController', function ($scope, $rootScope, LoginService, $http) {
@@ -241,3 +243,7 @@ angular.module('ApkApp').directive('ngFiles', ['$parse', function ($parse) {
         link: fn_link
     }
 }])
+
+angular.config(function (cfpLoadingBarProvider) {
+        cfpLoadingBarProvider.includeSpinner = true;
+    })

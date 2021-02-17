@@ -1,5 +1,5 @@
-﻿angular.module('ApkApp').controller('ApprovePOController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter','cfpLoadingBar',
-    function ($scope, $stateParams, $http, $rootScope, $filter, cfpLoadingBar) {
+﻿angular.module('ApkApp').controller('ApprovePOController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
+    function ($scope, $stateParams, $http, $rootScope, $filter) {
         $scope.SaveText = "อนุมัติ";
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
@@ -7,7 +7,6 @@
         $scope.rowAlternationEnabled = true;
         console.log($stateParams);
         $scope.Document_Dep = 0;
-        $scope.showModal1 = false;
         $http.get("api/PO/GETApprovePO/" + $stateParams.id + "?StaffID=" + localStorage.getItem("StaffID")).then(function (data) {
             console.log(data);
             //$scope.Header = data.data.Results.Document_Vnos[0].Column1
@@ -132,18 +131,9 @@
             window.open("/Upload/" + e.data.path, "popup", "width=800,height=600,left=300,top=200");
         };
 
-        $scope.SaveDocuments = function (e) {
+        $scope.SaveDocuments = function () {
             
-            //$scope.showModal1 = true;
-
-            //e.preventDefault();
-            $("#loadMe").modal({
-                //backdrop: "static", //remove ability to close modal with click
-                //keyboard: false, //remove option to close with keyboard
-                show: true //Display loader!
-            });
-
-
+       
                 var Header = {
                     "Document_Id": $stateParams.id,
                     "Document_Group": $scope.Header.Document_Group,
@@ -163,24 +153,10 @@
                     "Document_CreateUser": localStorage.getItem('StaffID'),
 
                 };
-            $http.post("api/PO/ApprovePOData", Header).then(function successCallback(response) {
-                console.log(response);
-                //$scope.showModal1 = false;
-                $("#loadMe").modal("hide");
-
-                //if (response.data.StatusCode > 1) {
-                //    swal({
-                //        title: 'Information',
-                //        text: response.data.Messages,
-                //        type: "info",
-                //        showCancelButton: false,
-                //        confirmButtonColor: "#6EAA6F",
-                //        confirmButtonText: 'OK'
-                //    })
-                //} else {
+                $http.post("api/PO/ApprovePOData", Header).then(function successCallback(response) {
+                    console.log(response);
                     window.location = '#/PurchaseOrder/ListPOApprove';
-                //}
-            });
+                });
             
 
 

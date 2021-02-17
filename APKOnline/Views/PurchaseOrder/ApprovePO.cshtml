@@ -27,14 +27,14 @@
                                     <div class="col-sm-8">
                                         <label style="margin-top:7px;">{{Header.Document_Project}}</label>
                                     </div>
-                                </div>
+                                </div>                                
                                 <div class="form-group" ng-hide="Header.Document_Project=='PR'||Header.Document_Project=='SR'">
                                     <label for="inputPassword3" class="col-sm-4 control-label">รหัสโครงการ : </label>
                                     <div class="col-sm-8">
                                         <label style="margin-top:7px;">{{Header.Job}}</label>
                                         @*<select class="form-control">
-                                                <option>-- เลือก --</option>
-                                            </select>*@
+                    <option>-- เลือก --</option>
+                </select>*@
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +116,7 @@
                                                         @*<input type="text" class="form-control" id="inputPassword3">*@
                                                     </div>
                                                 </div>
-
+                                               
                                             </div>
                                         </div>
                                     </form>
@@ -174,76 +174,9 @@
         </div>
     </div>
 </section>
-<!-- Modal -->
-<div class="modal fade" id="loadMe" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-body text-center">
-                @*<div class="loader"></div>*@
-                
-                <div clas="loader-txt">
-                    <p>กำลังบันทึกข้อมูล .... <br><br></p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 <style>
     #gridContainer {
         height: 440px;
     }
-
-
-
-
-/** SPINNER CREATION **/
-
-.loader {
-  position: relative;
-  text-align: center;
-  margin: 15px auto 35px auto;
-  z-index: 9999;
-  display: block;
-  width: 80px;
-  height: 80px;
-  border: 10px solid rgba(0, 0, 0, .3);
-  border-radius: 50%;
-  border-top-color: #000;
-  animation: spin 1s ease-in-out infinite;
-  -webkit-animation: spin 1s ease-in-out infinite;
-}
-    /*.ajax-loader {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        margin-left: -32px;*/ /* -1 * image width / 2 */
-        /*margin-top: -32px;*/ /* -1 * image height / 2 */
-        /*display: block;
-    }*/
-@*@keyframes spin {
-  to {
-    -webkit-transform: rotate(360deg);
-  }
-}*@
-
-@*@-webkit-keyframes spin {
-  to {
-    -webkit-transform: rotate(360deg);
-  }
-}*@
-
-
-/** MODAL STYLING **/
-
-.modal-content {
-  border-radius: 0px;
-  box-shadow: 0 0 20px 8px rgba(0, 0, 0, 0.7);
-}
-
-.modal-backdrop.show {
-  opacity: 0.75;
-}
-
-
-
 </style>

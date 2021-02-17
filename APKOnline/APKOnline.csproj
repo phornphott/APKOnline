@@ -136,11 +136,8 @@
     <Content Include="CSS\sweetalert.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="lib\images\ajax-loader.gif" />
     <Content Include="Scripts\angular-upload.js" />
     <Content Include="Scripts\angular-upload.min.js" />
-    <Content Include="Scripts\loading-bar.css" />
-    <Content Include="Scripts\loading-bar.js" />
     <Content Include="Scripts\src\PurchaseOrder\EditPreviewPO.js" />
     <Content Include="Scripts\src\PurchaseRequest\EditPurchaseRequest.js" />
     <Content Include="Scripts\src\PurchaseRequest\ListPreview.js" />

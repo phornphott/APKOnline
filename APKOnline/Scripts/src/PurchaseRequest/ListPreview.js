@@ -38,7 +38,7 @@
                     caption: "เลขที่ใบขอซื้อภายใน",
                     cellTemplate: function (container, item) {
                         var data = item.data,
-                            markup = "<a >" + data.PRNo + "</a>";
+                            markup = "<a >" +" ดูเอกสาร "+ data.PRNo + "</a>";
                         container.append(markup);
                     },
                 }, {
@@ -55,7 +55,7 @@
                         caption: "เลขที่ใบสั่งซื้อ"  ,
                         cellTemplate: function (container, item) {
                             var data = item.data,
-                                markup = "<a >" + data.PONo + "</a>";
+                                markup = "<a >"+" แก้ไขเอกสาร " + data.PONo +"</a>";
                             container.append(markup);
                         },
                     }, {

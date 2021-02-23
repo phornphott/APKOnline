@@ -22,7 +22,7 @@
             console.log(data);
             $scope.Header = data.data.Results.Header[0];
             $scope.SaveText = data.data.Results.Header[0].SaveText;
-            $scope.showpreview = true; //data.data.Results.Header[0].isPreview;
+            $scope.showpreview = data.data.Results.Header[0].isPreview;
             $scope.Document_Depid = data.data.Results.Header[0].Document_Depid;
             console.log($scope.Document_Depid);
             var Detail = data.data.Results.Detail;

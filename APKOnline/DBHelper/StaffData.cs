@@ -49,7 +49,13 @@ namespace APKOnline.DBHelper
 
         Task<bool> SetStaffAuthorize(StaffAuthorize item);
 
+        Task<int> GetPRforApprove(int StaffID);
+        Task<int> GetPROverDataForApprove(int id);
+        Task<int> GetListPreview(int StaffID);
+        Task<int> GetListPOForApprove(int id);
 
+        Task<DataTable> GetBudgetByDep(int id);
+        bool SetBudget(BudgetByDep item);
     }
 
     public class StaffData : IStaffData
@@ -622,6 +628,254 @@ namespace APKOnline.DBHelper
                 DBHelper.Execute(strSQL, sp);
             }
             return true;
+        }
+        #endregion
+
+        #region StaffNoti
+        public async Task<int> GetPRforApprove(int StaffID) {
+            int result = 0;
+
+            string Depin = "";
+            string tablename = "DocumentPR_Header";
+            int staffLevel = 0;
+
+            string sql = " SELECT DEPid,AuthorizeLevel FROM StaffAuthorize WHERE StaffID = " + StaffID;
+            DataTable staffauth = DBHelper.List(sql);
+            foreach (DataRow drow in staffauth.Rows)
+            {
+
+                Depin = drow["DEPid"].ToString();
+                staffLevel = Convert.ToInt32(drow["AuthorizeLevel"]) - 1;
+
+                int year = DateTime.Now.Year;
+
+                sql = "Select * from BudgetOfYearByDepartment WHERE  BudgetYear = " + year + " AND DEPid = " + Convert.ToInt32(drow["DEPid"]);
+                DataTable depbudget = DBHelper.List(sql);
+
+                if (depbudget.Rows.Count > 0)
+                {
+                    decimal Dep_Budget = 0;
+                    string monthcol = "DEPmonth" + DateTime.Now.Month.ToString();
+                    foreach (DataRow dr in depbudget.Rows)
+                    {
+                        Dep_Budget = Convert.ToDecimal(dr[monthcol]);
+
+
+                        string strSQL = "\r\n  SELECT distinct * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevel ELSE a.Current_Level END AS Document_Level FROM  (" +
+                          "(SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
+                          " FROM " + tablename + " p " +
+                          " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                          " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                          " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+                          " where Document_Delete=0 AND Document_Status<2 " +
+                          " AND Document_Cog <=" + Dep_Budget + " And p.Document_Dep = '" + Depin + "'" +
+                          ") UNION ALL (" +
+                          " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT" +
+                          " FROM " + tablename + " p " +
+                          " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                          " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                          " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+                          " LEFT JOIN ApprovePROverBudget a on a.Approve_Documen_Id=p.Document_Id " +
+                          " where Document_Delete=0 AND Document_Status < 2 AND a.Approve_Status = 2" +
+                          " AND Document_Cog > " + Dep_Budget + " And p.Document_Dep in ( " + Depin + ")" + ")) aa  " +
+                          " left join (SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
+                          " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel;
+
+
+                        DataTable dt = DBHelper.List(strSQL);
+                        result = result + dt.Rows.Count;
+                    }
+                }
+
+            }
+
+            return result;
+        }
+        public async Task<int> GetPROverDataForApprove(int id)
+        {
+            DataTable dt = new DataTable();
+            string tablename = "DocumentPR_Header";
+            int result = 0;
+
+                string  DeptID = "";
+                string sql = " SELECT DEPid,AuthorizeLevel FROM StaffAuthorize WHERE StaffID = " + id;
+                DataTable staffauth = DBHelper.List(sql);
+                foreach (DataRow drow in staffauth.Rows)
+                {
+
+                    DeptID = drow["DEPid"].ToString();
+
+                    sql = "Select * from BudgetOfYearByDepartment WHERE DEPid = " + DeptID;
+                    DataTable depbudget = DBHelper.List(sql);
+                    sql = "Select * from OverBudgetSetting WHERE StaffID = " + id;
+                    DataTable BudgetSetting = DBHelper.List(sql);
+                    if (BudgetSetting.Rows.Count > 0)
+                    {
+                        if (depbudget.Rows.Count > 0)
+                        {
+                            decimal Dep_Budget = 0;
+                            string monthcol = "DEPmonth" + DateTime.Now.Month.ToString();
+                            foreach (DataRow dr in depbudget.Rows)
+                            {
+                                Dep_Budget = Convert.ToDecimal(dr[monthcol]);
+
+
+                                string strSQL = "\r\n  " +
+                                  " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                                  ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT" +
+                                  " FROM " + tablename + " p " +
+                                  " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                                  " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                                  " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+                                  " LEFT JOIN ApprovePROverBudget a on a.Approve_Documen_Id=p.Document_Id " +
+                                  " where Document_Delete=0 AND Document_Status<2 AND (a.Approve_Status < 2 OR a.Approve_Status IS NULL)" +
+                                  " AND p.Document_Cog >" + Dep_Budget + " And p.Document_Dep= " + DeptID;
+                                dt = DBHelper.List(strSQL);
+
+                                result = result + dt.Rows.Count;
+                            }
+                        }
+                        else
+                        {
+                            //errMsg = "ไม่สารมารถดูข้อมูลการอนุมัติเอกสารได้เนื่องจากไม่มีการตั้งค่างบประมาณของแผนก.";
+                        }
+                    }
+                }
+                //else
+                //{ errMsg = "คุณไม่มีสิทธิ์ในการอนุมัติเอกสารเกินงบประมาณ"; }
+
+
+
+            //dt.TableName = "ListPRData";
+
+            return result;
+        }
+        public async Task<int> GetListPreview(int StaffID)
+        {
+            DataTable dt = new DataTable();
+            int result = 0; 
+
+
+                string strSQL = "SELECT l.*,pr.Document_Vnos AS PRNo,pr.Document_Cog AS PRAmount,po.Document_Vnos AS PONo,po.Document_Cog AS POAmount " +
+                    ",po.Document_EditDate AS POapprove,po.Document_EditUser AS POapproveBy,po.Document_Id AS POID,pr.Document_Id AS PRID" +
+                    " FROM LogPreview l " +
+                    " Left Join DocumentPR_Header pr on pr.Document_Id = Document_PRId" +
+                    " Left Join DocumentPO_Header po on po.Document_PRID = pr.Document_Id" +
+                    " WHERE l.Document_PreviewUser = " + StaffID + "  and po.Document_Status < 2";
+
+
+                dt = DBHelper.List(strSQL);
+
+            result = dt.Rows.Count;
+
+
+
+
+
+
+            return result;
+        }
+        public async Task<int> GetListPOForApprove(int id)
+        {
+            DataTable dtPO = new DataTable("PO");
+            DataTable dt = new DataTable();
+            string tablename = "DocumentPO_Header";
+            int staffLevel = 0;
+            string Depin = "";
+            int irow = 0;
+            int result = 0;
+
+
+
+            string sql = " SELECT DEPid,AuthorizeLevel FROM StaffAuthorize WHERE StaffID = " + id;
+            DataTable staffauth = DBHelper.List(sql);
+            foreach (DataRow drow in staffauth.Rows)
+            {
+                irow++;
+                staffLevel = Convert.ToInt32(drow["AuthorizeLevel"]) - 1;
+            }
+
+
+            string strSQL = "\r\n   SELECT * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevel ELSE a.Current_Level END AS Document_Level FROM " +
+                " (SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate,s.StaffLevel" +
+                ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff" +
+                " ,g.GroupName AS 'Group', Objective_Name AS Objective,Category_Name AS Category" +
+                " FROM " + tablename + " p " +
+                " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
+                " LEFT JOIN Category c on c.Category_Id = p.Document_Category" +
+                " LEFT JOIN Objective o on o.Objective_Id = p.Document_Objective" +
+                " LEFT JOIN Document_Group g on g.id=p.Document_Group" +
+                " where Document_Delete=0 AND Document_Status < 2) aa " +
+                " left join(SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
+                    " FROM ApprovePO GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel;
+
+            dt = DBHelper.List(strSQL);
+
+            result = dt.Rows.Count;
+
+            return result;
+        }
+
+        #endregion
+
+        #region Budget Dep
+        public async Task<DataTable> GetBudgetByDep(int id)
+        {
+            DataTable dt = new DataTable();
+
+            string sql = " ";
+            DataTable staffauth = DBHelper.List(sql);
+
+            string strSQL = "\r\n   select d.depid,depcode,depdesct,a.*  from department d "+
+                            "\r\n left join(SELECT id,DEPid, BudgetYear, DEPmonth1, DEPmonth2, DEPmonth3, DEPmonth4, DEPmonth5, DEPmonth6, DEPmonth7" +
+                            "\r\n, DEPmonth8, DEPmonth9, DEPmonth10, DEPmonth11, DEPmonth12, DEPTotalbudget " +
+                            "\r\n FROM dbo.BudgetOfYearByDepartment AS b where BudgetYear = "+id+") a on a.depid = d.depid " +
+                            "\r\n where d.FLG_DEL = 0";
+
+            dt = DBHelper.List(strSQL);
+            dt.TableName = "Budget";
+            return dt;
+        }
+
+        public bool SetBudget(BudgetByDep item)
+        {
+            bool result = false;
+            string strSQL = "";
+
+
+
+            if (item.id == 0)
+            {
+                strSQL = "Insert Into BudgetOfYearByDepartment (BudgetYear,DEPid,DEPcode,DEPdescT,"+item.ColumnName+")" +
+                    " VALUES (@BudgetYear,@DEPid,@DEPcode,@DEPdescT,@Budget)";
+                List<SqlParameter> sp = new List<SqlParameter>()
+                {
+                    new SqlParameter() {ParameterName = "@BudgetYear", SqlDbType = SqlDbType.Int, Value= item.Year},
+                    new SqlParameter() {ParameterName = "@DEPid", SqlDbType = SqlDbType.Int, Value= item.DEPid},
+                    new SqlParameter() {ParameterName = "@DEPcode", SqlDbType = SqlDbType.NVarChar, Value = item.DEPcode},
+                    new SqlParameter() {ParameterName = "@DEPdescT", SqlDbType = SqlDbType.NVarChar, Value= item.DEPdescT},
+                    new SqlParameter() {ParameterName = "@Budget", SqlDbType = SqlDbType.Decimal, Value = item.Budget},
+   
+                };
+                DBHelper.Execute(strSQL, sp);
+            }
+            else
+            {
+                strSQL = "UPDATE BudgetOfYearByDepartment SET " + item.ColumnName + "=@Budget WHERE id=@id";
+
+                List<SqlParameter> sp = new List<SqlParameter>()
+                {
+                    new SqlParameter() {ParameterName = "@id", SqlDbType = SqlDbType.Int, Value= item.id},
+                    new SqlParameter() {ParameterName = "@Budget", SqlDbType = SqlDbType.Decimal, Value= item.Budget},
+
+                };
+                DBHelper.Execute(strSQL, sp);
+            }
+            return result;
         }
         #endregion
     }

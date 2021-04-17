@@ -336,16 +336,6 @@ namespace APKOnline.DBHelper
             try
             {
 
-                //string sql = "Select * from Staffs WHERE StaffID = " + StaffID;
-                //DataTable staff = DBHelper.List(sql);
-                //if (staff.Rows.Count > 0)
-                //{
-                //    foreach (DataRow dr in staff.Rows)
-                //    {
-                //        //staffLevel = Convert.ToInt32(dr["StaffLevelID"]) - 1;
-                //        staffLevel = Convert.ToInt32(dr["StaffLevel"]) - 1;
-                //    }
-                //}
 
 
                 string sql = " SELECT DEPid,AuthorizeLevel FROM StaffAuthorize WHERE StaffID = " + StaffID;
@@ -446,71 +436,6 @@ namespace APKOnline.DBHelper
                     //    errMsg = "ไม่สารมารถดูข้อมูลการอนุมัติเอกสารได้เนื่องจากไม่มีการตั้งค่างบประมาณของแผนก.";
                     //}
                 }
-
-                //sql = "Select * from BudgetOfYearByDepartment WHERE DEPid = " + DeptID;
-                //DataTable depbudget = DBHelper.List(sql);
-
-                //if (depbudget.Rows.Count > 0)
-                //{
-                //    decimal Dep_Budget = 0;
-                //    string monthcol = "DEPmonth"+DateTime.Now.Month.ToString();
-                //    foreach (DataRow dr in depbudget.Rows)
-                //    {
-                //        Dep_Budget = Convert.ToDecimal(dr[monthcol]);
-
-
-                //        //string strSQL = "\r\n  SELECT distinct * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevelID ELSE a.Current_Level END AS Document_Level FROM  (" +
-                //        //  "(SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                //        //  ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
-                //        //  " FROM " + tablename + " p " +
-                //        //  " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
-                //        //  " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
-                //        //  " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
-                //        //  " where Document_Delete=0 AND Document_Status<2 " +
-                //        //  " AND Document_Cog <=" + Dep_Budget + " And p.Document_Dep= " + DeptID +
-                //        //  ") UNION ALL (" +
-                //        //  " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                //        //  ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevelID,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT" +
-                //        //  " FROM " + tablename + " p " +
-                //        //  " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
-                //        //  " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
-                //        //  " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
-                //        //  " LEFT JOIN ApprovePROverBudget a on a.Approve_Documen_Id=p.Document_Id " +
-                //        //  " where Document_Delete=0 AND Document_Status < 2 AND a.Approve_Status = 2" +
-                //        //  " AND Document_Cog > " + Dep_Budget + " And p.Document_Dep= " + DeptID+ ")) aa  " +
-                //        //  " left join (SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
-                //        //  " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level ="+ staffLevel;
-
-                //        string strSQL = "\r\n  SELECT distinct * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevel ELSE a.Current_Level END AS Document_Level FROM  (" +
-                //          "(SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                //          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
-                //          " FROM " + tablename + " p " +
-                //          " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
-                //          " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
-                //          " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
-                //          " where Document_Delete=0 AND Document_Status<2 " +
-                //          " AND Document_Cog <=" + Dep_Budget + " And p.Document_Dep in ( " + Depin + ")" +
-                //          ") UNION ALL (" +
-                //          " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                //          ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT" +
-                //          " FROM " + tablename + " p " +
-                //          " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
-                //          " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
-                //          " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
-                //          " LEFT JOIN ApprovePROverBudget a on a.Approve_Documen_Id=p.Document_Id " +
-                //          " where Document_Delete=0 AND Document_Status < 2 AND a.Approve_Status = 2" +
-                //          " AND Document_Cog > " + Dep_Budget + " And p.Document_Dep in ( " + Depin + ")" + ")) aa  " +
-                //          " left join (SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
-                //          " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel;
-
-
-                //        dt = DBHelper.List(strSQL);
-                //    }
-                //}
-                // else
-                //    {
-                //    errMsg = "ไม่สารมารถดูข้อมูลการอนุมัติเอกสารได้เนื่องจากไม่มีการตั้งค่างบประมาณของแผนก.";
-                //}
 
                 
             }
@@ -641,7 +566,7 @@ namespace APKOnline.DBHelper
                 }
 
 
-                         sql = "Select SUM(Document_Detail_Cog) From DocumentPR_Detail_tmp WHERE Document_Detail_Hid = " + Header.Document_Id;
+                sql = "Select SUM(Document_Detail_Cog) From DocumentPR_Detail_tmp WHERE Document_Detail_Hid = " + Header.Document_Id;
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 da.SelectCommand.Transaction = myTran;
                 DataTable tmp = new DataTable();

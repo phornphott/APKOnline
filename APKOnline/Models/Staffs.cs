@@ -50,4 +50,15 @@ namespace APKOnline.Models
         public bool isPreview { get; set; }
     }
 
+    public class BudgetByDep
+    {
+        public int id { get; set; }
+        public int DEPid { get; set; }
+        public string DEPcode { get; set; }
+        public string DEPdescT { get; set; }
+        public string ColumnName { get; set; }
+        public decimal Budget { get; set; }
+        public int  Year { get; set; }
+    }
+
 }

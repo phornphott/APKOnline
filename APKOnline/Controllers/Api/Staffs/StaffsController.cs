@@ -9,12 +9,21 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.AspNet.SignalR;
 
 namespace APKOnline.Controllers
 {
     public class StaffsController : ApiController
     {
         static readonly IStaffData repository = new StaffData();
+
+        public static IHubContext _hubcontext = GlobalHost.ConnectionManager.GetHubContext<NotiHub>();
+        private static IList<NotiData> _noti;
+        public StaffsController()
+        {
+            if (_noti == null)
+                _noti = new List<NotiData>();
+        }
 
         [HttpPost]
         [ActionName("login")]
@@ -485,6 +494,62 @@ namespace APKOnline.Controllers
             //response.Records = ds.Tables[0].Rows.Count;
             return Request.CreateResponse(HttpStatusCode.OK, response);
         }
+
+        [HttpGet]
+        [ActionName("GetBudgetByDep")]
+        public async Task<HttpResponseMessage> GetBudgetByDep(int id)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+ 
+            dt = await repository.GetBudgetByDep(id);
+
+            ds.Tables.Add(dt);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            resData.Records = ds.Tables[0].Rows.Count;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+
+        [HttpPost]
+        [ActionName("SetBudget")]
+        public  HttpResponseMessage SetBudget(BudgetByDep item)
+        {
+            Result response = new Result();
+            bool ret = false;
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+
+            try
+            {
+                ret = repository.SetBudget(item);
+            }
+            catch (Exception e)
+            {
+                response.StatusCode = (int)StatusCodes.Error;
+                response.Messages = e.Message;
+            }
+
+
+            response.Results = ret;
+            //response.Records = ds.Tables[0].Rows.Count;
+            return Request.CreateResponse(HttpStatusCode.OK, response);
+        }
+
+
         #endregion
 
         #region " บทบาทหน้าที่ "
@@ -638,7 +703,78 @@ namespace APKOnline.Controllers
         #endregion
 
 
+        #region Noti Index
+        [HttpPost]
+        [ActionName("GetNotiPR")]
+        public async Task<HttpResponseMessage> GetNotiPR(int id)
+        {
+            Result resData = new Result();
+
+            int prcount = await repository.GetPRforApprove(id);
+            NotiData item = new NotiData();
+            item.index = 1;
+            if (prcount > 0)
+            {
+                item.NotiText = "มี " + prcount + " รายการขออนุมัติงบประมาณรอการอนุมัติ'";
+            }
+            _noti.Add(item);
+            _hubcontext.Clients.All.NotiData("", _noti);
+
+            resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+
+            resData.Results = prcount;
+            //resData.Records = ds.Tables[0].Rows.Count;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+
+        [HttpPost]
+        [ActionName("GetNotiPROver")]
+        public async Task<HttpResponseMessage> GetNotiPROver(int id)
+        {
+
+            Result resData = new Result();
+            int prOver = await repository.GetPROverDataForApprove(id);
 
 
+            resData.StatusCode = (int)(StatusCodes.Succuss);
+            resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+
+            resData.Results = prOver;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+
+        [HttpPost]
+        [ActionName("GetNotiPreview")]
+        public async Task<HttpResponseMessage> GetNotiPreview(int id)
+        {
+            Result resData = new Result();
+
+            int prview = await repository.GetListPreview(id);
+
+
+            resData.StatusCode = (int)(StatusCodes.Succuss);
+            resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+
+
+            resData.Results = prview;
+            //resData.Records = ds.Tables[0].Rows.Count;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+        [HttpPost]
+        [ActionName("GetNotiPO")]
+        public async Task<HttpResponseMessage> GetNotiPO(int id)
+        {
+            Result resData = new Result();
+
+            int po = await repository.GetListPOForApprove(id);
+
+            resData.StatusCode = (int)(StatusCodes.Succuss);
+            resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+
+            resData.Results = po;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+        #endregion
     }
 }

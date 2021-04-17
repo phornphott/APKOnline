@@ -333,5 +333,20 @@
                 }]
             }
         })
-
+        .state('/ManageStaff/ManageBudgetDep', {
+            url: "/ManageStaff/ManageBudgetDep",
+            templateUrl: '\ManageStaff/ManageBudgetDep',
+            controller: 'ManageBudgetDepController',
+            resolve: {
+                lazyLoad: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'AceApp',
+                            files: [
+                                'Scripts/src/ManageStaff/ManageBudgetDep.js'
+                            ]
+                        }])
+                }]
+            }
+        })
 });

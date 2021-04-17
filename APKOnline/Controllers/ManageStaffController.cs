@@ -29,5 +29,9 @@ namespace APKOnline.Controllers
         {
             return View();
         }
+        public ActionResult ManageBudgetDep()
+        {
+            return View();
+        }
     }
 }

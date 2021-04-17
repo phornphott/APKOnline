@@ -636,6 +636,13 @@ D:\Repository\APK\APKOnline\obj\Debug\APKOnline.csproj.CopyComplete
 D:\Repository\APK\APKOnline\obj\Debug\APKOnline.dll
 D:\Repository\APK\APKOnline\obj\Debug\APKOnline.pdb
 D:\Repository\APK\APKOnline\obj\Debug\APKOnline.csprojAssemblyReference.cache
+D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+D:\Work Project\Repository\APK\APKOnline\bin\roslyn\System.Collections.Immutable.dll
+D:\Work Project\Repository\APK\APKOnline\bin\roslyn\System.Reflection.Metadata.dll
+D:\Work Project\Repository\APK\APKOnline\bin\roslyn\VBCSCompiler.exe
 D:\Work Project\Repository\APK\APKOnline\bin\SqlServerTypes\x64\msvcr120.dll
 D:\Work Project\Repository\APK\APKOnline\bin\SqlServerTypes\x64\SqlServerSpatial140.dll
 D:\Work Project\Repository\APK\APKOnline\bin\SqlServerTypes\x86\msvcr120.dll
@@ -646,31 +653,29 @@ D:\Work Project\Repository\APK\APKOnline\bin\roslyn\csc.rsp
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\csi.exe
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\csi.rsp
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
-D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
-D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.dll
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
-D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.CSharp.Core.targets
-D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\Microsoft.VisualBasic.Core.targets
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\System.AppContext.dll
-D:\Work Project\Repository\APK\APKOnline\bin\roslyn\System.Collections.Immutable.dll
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\System.Diagnostics.StackTrace.dll
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\System.IO.FileSystem.dll
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\System.IO.FileSystem.Primitives.dll
-D:\Work Project\Repository\APK\APKOnline\bin\roslyn\System.Reflection.Metadata.dll
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\vbc.exe
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\vbc.exe.config
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\vbc.rsp
-D:\Work Project\Repository\APK\APKOnline\bin\roslyn\VBCSCompiler.exe
 D:\Work Project\Repository\APK\APKOnline\bin\roslyn\VBCSCompiler.exe.config
 D:\Work Project\Repository\APK\APKOnline\bin\Report_PO.rdlc
 D:\Work Project\Repository\APK\APKOnline\bin\APKOnline.dll.config
 D:\Work Project\Repository\APK\APKOnline\bin\APKOnline.dll
 D:\Work Project\Repository\APK\APKOnline\bin\APKOnline.pdb
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.AspNet.SignalR.Core.dll
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
 D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.Owin.dll
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.Owin.Host.SystemWeb.dll
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.Owin.Security.dll
 D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.ReportViewer.Common.dll
 D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.ReportViewer.DataVisualization.dll
 D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.ReportViewer.Design.dll
@@ -681,6 +686,7 @@ D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.ReportViewer.WinForms.dll
 D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.SqlServer.Types.dll
 D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.Web.Infrastructure.dll
 D:\Work Project\Repository\APK\APKOnline\bin\Newtonsoft.Json.dll
+D:\Work Project\Repository\APK\APKOnline\bin\Owin.dll
 D:\Work Project\Repository\APK\APKOnline\bin\System.Net.Http.Formatting.dll
 D:\Work Project\Repository\APK\APKOnline\bin\System.Web.Helpers.dll
 D:\Work Project\Repository\APK\APKOnline\bin\System.Web.Http.dll
@@ -698,7 +704,14 @@ D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.VisualStudio.OLE.Interop.
 D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.VisualStudio.TextManager.Interop.dll
 D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.VisualStudio.TextManager.Interop.8.0.dll
 D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.MSXML.dll
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.AspNet.SignalR.Core.pdb
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.AspNet.SignalR.Core.xml
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.AspNet.SignalR.SystemWeb.pdb
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
 D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.Owin.xml
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.Owin.Host.SystemWeb.xml
+D:\Work Project\Repository\APK\APKOnline\bin\Microsoft.Owin.Security.xml
 D:\Work Project\Repository\APK\APKOnline\bin\System.Web.Razor.xml
 D:\Work Project\Repository\APK\APKOnline\bin\System.Web.Webpages.xml
 D:\Work Project\Repository\APK\APKOnline\bin\System.Web.Webpages.Deployment.xml

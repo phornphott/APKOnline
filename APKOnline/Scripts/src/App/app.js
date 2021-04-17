@@ -16,10 +16,95 @@ angular.module('ApkApp').controller('IndexController', function ($scope, $rootSc
         window.location = 'Home/Login';
     }
 
+    $scope.messages = [];
+    $scope.data = [];
+    $scope.NotiNumber = 0;
+    $scope.Noti1 = 0;
+    $scope.Noti2 = 0;
+    $scope.Noti3 = 0;
+    $scope.Noti4 = 0;
+    $scope.Noti5 = 0;
+    $scope.NotiHeaderText = '';
+    $scope.Notitext_1 = '';
+    $scope.Notitext_2 = '';
+    $scope.Notitext_3 = '';
+    $scope.Notitext_4 = '';
+    $scope.Notitext_5 = '';
+    $scope.LoadNotification = function () {
+
+
+
+        $http.post("api/Staffs/GetNotiPR/" + localStorage.getItem("StaffID") + "?").then(function (data) {
+            $scope.data = data;
+            console.log($scope.data);
+
+            $scope.Noti1 = $scope.data.data.Results;
+
+
+        });
+        $http.post("api/Staffs/GetNotiPROver/" + localStorage.getItem("StaffID") + "?").then(function (data) {
+            $scope.data = data;
+            console.log($scope.data);
+
+            $scope.Noti2 = $scope.data.data.Results;
+
+
+        });
+        $http.post("api/Staffs/GetNotiPreview/" + localStorage.getItem("StaffID") + "?").then(function (data) {
+            $scope.data = data;
+            console.log($scope.data);
+
+            $scope.Noti4 = $scope.data.data.Results;
+
+
+        });
+        $http.post("api/Staffs/GetNotiPO/" + localStorage.getItem("StaffID") + "?").then(function (data) {
+            $scope.data = data;
+            console.log($scope.data);
+
+            $scope.Noti5 = $scope.data.data.Results;
+
+
+        });
+    }
+
     $scope.FirstName = localStorage.getItem('StaffFirstName');
     $scope.LastName = localStorage.getItem('StaffLastName');
     $scope.PictureFile = localStorage.getItem('StaffImage');
     $scope.DepartmentID = localStorage.getItem('StaffDepartmentID');
+    $scope.LoadNotification();
+    setInterval(function () {
+        $scope.LoadNotification();
+    }, 120000)
+
+    setInterval(function () {
+
+        $scope.NotiNumber = $scope.Noti1 + $scope.Noti2 + $scope.Noti3 + $scope.Noti4 + $scope.Noti5;
+        console.log($scope.NotiNumber);
+        $scope.NotiShow = '';
+        if ($scope.NotiNumber > 0) {
+            $scope.NotiShow = $scope.NotiNumber;
+        }
+        $scope.NotiHeaderText = 'You Have ' + $scope.NotiNumber + ' Notifications ';
+        $scope.Notitext_1 = 'มี ' + $scope.Noti1 + ' รายการขออนุมัติงบประมาณรอการอนุมัติ';
+        $scope.Notitext_2 = 'มี ' + $scope.Noti2 + ' รายการขออนุมัติงบประมาณเกินงบประมาณรอการอนุมัติ';
+        $scope.Notitext_3 = 'มี ' + $scope.Noti3 + ' รายการขออนุมัติงบประมาณรอสร้างเอกสารขออนุมัติสั่งซื้อ';
+        $scope.Notitext_4 = 'มี ' + $scope.Noti4 + ' รายการขออนุมัติสั่งซื้อรอการ Preview';
+        $scope.Notitext_5 = 'มี ' + $scope.Noti5 + ' รายการขออนุมัติสั่งซื้อรอการอนุมัติ';
+    }, 30000)
+    console.log($scope.data);
+    $scope.hub = $.connection.notiHub;
+    $.connection.hub.start();
+
+
+    $scope.hub.client.getNotiStaff = function (message) {
+
+        $scope.$apply(function () {
+            $scope.messages.push(message);
+        });
+    }
+    console.log($scope.messages);
+
 
     LoginService.GlobalLogin();
 });
@@ -155,8 +240,10 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
                 }
             };
         });
-    };
 
+
+        
+    };
 
 
     function toggleVisibility(item) {

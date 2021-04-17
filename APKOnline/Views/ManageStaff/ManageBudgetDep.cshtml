@@ -1,0 +1,63 @@
+﻿                                                                       <!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+
+                    
+                </div>
+                <!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="STARTDATE" class="col-sm-1 control-label">ปี : </label>
+                            <div class="col-sm-4">
+                                <p class="input-group pull-left">
+                                    <input type="text" class="form-control" name="MONTHDATE" uib-datepicker-popup="yyyy" ng-model="MONTHDATE" ng-change="ChangeMonthDate(MONTHDATE)" is-open="popupMonth.opened" datepicker-options="dateOptionsMonth" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" ng-click="openMonth()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="">
+
+                                <button type="submit" class="btn btn-success" ng-click="getBudget()"><i class="fa fa-search"></i> ค้นหา</button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group">
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group" style="margin-top: 59px;">
+                        <div id="gridContainer" dx-data-grid="dataGridOptions"></div>
+                    </div>
+                </div> 
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    #gridContainer {
+        /*height: 440px;*/
+    }
+
+    #tree-list-demo {
+        min-height: 700px;
+    }
+
+    #employees {
+        max-height: 700px;
+    }
+</style>

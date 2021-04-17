@@ -565,7 +565,6 @@ namespace APKOnline.DBHelper
                     }
                 }
 
-
                 sql = "Select SUM(Document_Detail_Cog) From DocumentPR_Detail_tmp WHERE Document_Detail_Hid = " + Header.Document_Id;
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 da.SelectCommand.Transaction = myTran;
@@ -577,6 +576,18 @@ namespace APKOnline.DBHelper
                     amount =Math.Round(amount, 2);
                 }
 
+                string fristDate = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString("00") + "-01";
+                string LastDate = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString("00") + "-" + DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month).ToString("00");
+                sql = "Select SUM(Document_Cog) From DocumentPR_header  where Document_Date between '"+ fristDate + "'and  '"+ LastDate + "' and Document_Depid ="+Header.Document_Dep+" and Document_Delete=0";
+                 da = new SqlDataAdapter(sql, conn);
+                da.SelectCommand.Transaction = myTran;
+                tmp = new DataTable();
+                da.Fill(tmp);
+                foreach (DataRow dr in tmp.Rows)
+                {
+                    amount = amount + Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
+                    amount = Math.Round(amount, 2);
+                }
 
                 if (Dep_Budget < amount)
                 {

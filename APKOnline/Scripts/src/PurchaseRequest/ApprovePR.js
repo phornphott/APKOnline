@@ -2,6 +2,7 @@
     function ($scope, $stateParams, $http, $rootScope, $filter) {
         console.log($stateParams);
         $scope.SaveText = "อนุมัติ";
+        $scope.RejectText = 'ไม่อนุมติ'
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
         $scope.showBorders = true;
@@ -22,7 +23,11 @@
             console.log(data);
             $scope.Header = data.data.Results.Header[0];
             $scope.SaveText = data.data.Results.Header[0].SaveText;
-            $scope.showpreview = data.data.Results.Header[0].isPreview;
+            if ($scope.SaveText == "อนุมัติ")
+                $scope.showpreview = data.data.Results.Header[0].isPreview;
+            else {
+                $scope.showpreview = false;
+            }
             $scope.Document_Depid = data.data.Results.Header[0].Document_Depid;
             console.log($scope.Document_Depid);
             var Detail = data.data.Results.Detail;
@@ -213,30 +218,43 @@
             $scope.ListFilePR.push({});
         };
         $scope.SaveDocuments = function () {
-          
-            
-                var Header = {
-                    "Document_Id": $scope.Document_ID,
-                    "Document_Depid": $scope.Document_Depid,
-                    "isPreview": $scope.ispreview,
-                    "Document_CreateUser": localStorage.getItem('StaffID'),
-            };
-            console.log(Header);
-                $http.post("api/PR/ApprovePRData?", Header).then(function successCallback(response) {
-                    console.log(response);
-                    if (response.data.StatusCode > 1) {
-                        swal({
-                            title: 'Information',
-                            text: response.data.Messages,
-                            type: "info",
-                            showCancelButton: false,
-                            confirmButtonColor: "#6EAA6F",
-                            confirmButtonText: 'OK'
-                        })
+
+            swal({
+                title: "ยืนยันการอนุมัติเอกสาร",
+                text: "ต้องการอนุมัติรายการขอซื้อ!",
+                icon: "info",
+                buttons: true,
+                dangerMode: false,
+            })
+                .then((willSave) => {
+                    console.log(willSave)
+                    if (willSave) {
+                        var Header = {
+                            "Document_Id": $scope.Document_ID,
+                            "Document_Depid": $scope.Document_Depid,
+                            "isPreview": $scope.ispreview,
+                            "Document_CreateUser": localStorage.getItem('StaffID'),
+                        };
+                        console.log(Header);
+                        $http.post("api/PR/ApprovePRData?", Header).then(function successCallback(response) {
+                            console.log(response);
+                            if (response.data.StatusCode > 1) {
+                                swal({
+                                    title: 'Information',
+                                    text: response.data.Messages,
+                                    type: "info",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#6EAA6F",
+                                    confirmButtonText: 'OK'
+                                })
+                            }
+                            else { window.location = '#/PurchaseRequest/ListPRApprove'; }
+                            //
+                        });
                     }
-                    else { window.location = '#/PurchaseRequest/ListPRApprove'; }
-                    //
                 });
+            
+
         };
         $scope.CancelDocuments = function () {
 
@@ -244,7 +262,42 @@
                     window.location = '#/PurchaseRequest/ListPRApprove';
                
         };
-
+        $scope.RejectDocuments = function () {
+            swal({
+                title: "ยืนยันไม่อนุมัติเอกสาร",
+                text: "ไม่อนุมัติรายการขอซื้อ!",
+                icon: "info",
+                buttons: true,
+                dangerMode: false,
+            })
+                .then((willSave) => {
+                    console.log(willSave)
+                    if (willSave) {
+                        var Header = {
+                            "Document_Id": $scope.Document_ID,
+                            "Document_Depid": $scope.Document_Depid,
+                            "isPreview": $scope.ispreview,
+                            "Document_CreateUser": localStorage.getItem('StaffID'),
+                        };
+                        console.log(Header);
+                        $http.post("api/PR/RejectPRData?", Header).then(function successCallback(response) {
+                            console.log(response);
+                            if (response.data.StatusCode > 1) {
+                                swal({
+                                    title: 'Information',
+                                    text: response.data.Messages,
+                                    type: "info",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#6EAA6F",
+                                    confirmButtonText: 'OK'
+                                })
+                            }
+                            else { window.location = '#/PurchaseRequest/ListPRApprove'; }
+                            //
+                        });
+                    }
+                });
+        };
         $scope.removeFilePR = function (index) {
             $scope.ListFilePR.splice(index, 1);
         };

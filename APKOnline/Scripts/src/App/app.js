@@ -93,17 +93,17 @@ angular.module('ApkApp').controller('IndexController', function ($scope, $rootSc
         $scope.Notitext_5 = 'มี ' + $scope.Noti5 + ' รายการขออนุมัติสั่งซื้อรอการอนุมัติ';
     }, 30000)
     console.log($scope.data);
-    $scope.hub = $.connection.notiHub;
-    $.connection.hub.start();
+    //$scope.hub = $.connection.notiHub;
+    //$.connection.hub.start();
 
 
-    $scope.hub.client.getNotiStaff = function (message) {
+    //$scope.hub.client.getNotiStaff = function (message) {
 
-        $scope.$apply(function () {
-            $scope.messages.push(message);
-        });
-    }
-    console.log($scope.messages);
+    //    $scope.$apply(function () {
+    //        $scope.messages.push(message);
+    //    });
+    //}
+    //console.log($scope.messages);
 
 
     LoginService.GlobalLogin();

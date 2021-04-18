@@ -161,7 +161,20 @@
                             </div>
                         </div>
                     </div>
+                    <br />
+                    <div>
+                        <center>
 
+                            <input type="file" id="file1" name="file" accept="application/pdf" multiple
+                                   ng-files="getTheFiles($files)" />
+                            <ul>
+                                <li ng-repeat="file in files">{{file.name}}</li>
+                            </ul>
+                            <input type="button" class="btn btn-info" ng-click="uploadFiles()" value="Upload Files" />
+                            <input type="button" class="btn btn-danger" ng-click="DeleteFile()" value="Delete Files" />
+
+                        </center>
+                    </div>
                     <br />
                     <div class="box-footer">
                         <center>

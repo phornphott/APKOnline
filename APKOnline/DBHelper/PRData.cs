@@ -25,6 +25,8 @@ namespace APKOnline.DBHelper
         DataTable GetPRData(int staffID, ref string errMsg);
         DataTable GetPRDataForApprove(int StaffID, int DeptID, ref string errMsg);
         int ApprovePR(int Document_Id, int StaffID, int DeptID, bool isPreview, ref string errMsg);
+        int RejectPR(int Document_Id, int StaffID, int DeptID, bool isPreview, ref string errMsg);
+
         DataTable GetPROverDataForApprove(int id, int DeptID, ref string errMsg);
         int ApprovePROverBudget(int Document_Id, int StaffID, ref string errMsg);
         bool UpdatePRDetail(PRDetailModels detail, ref string errMsg);
@@ -976,6 +978,61 @@ namespace APKOnline.DBHelper
                         cmd.ExecuteNonQuery();
                     }
                 }
+                //document_id = (int)shipperIdParam.Value;
+
+            }
+            catch (Exception ex)
+            {
+                errMsg = ex.Message;
+            }
+
+            return document_id;
+        }
+        public int RejectPR(int Document_Id, int StaffID, int DeptID, bool isPreview, ref string errMsg)
+        {
+            int document_id = 0;
+            string sqlQuery = "";
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter shipperIdParam = null;
+
+            decimal budget = 0;
+            decimal doc_cog = 0;
+            int docLevel = 0;
+            int ApproveLevel = 0;
+            try
+            {
+    
+                SqlConnection conn = DBHelper.sqlConnection();
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                cmd = conn.CreateCommand();
+                //myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
+                cmd.Connection = conn;
+
+                sqlQuery = "INSERT INTO ApprovePR (Approve_Documen_Id,Approve_Create_Level,Approve_Current_Level,Approve_Status,Approve_Order,Approve_By) VALUES" +
+            " (@Approve_Documen_Id,@Approve_Create_Level,@Approve_Current_Level,9,0,@Approve_By  )";
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@Approve_Documen_Id", Document_Id);
+                cmd.Parameters.AddWithValue("@Approve_Create_Level", docLevel);
+                cmd.Parameters.AddWithValue("@Approve_Current_Level", ApproveLevel);
+                cmd.Parameters.AddWithValue("@Approve_By", StaffID);
+                cmd.ExecuteNonQuery();
+
+                sqlQuery = "Update DocumentPR_Header SET " +
+                            "Document_EditUser = @Document_EditUser,Document_EditDate=GETDATE(),Document_Status =9 WHERE Document_Id = @Document_Id";
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@Document_Id", Document_Id);
+                cmd.Parameters.AddWithValue("@Document_EditUser", StaffID);
+                cmd.ExecuteNonQuery();
+
+
+
                 //document_id = (int)shipperIdParam.Value;
 
             }

@@ -14,6 +14,8 @@
         $scope.Document_Vnos = "";
         $scope.detailorg = [];
         $scope.listupdate = [];
+        $scope.listfiledelete = [];
+        $scope.tmpfolder = Math.floor(Math.random() * 1000000);
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
         $http.get("api/PR/ViewPRData/" + $scope.Document_ID + "?staffid=" + localStorage.getItem('StaffID')).then(function (data) {
@@ -335,7 +337,33 @@
                             markup = "<a >" + data.filename + "</a>";
                         container.append(markup);
                     },
+                }, {
+                        dataField: "filename",
+                        caption: "ลบไฟล์",
+                        alignment: 'center',
+                        allowFiltering: false,
+                        width: 100,
+                        cellTemplate: function (container, options) {
+                            //if (options.key.Document_Status == 0) {
 
+                                $("<div />").dxButton({
+                                    icon: 'fa fa-trash',
+                                    type: 'danger',
+                                    disabled: false,
+                                    onClick: function (e) {
+                                        var r = confirm("ต้องการลบไฟล์ใช่หรือไม่ !!!");
+                                        if (r === true) {
+                                            console.log(options);
+                                            $scope.listfiledelete.push($scope.Document_ID + '/' + options.key.filename);
+                                            console.log($scope.listfiledelete);
+                                            $("#gridfileContainer").dxDataGrid("instance").deleteRow(options.rowIndex);
+                                            $("#gridfileContainer").dxDataGrid("instance").refresh();
+
+                                        }
+                                    }
+                                }).appendTo(container);
+                            //}
+                        }
                 }],
 
             };
@@ -345,7 +373,9 @@
             return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
         }
         var onCellClickViewFile = function (e) {
-            window.open("/Upload/" + e.data.path, "popup", "width=800,height=600,left=300,top=200");
+            if (e.columnIndex == 0) {
+                window.open("/Upload/" + e.data.path, "popup", "width=800,height=600,left=300,top=200");
+            }
         };
         $scope.ListFilePR = [{}];
 
@@ -357,7 +387,7 @@
             window.location = '#/PurchaseRequest/ListPurchaseRequest';
         };
         $scope.SaveDocuments = function () {
-            if ($scope.listupdate.length > 0) {
+            //if ($scope.listupdate.length > 0 || $scope.listfiledelete > 0) {
 
                 swal({
                     title: "ยืนยันการบันทึกข้อมูล?",
@@ -369,56 +399,81 @@
                     .then((willSave) => {
                         console.log(willSave)
                         if (willSave) {
-                            
-                            $http.post("api/PR/UpdateEditPRDetail?", $scope.listupdate).then(function successCallback(response) {
+                            $http.post("api/PR/updateFileEdit?docid=" + $scope.Document_ID + "&tmpupload=" + $scope.tmpfolder, $scope.listfiledelete).then(function successCallback(response) {
 
-                                if (response.data.StatusCode > 1) {
-                                    swal({
-                                        title: 'Information',
-                                        text: data.Messages,
-                                        type: "info",
-                                        showCancelButton: false,
-                                        confirmButtonColor: "#6EAA6F",
-                                        confirmButtonText: 'OK'
-                                    })
-                                } else {
-                                    swal("บันทึกข้อมูลสำเร็จ", {
-                                        icon: "success",
+                                $http.get("api/PR/GetFileUpload/" + $scope.Document_ID + "?").then(function (data) {
+                                    $scope.files = [];
+                                    if (data.data.StatusCode > 1) {
+                                        swal({
+                                            title: 'Information',
+                                            text: data.Messages,
+                                            type: "info",
+                                            showCancelButton: false,
+                                            confirmButtonColor: "#6EAA6F",
+                                            confirmButtonText: 'OK'
+                                        })
+
+                                    }
+
+                                    $("#gridfileContainer").dxDataGrid({
+                                        dataSource: data.data.Results.FileUpload
                                     });
-                                    $scope.listupdate = [];
-                                    $http.get("api/PR/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
-                                        console.log(data.data.Results.Detail);
-                                        console.log(data);
-                                        if (data.data.StatusCode > 1) {
-                                            swal({
-                                                title: 'Information',
-                                                text: data.Messages,
-                                                type: "info",
-                                                showCancelButton: false,
-                                                confirmButtonColor: "#6EAA6F",
-                                                confirmButtonText: 'OK'
-                                            })
-
-                                        }
-
-                                        $("#gridContainer").dxDataGrid({
-                                            dataSource: data.data.Results.Detail
-
-                                        });
-                                        $("#gridContainer").dxDataGrid("instance").refresh();
-                                    });
-
-                                }
-
+                                    $("#gridfileContainer").dxDataGrid("instance").refresh();
+                                });
                             });
+                            if ($scope.listupdate.length > 0) {
+                                $http.post("api/PR/UpdateEditPRDetail?", $scope.listupdate).then(function successCallback(response) {
+
+                                    if (response.data.StatusCode > 1) {
+                                        swal({
+                                            title: 'Information',
+                                            text: data.Messages,
+                                            type: "info",
+                                            showCancelButton: false,
+                                            confirmButtonColor: "#6EAA6F",
+                                            confirmButtonText: 'OK'
+                                        })
+                                    } else {
+
+
+                                        swal("บันทึกข้อมูลสำเร็จ", {
+                                            icon: "success",
+                                        });
+                                        $scope.listupdate = [];
+                                        $http.get("api/PR/PRDetailData/" + $scope.Document_ID + "?type=1").then(function (data) {
+                                            console.log(data.data.Results.Detail);
+                                            console.log(data);
+                                            if (data.data.StatusCode > 1) {
+                                                swal({
+                                                    title: 'Information',
+                                                    text: data.Messages,
+                                                    type: "info",
+                                                    showCancelButton: false,
+                                                    confirmButtonColor: "#6EAA6F",
+                                                    confirmButtonText: 'OK'
+                                                })
+
+                                            }
+
+                                            $("#gridContainer").dxDataGrid({
+                                                dataSource: data.data.Results.Detail
+
+                                            });
+                                            $("#gridContainer").dxDataGrid("instance").refresh();
+                                        });
+
+                                    }
+
+                                });
+                            }
                         }
                     });
 
               
-            }
-            else {
-                swal("ไม่มีการแก้ไขรายการขออนุมัติ");
-            }
+            //}
+            //else {
+            //    swal("ไม่มีการแก้ไขรายการขออนุมัติ");
+            //}
 
 
 
@@ -426,5 +481,90 @@
         $scope.removeFilePR = function (index) {
             $scope.ListFilePR.splice(index, 1);
         };
+        $scope.UploadFiles = function (files) {
+            console.log(files);
+            $scope.SelectedFiles = files;
+            if ($scope.SelectedFiles && $scope.SelectedFiles.length) {
+                Upload.upload({
+                    url: "/api/PR/UploadFiles?tmppath=" + $scope.tmpfolder,
+                    data: {
+                        files: $scope.SelectedFiles
+                    }
+                }).then(function (response) {
+                    $timeout(function () {
+                        $scope.Result = response.data;
+                    });
+                }, function (response) {
+                    if (response.status > 0) {
+                        var errorMsg = response.status + ': ' + response.data;
+                        alert(errorMsg);
+                    }
+                }, function (evt) {
+                    var element = angular.element(document.querySelector('#dvProgress'));
+                    $scope.Progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                    element.html('<div style="width: ' + $scope.Progress + '%">' + $scope.Progress + '%</div>');
+                });
+            }
+        };
+        $scope.DeleteFile = function () {
+
+            $http.post("api/PR/DeleteFiles?tmppath=" + $scope.tmpfolder).then(function (data) {
+
+                $scope.files = [];
+                console.log(data);
+                swal({
+                    title: 'info',
+                    text: data.data.Messages,
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                })
+            });
+        };
+        var formdata = new FormData();
+        var tmpfile = [];
+        $scope.getTheFiles = function ($files) {
+            tmpfile = [];
+            angular.forEach($files, function (value, key) {
+                console.log(key);
+                console.log(value);
+                tmpfile.push(value);
+                formdata.append(key, value);
+            });
+        };
+        $scope.uploadFiles = function () {
+            var url = "/api/PR/FileUpload?tmppath=" + $scope.tmpfolder;
+            $scope.files = [];
+
+            $http({
+                url: url,
+                method: "POST",
+                data: formdata,
+                async: false,
+                crossDomain: true,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'Content-Type': undefined
+                }
+            }).then(function successCallback(response) {
+                console.log(response);
+                if (response.data.StatusCode == 1) {
+                    $scope.files = tmpfile;
+                }
+                swal({
+                    title: 'Information',
+                    text: data.Messages,
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                })
+                // this callback will be called asynchronously
+                // when the response is available
+            }, function errorCallback(response) {
+            });
+        }
     }
 ])

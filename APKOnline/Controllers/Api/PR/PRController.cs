@@ -18,10 +18,10 @@ namespace APKOnline
     {
         static readonly IPRData repository = new PRData();
 
-      
+
         [HttpGet]
         [ActionName("PreparePageData")]
-        public HttpResponseMessage GETPreparePageData(int id,int type)
+        public HttpResponseMessage GETPreparePageData(int id, int type)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
@@ -39,7 +39,7 @@ namespace APKOnline
 
 
 
-            dtDocumentGroup.Columns.Add("ID",typeof(int));
+            dtDocumentGroup.Columns.Add("ID", typeof(int));
             dtDocumentGroup.Columns.Add("Name", typeof(string));
 
             for (int i = 0; i <= 6; i++)
@@ -137,10 +137,10 @@ namespace APKOnline
             resData.Results = ds;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
-       
+
         [HttpGet]
         [ActionName("ViewPRData")]
-        public HttpResponseMessage GETViewPRData(int id,int staffid)
+        public HttpResponseMessage GETViewPRData(int id, int staffid)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
@@ -149,7 +149,7 @@ namespace APKOnline
 
             DataTable dtAccount = repository.GetAccountData(ref errMsg);
             DataTable dtHeaderData = repository.GetHeaderData(id, staffid, ref errMsg);
-            
+
             DataTable dtDetail = repository.GetDetailData(id, 1, ref errMsg);
             ds.Tables.Add(dtAccount);
             ds.Tables.Add(dtHeaderData);
@@ -175,7 +175,7 @@ namespace APKOnline
 
                     // Use static Path methods to extract only the file name from the path.
                     dr[0] = System.IO.Path.GetFileName(s);
-                    dr[1] = id.ToString() + "/"+ dr[0];
+                    dr[1] = id.ToString() + "/" + dr[0];
 
                     dtfile.Rows.Add(dr);
                     //string destFile = System.IO.Path.Combine(targetpath, fileName);
@@ -207,7 +207,7 @@ namespace APKOnline
         }
         [HttpGet]
         [ActionName("ListPRByStaff")]
-        public HttpResponseMessage GETListPRByStaff(int id )
+        public HttpResponseMessage GETListPRByStaff(int id)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
@@ -235,14 +235,14 @@ namespace APKOnline
         }
         [HttpGet]
         [ActionName("ListPRForApprove")]
-        public HttpResponseMessage GETListPRForApprove(int id,int deptid)
+        public HttpResponseMessage GETListPRForApprove(int id, int deptid)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             Result resData = new Result();
 
-            dt = repository.GetPRDataForApprove(id,deptid, ref errMsg);
+            dt = repository.GetPRDataForApprove(id, deptid, ref errMsg);
 
 
             ds.Tables.Add(dt);
@@ -291,7 +291,7 @@ namespace APKOnline
         }
         [HttpGet]
         [ActionName("ListPROverForApprove")]
-        public HttpResponseMessage GETListPROverForApprove(int id,int depid)
+        public HttpResponseMessage GETListPROverForApprove(int id, int depid)
         {
             string errMsg = "";
             DataSet ds = new DataSet();
@@ -329,7 +329,7 @@ namespace APKOnline
             repository.DeleteTmpDetail(id, ref errMsg);
 
 
-          
+
 
             if (errMsg != "")
             {
@@ -354,7 +354,7 @@ namespace APKOnline
             DataTable dt = new DataTable();
             Result resData = new Result();
 
-            
+
             DataTable dtDocumentObj = repository.GetObjectiveData(id, ref errMsg);
             ds.Tables.Add(dtDocumentObj);
 
@@ -382,7 +382,7 @@ namespace APKOnline
             Result resData = new Result();
 
 
-           int id = repository.InserttmpDetail(detail, ref errMsg);
+            int id = repository.InserttmpDetail(detail, ref errMsg);
 
             //ds.Tables.Add(dtDocumentVnos);
             if (errMsg != "")
@@ -409,7 +409,7 @@ namespace APKOnline
             Result resData = new Result();
 
 
-           repository.DeletePRDetail(id,true, ref errMsg);
+            repository.DeletePRDetail(id, true, ref errMsg);
 
             //ds.Tables.Add(dtDocumentVnos);
             if (errMsg != "")
@@ -464,7 +464,7 @@ namespace APKOnline
             Result resData = new Result();
 
 
-             repository.UpdatePRDetail(detail, ref errMsg);
+            repository.UpdatePRDetail(detail, ref errMsg);
 
             //ds.Tables.Add(dtDocumentVnos);
             if (errMsg != "")
@@ -492,7 +492,7 @@ namespace APKOnline
 
             //foreach (PRDetailModels item in detail)
             //{
-                repository.UpdatePRDetail(detail, ref errMsg);
+            repository.UpdatePRDetail(detail, ref errMsg);
             //}
             //ds.Tables.Add(dtDocumentVnos);
             if (errMsg != "")
@@ -622,7 +622,34 @@ namespace APKOnline
             Result resData = new Result();
 
 
-            int id = repository.ApprovePR(Header.Document_Id,Header.Document_CreateUser, Header.Document_Depid,Header.isPreview, ref errMsg);
+            int id = repository.ApprovePR(Header.Document_Id, Header.Document_CreateUser, Header.Document_Depid, Header.isPreview, ref errMsg);
+
+            //ds.Tables.Add(dtDocumentVnos);
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+        [HttpPost]
+        [ActionName("RejectPRData")]
+        public HttpResponseMessage RejectPRData(PRHeaderModels Header)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+
+            int id = repository.RejectPR(Header.Document_Id, Header.Document_CreateUser, Header.Document_Depid, Header.isPreview, ref errMsg);
 
             //ds.Tables.Add(dtDocumentVnos);
             if (errMsg != "")
@@ -729,7 +756,66 @@ namespace APKOnline
             //Send OK Response to Client.
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
+        [HttpPost]
+        [ActionName("updateFileEdit")]
+        public HttpResponseMessage updateFileEdit(List<string> listfiledelete, int docid,string tmpupload)
+        {
+            Result resData = new Result();
+            try
+            {
+                //string path = HttpContext.Current.Server.MapPath("~/Upload/" + Pathfile);
 
+                foreach (string item in listfiledelete)
+                {
+                    string sourcePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Upload/" + item);
+                    if (System.IO.File.Exists(sourcePath))
+                    {
+                        System.IO.File.Delete(sourcePath);
+                    }
+                }
+                string Path = System.Web.Hosting.HostingEnvironment.MapPath("~/tmpUpload/" + tmpupload + "/");
+                string targetpath = System.Web.Hosting.HostingEnvironment.MapPath("~/Upload/" + docid.ToString() + "/");
+                if (System.IO.Directory.Exists(Path))
+                {
+                    if (!System.IO.Directory.Exists(targetpath))
+                    { System.IO.Directory.CreateDirectory(targetpath); }
+
+                    string[] files = System.IO.Directory.GetFiles(Path);
+
+                    // Copy the files and overwrite destination files if they already exist.
+                    foreach (string s in files)
+                    {
+                        // Use static Path methods to extract only the file name from the path.
+                        string fileName = System.IO.Path.GetFileName(s);
+                        string destFile = System.IO.Path.Combine(targetpath, fileName);
+                        System.IO.File.Copy(s, destFile, true);
+
+                    }
+                    System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(Path);
+                    foreach (System.IO.FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                    foreach (System.IO.DirectoryInfo dir in di.GetDirectories())
+                    {
+                        dir.Delete(true);
+                    }
+                }
+
+
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+
+            }
+            catch (Exception ex)
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = ex.Message; ;
+            }
+
+            //Send OK Response to Client.
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
         [HttpPost]
         [ActionName("FileUpload")]
         public HttpResponseMessage UploadFile(string tmppath)
@@ -849,6 +935,58 @@ namespace APKOnline
 
 
             return Request.CreateResponse(HttpStatusCode.OK, response);
+        }
+        [HttpGet]
+        [ActionName("GetFileUpload")]
+        public HttpResponseMessage GetFileUpload(int id) {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+            //Get Pathfile
+            DataTable dtfile = new DataTable();
+            dtfile.Columns.Add("filename");
+            dtfile.Columns.Add("path");
+
+
+            string targetpath = System.Web.Hosting.HostingEnvironment.MapPath("~/Upload/" + id.ToString() + "/");
+            if (System.IO.Directory.Exists(targetpath))
+            {
+                string[] files = System.IO.Directory.GetFiles(targetpath);
+
+                // Copy the files and overwrite destination files if they already exist.
+                foreach (string s in files)
+                {
+                    DataRow dr = dtfile.NewRow();
+
+
+
+                    // Use static Path methods to extract only the file name from the path.
+                    dr[0] = System.IO.Path.GetFileName(s);
+                    dr[1] = id.ToString() + "/" + dr[0];
+
+                    dtfile.Rows.Add(dr);
+                    //string destFile = System.IO.Path.Combine(targetpath, fileName);
+
+                }
+
+            }
+            dtfile.TableName = "FileUpload";
+            ds.Tables.Add(dtfile);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
     }
 }

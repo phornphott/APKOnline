@@ -794,7 +794,6 @@ D:\Work Project\Repository\APK\APKOnline\bin\zh-CHS\Microsoft.ReportViewer.WinFo
 D:\Work Project\Repository\APK\APKOnline\bin\zh-CHT\Microsoft.ReportViewer.WinForms.resources.dll
 D:\Work Project\Repository\APK\APKOnline\bin\zh-HANS\Microsoft.ReportViewer.WinForms.resources.dll
 D:\Work Project\Repository\APK\APKOnline\bin\zh-HANT\Microsoft.ReportViewer.WinForms.resources.dll
-D:\Work Project\Repository\APK\APKOnline\obj\Debug\APKOnline.csprojAssemblyReference.cache
 D:\Work Project\Repository\APK\APKOnline\obj\Debug\APKOnline.csproj.CoreCompileInputs.cache
 D:\Work Project\Repository\APK\APKOnline\obj\Debug\APKOnline.csproj.CopyComplete
 D:\Work Project\Repository\APK\APKOnline\obj\Debug\APKOnline.dll

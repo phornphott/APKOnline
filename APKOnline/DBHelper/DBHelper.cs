@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace APKOnline.DBHelper
@@ -101,6 +102,20 @@ namespace APKOnline.DBHelper
             var sqlCommand = new SqlCommand(query, conn);
             sqlCommand.Parameters.AddRange(sp.ToArray());
            i = sqlCommand.ExecuteNonQuery();
+            conn.Close();
+
+            return (i > 0) ? i : 0;
+        }
+        public static async Task<int> ExecuteStoreProcedure(string query,List<SqlParameter> sp)
+        {
+            int i = 0;
+            SqlConnection conn = DBHelper.SqlConnectionDb();
+            var sqlCommand = new SqlCommand(query, conn);
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlCommand.Parameters.AddRange(sp.ToArray());
+
+
+            i = (Int32)sqlCommand.ExecuteScalar();//sqlCommand.ExecuteNonQuery();
             conn.Close();
 
             return (i > 0) ? i : 0;

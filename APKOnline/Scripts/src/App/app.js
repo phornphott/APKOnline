@@ -30,9 +30,10 @@ angular.module('ApkApp').controller('IndexController', function ($scope, $rootSc
     $scope.Notitext_3 = '';
     $scope.Notitext_4 = '';
     $scope.Notitext_5 = '';
+    $scope.Loadingdata = false;
     $scope.LoadNotification = function () {
 
-
+        $scope.Loadingdata = true;
 
         $http.post("api/Staffs/GetNotiPR/" + localStorage.getItem("StaffID") + "?").then(function (data) {
             $scope.data = data;
@@ -66,6 +67,8 @@ angular.module('ApkApp').controller('IndexController', function ($scope, $rootSc
 
 
         });
+
+        $scope.Loadingdata = false;
     }
 
     $scope.FirstName = localStorage.getItem('StaffFirstName');
@@ -78,33 +81,23 @@ angular.module('ApkApp').controller('IndexController', function ($scope, $rootSc
     }, 120000)
 
     setInterval(function () {
-
-        $scope.NotiNumber = $scope.Noti1 + $scope.Noti2 + $scope.Noti3 + $scope.Noti4 + $scope.Noti5;
-        console.log($scope.NotiNumber);
-        $scope.NotiShow = '';
-        if ($scope.NotiNumber > 0) {
-            $scope.NotiShow = $scope.NotiNumber;
+        console.log($scope.Loadingdata);
+        if ($scope.Loadingdata == false) {
+            $scope.NotiNumber = $scope.Noti1 + $scope.Noti2 + $scope.Noti3 + $scope.Noti4 + $scope.Noti5;
+            console.log($scope.NotiNumber);
+            $scope.NotiShow = '';
+            if ($scope.NotiNumber > 0) {
+                $scope.NotiShow = $scope.NotiNumber;
+            }
+            $scope.NotiHeaderText = 'You Have ' + $scope.NotiNumber + ' Notifications ';
+            $scope.Notitext_1 = 'มี ' + $scope.Noti1 + ' รายการขออนุมัติงบประมาณรอการอนุมัติ';
+            $scope.Notitext_2 = 'มี ' + $scope.Noti2 + ' รายการขออนุมัติงบประมาณเกินงบประมาณรอการอนุมัติ';
+            $scope.Notitext_3 = 'มี ' + $scope.Noti3 + ' รายการขออนุมัติงบประมาณรอสร้างเอกสารขออนุมัติสั่งซื้อ';
+            $scope.Notitext_4 = 'มี ' + $scope.Noti4 + ' รายการขออนุมัติสั่งซื้อรอการ Preview';
+            $scope.Notitext_5 = 'มี ' + $scope.Noti5 + ' รายการขออนุมัติสั่งซื้อรอการอนุมัติ';
         }
-        $scope.NotiHeaderText = 'You Have ' + $scope.NotiNumber + ' Notifications ';
-        $scope.Notitext_1 = 'มี ' + $scope.Noti1 + ' รายการขออนุมัติงบประมาณรอการอนุมัติ';
-        $scope.Notitext_2 = 'มี ' + $scope.Noti2 + ' รายการขออนุมัติงบประมาณเกินงบประมาณรอการอนุมัติ';
-        $scope.Notitext_3 = 'มี ' + $scope.Noti3 + ' รายการขออนุมัติงบประมาณรอสร้างเอกสารขออนุมัติสั่งซื้อ';
-        $scope.Notitext_4 = 'มี ' + $scope.Noti4 + ' รายการขออนุมัติสั่งซื้อรอการ Preview';
-        $scope.Notitext_5 = 'มี ' + $scope.Noti5 + ' รายการขออนุมัติสั่งซื้อรอการอนุมัติ';
-    }, 30000)
+    }, 5000)
     console.log($scope.data);
-    //$scope.hub = $.connection.notiHub;
-    //$.connection.hub.start();
-
-
-    //$scope.hub.client.getNotiStaff = function (message) {
-
-    //    $scope.$apply(function () {
-    //        $scope.messages.push(message);
-    //    });
-    //}
-    //console.log($scope.messages);
-
 
     LoginService.GlobalLogin();
 });

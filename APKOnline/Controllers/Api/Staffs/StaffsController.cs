@@ -318,7 +318,7 @@ namespace APKOnline.Controllers
 
             try
             {
-                ret = await repository.DeleteDepartment(id);
+                ret = await repository.DeleteStaff(id);
 
                 if (ret)
                 {
@@ -706,19 +706,19 @@ namespace APKOnline.Controllers
         #region Noti Index
         [HttpPost]
         [ActionName("GetNotiPR")]
-        public async Task<HttpResponseMessage> GetNotiPR(int id)
+        public async Task<HttpResponseMessage> GetNotiPR(int id)   //async Task<HttpResponseMessage>
         {
             Result resData = new Result();
 
-            int prcount = await repository.GetPRforApprove(id);
-            NotiData item = new NotiData();
-            item.index = 1;
-            if (prcount > 0)
-            {
-                item.NotiText = "มี " + prcount + " รายการขออนุมัติงบประมาณรอการอนุมัติ'";
-            }
-            _noti.Add(item);
-            _hubcontext.Clients.All.NotiData("", _noti);
+            int prcount = await repository.GetPRforApprove(id);  //await
+            //NotiData item = new NotiData();
+            //item.index = 1;
+            //if (prcount > 0)
+            //{
+            //    item.NotiText = "มี " + prcount + " รายการขออนุมัติงบประมาณรอการอนุมัติ'";
+            //}
+            //_noti.Add(item);
+            //_hubcontext.Clients.All.NotiData("", _noti);
 
             resData.StatusCode = (int)(StatusCodes.Succuss);
                 resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);

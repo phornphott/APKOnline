@@ -353,10 +353,15 @@
                                     onClick: function (e) {
                                         var r = confirm("ต้องการลบไฟล์ใช่หรือไม่ !!!");
                                         if (r === true) {
-                                            console.log(options);
+                                            console.log(FileUpload);
                                             $scope.listfiledelete.push($scope.Document_ID + '/' + options.key.filename);
+                                            for (var i = FileUpload.length; i--;) {
+                                                if (FileUpload[i].filename === options.key.filename) FileUpload.splice(i, 1);
+                                            }
+
                                             console.log($scope.listfiledelete);
-                                            $("#gridfileContainer").dxDataGrid("instance").deleteRow(options.rowIndex);
+                                            $("#gridfileContainer").dxDataGrid({ dataSource: FileUpload});
+                                            //$("#gridfileContainer").dxDataGrid("instance").dataSource = FileUpload;
                                             $("#gridfileContainer").dxDataGrid("instance").refresh();
 
                                         }
@@ -373,7 +378,7 @@
             return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
         }
         var onCellClickViewFile = function (e) {
-            if (e.columnIndex == 0) {
+            if (e.columnIndex == 0) {                                                     ลลลลลล 
                 window.open("/Upload/" + e.data.path, "popup", "width=800,height=600,left=300,top=200");
             }
         };

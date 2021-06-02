@@ -798,3 +798,4 @@ D:\Work Project\Repository\APK\APKOnline\obj\Debug\APKOnline.csproj.CoreCompileI
 D:\Work Project\Repository\APK\APKOnline\obj\Debug\APKOnline.csproj.CopyComplete
 D:\Work Project\Repository\APK\APKOnline\obj\Debug\APKOnline.dll
 D:\Work Project\Repository\APK\APKOnline\obj\Debug\APKOnline.pdb
+D:\Work Project\Repository\APK\APKOnline\obj\Debug\APKOnline.csprojAssemblyReference.cache

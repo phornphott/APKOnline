@@ -2,7 +2,7 @@
     function ($scope, $stateParams, $http, $rootScope, $filter) {
         console.log($stateParams);
         $scope.SaveText = "อนุมัติ";
-        $scope.RejectText = 'ไม่อนุมติ'
+        $scope.RejectText = 'ไม่อนุมัติ'
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
         $scope.showBorders = true;

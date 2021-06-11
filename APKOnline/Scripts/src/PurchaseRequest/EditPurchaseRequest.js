@@ -342,7 +342,7 @@
                         caption: "ลบไฟล์",
                         alignment: 'center',
                         allowFiltering: false,
-                        width: 100,
+                        width: 100,                                                                                    
                         cellTemplate: function (container, options) {
                             //if (options.key.Document_Status == 0) {
 
@@ -389,7 +389,19 @@
         };
         $scope.CancelDocuments = function () {
 
-            window.location = '#/PurchaseRequest/ListPurchaseRequest';
+            if ($scope.listfiledelete.length > 0 || $scope.listupdate.length > 0) {
+                swal({
+                    title: 'Information',
+                    text: "มีการแก้ไขข้อมูลที่ยังไม่ได้บันทึก ๖้องการยกเลิกการแก้ไขข้อมูล",
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#6EAA6F",
+                    confirmButtonText: 'OK'
+                })
+            }
+            else {
+                window.location = '#/PurchaseRequest/ListPurchaseRequest';
+            }
         };
         $scope.SaveDocuments = function () {
             //if ($scope.listupdate.length > 0 || $scope.listfiledelete > 0) {

@@ -239,7 +239,8 @@
                 }, {
                     dataField: "Document_Detail_Quan",
                     caption: "Qty",
-                    alignment: "right",
+                        alignment: "right",
+                        dataType: 'number',  
                     cellTemplate: function (container, item) {
                         var data = item.data,
                             markup = formatNumber(parseFloat(data.Document_Detail_Quan).toFixed(2));
@@ -247,7 +248,8 @@
                     },
                 }, {
                     dataField: "Document_Detail_UnitPrice",
-                    caption: "ราคา/หน่วย",
+                        caption: "ราคา/หน่วย",
+                        dataType: 'number',  
                     alignment: "right",
                     cellTemplate: function (container, item) {
                         var data = item.data,
@@ -322,20 +324,23 @@
   
                    
                     if (e.parentType == 'dataRow' && e.dataField == 'Document_Detail_Quan') {
-                        $(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
-
+                        console.log(e.editorElement.data());  
+                        let instance = e.editorElement.dxNumberBox("instance");  
+                        //$(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
+                        //instance.on("keyPress", function (args) {
                           
-                            var event = args.jQueryEvent;
-                            console.log(event);
-                            if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
-                                event.stopPropagation();
-                                event.preventDefault();  
+                        //    var event = args.jQueryEvent;
+                        //    console.log(event);
+                        //    if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+                        //        event.stopPropagation();
+                        //        event.preventDefault();  
 
-                            }
-                        });
+                        //    }
+                        //});
 
 
-                        $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
+                        //$(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
+                        instance.on("valueChanged", function (args) {
                             var grid = $("#gridContainer").dxDataGrid("instance");
                             var index = e.row.rowIndex;
                             var data = grid.cellValue(index, "Document_Detail_UnitPrice");
@@ -354,19 +359,22 @@
                             grid.cellValue(index, "Document_Detail_Cog", result);
 
                         });
+
                     }
                     else if (e.parentType == 'dataRow' && e.dataField == "Document_Detail_UnitPrice") {
-                        $(e.editorElement).dxTextBox("instance").on("keyPress", function (args) {
+                        console.log(e.editorElement.data());
+                        let instance = e.editorElement.dxNumberBox("instance");  
+                        //instance.on("keyPress", function (args) {
 
-                            var event = args.jQueryEvent;
-                            console.log(event);
-                            if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
-                                event.stopPropagation();
-                                event.preventDefault();
+                        //    var event = args.jQueryEvent;
+                        //    console.log(event);
+                        //    if (event.which != 8 && event.which != 46 && event.which != 0 && (event.which < 48 || event.which > 57)) {
+                        //        event.stopPropagation();
+                        //        event.preventDefault();
 
-                            }
-                        });
-                        $(e.editorElement).dxTextBox("instance").on("valueChanged", function (args) {
+                        //    }
+                        //});
+                        instance.on("valueChanged", function (args) {
                             var grid = $("#gridContainer").dxDataGrid("instance");
                             var index = e.row.rowIndex;
                             var data = grid.cellValue(index, "Document_Detail_Quan");

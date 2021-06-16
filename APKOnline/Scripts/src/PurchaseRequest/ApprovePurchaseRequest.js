@@ -15,12 +15,12 @@
         $scope.Document_Group = 0;
         $scope.Objective = 0;
         $scope.Document_Term = 0;
-        $scope.Document_ID = Math.floor(Math.random() * 10000); 
+        $scope.Document_ID = Math.floor(Math.random() * 1000000); 
         $scope.tmpfolder=Math.floor(Math.random() * 1000000);
         $scope.Document_Vnos = "";
         $scope.ProjectSelect = "";
         $scope.ProjectSelect = $scope.RadioValue[0];
-        console.log($scope.ProjectSelect);
+        console.log($scope.Document_ID);
         $scope.JobVisible = false;
         $scope.radioGroup = {
             eventRadioGroupOptions: {

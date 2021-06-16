@@ -585,13 +585,17 @@ namespace APKOnline.DBHelper
                 da.SelectCommand.Transaction = myTran;
                 tmp = new DataTable();
                 da.Fill(tmp);
+
+                decimal dep_amount = 0;
                 foreach (DataRow dr in tmp.Rows)
                 {
-                    amount = amount + Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
-                    amount = Math.Round(amount, 2);
+                    dep_amount = dep_amount + Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
+                    dep_amount = Math.Round(dep_amount, 2);
                 }
 
-                if (Dep_Budget < amount)
+                dep_amount += amount;
+
+                if (Dep_Budget < dep_amount)
                 {
                     errMsg = "ไม่สามารถบันทึกได้เนื่องจากยอดรวมมากกว่างบประมาณอนุมัติของแผนกในเดือนปัจจุบัน.";
                 }
@@ -679,6 +683,11 @@ namespace APKOnline.DBHelper
                     cmd.Transaction = myTran;
                     cmd.ExecuteNonQuery();
 
+
+
+
+
+
                     myTran.Commit();
 
                     string sourcePath = System.Web.Hosting.HostingEnvironment.MapPath("~/tmpUpload/" + Header.folderUpload + "/");
@@ -710,6 +719,10 @@ namespace APKOnline.DBHelper
                         }
                     }
                 }
+
+
+
+
             }
             catch (Exception ex)
             {

@@ -115,6 +115,8 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
         $scope.ENDDATE = new Date($scope.MONTHDATE.getFullYear(), $scope.MONTHDATE.getMonth(), getDaysInMonth(($scope.MONTHDATE.getMonth() + 1), $scope.MONTHDATE.getFullYear()));
         $scope.MONTHS = String($scope.MONTHDATE.getMonth() + 1);
 
+
+
         $http.get("api/Report/DashBroad/" + localStorage.getItem("StaffID") + "?").then(function (data) {
             console.log(data);
             $scope.ListReportBudgets = data.data.Results.DepAmount;
@@ -141,91 +143,91 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
                         }
                     }
                 ],
-                title: "Sum Amount by Department",
+                title: "Sum Amount by Department [" + String($scope.MONTHDATE.getMonth() + 1) + "/" + String($scope.MONTHDATE.getFullYear()) + "]" ,
                 "export": {
                     enabled: true
                 },
-                onPointClick: function (e) {
+                //onPointClick: function (e) {
 
-                    $scope.ShowSumdept = 0;
-                    //var point = e.target;
-                    console.log(e.target.argument);
-
-
-                    $http.get("api/Report/DashBroadByDepartment?Dep=" + e.target.argument).then(function (data) {
-
-                        $scope.ListReportBudgets = data.data.Results.DepAmount;
-                        $scope.ListReportPOPR = data.data.Results.PRPOData;
-                        var SeriesName = data.data.Results.Department[0].Name;
-                        $scope.chartOptions = {
-                            size: {
-                                width: 100 + '%'
-                            },
-
-                            palette: "soft",
-                            dataSource: $scope.ListReportBudgets,
-
-                            displayMode: 'stagger',
-                            series: {
-                                argumentField: "date",
-                                valueField: "Amount",
-                                name: SeriesName,
-                                type: "bar",
-                                ignoreEmptyPoints: true,
-
-                            },
-                            title: "Sum Amount Department by Date",
-                            "export": {
-                                enabled: true
-                            },
-                            legend: {
-                                verticalAlignment: "bottom",
-                                horizontalAlignment: "center"
-                            },
-                            onPointClick: function (e) {
+                //    $scope.ShowSumdept = 0;
+                //    //var point = e.target;
+                //    console.log(e.target.Document_Dep);
 
 
-                            },
+                //    $http.get("api/Report/DashBroadByDepartment?Dep=" + e.target.argument).then(function (data) {
 
-                        };
-                        $scope.chart1Options = {
-                            size: {
-                                width: 100 + '%'
-                            },
+                //        $scope.ListReportBudgets = data.data.Results.DepAmount;
+                //        $scope.ListReportPOPR = data.data.Results.PRPOData;
+                //        var SeriesName = data.data.Results.Department[0].Name;
+                //        $scope.chartOptions = {
+                //            size: {
+                //                width: 100 + '%'
+                //            },
 
-                            palette: "soft",
-                            dataSource: $scope.ListReportPOPR,
-                            commonSeriesSettings: {
-                                argumentField: "Document_Vnos",
-                                type: "bar",
-                                hoverMode: "allArgumentPoints",
-                                selectionMode: "allArgumentPoints",
-                                label: {
-                                    visible: true,
-                                    format: {
-                                        type: "fixedPoint",
-                                        precision: 2
-                                    }
-                                }
-                            },
-                            series: [
-                                { valueField: "POAmount", name: "PO Amount" },
-                                { valueField: "PRAmount", name: "PR Amount" },
+                //            palette: "soft",
+                //            dataSource: $scope.ListReportBudgets,
 
-                            ],
-                            title: "Sum Amount Department by Date",
-                            "export": {
-                                enabled: true
-                            },
-                            legend: {
-                                verticalAlignment: "bottom",
-                                horizontalAlignment: "center"
-                            },
+                //            displayMode: 'stagger',
+                //            series: {
+                //                argumentField: "date",
+                //                valueField: "Amount",
+                //                name: SeriesName,
+                //                type: "bar",
+                //                ignoreEmptyPoints: true,
 
-                        };
-                    });
+                //            },
+                //            title: "Sum Amount Department by Date",
+                //            "export": {
+                //                enabled: true
+                //            },
+                //            legend: {
+                //                verticalAlignment: "bottom",
+                //                horizontalAlignment: "center"
+                //            },
+                //            onPointClick: function (e) {
 
-                },
+
+                //            },
+
+                //        };
+                //        $scope.chart1Options = {
+                //            size: {
+                //                width: 100 + '%'
+                //            },
+
+                //            palette: "soft",
+                //            dataSource: $scope.ListReportPOPR,
+                //            commonSeriesSettings: {
+                //                argumentField: "Document_Vnos",
+                //                type: "bar",
+                //                hoverMode: "allArgumentPoints",
+                //                selectionMode: "allArgumentPoints",
+                //                label: {
+                //                    visible: true,
+                //                    format: {
+                //                        type: "fixedPoint",
+                //                        precision: 2
+                //                    }
+                //                }
+                //            },
+                //            series: [
+                //                { valueField: "POAmount", name: "PO Amount" },
+                //                { valueField: "PRAmount", name: "PR Amount" },
+
+                //            ],
+                //            title: "Sum Amount Department by Date",
+                //            "export": {
+                //                enabled: true
+                //            },
+                //            legend: {
+                //                verticalAlignment: "bottom",
+                //                horizontalAlignment: "center"
+                //            },
+
+                //        };
+                //    });
+
+                //},
                 onLegendClick: function (e) {
                     var arg = e.target;
 

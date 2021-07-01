@@ -1,6 +1,7 @@
 ﻿angular.module('ApkApp').controller('ApprovePOController', ['$scope', '$stateParams', '$http', '$rootScope', '$filter',
     function ($scope, $stateParams, $http, $rootScope, $filter) {
         $scope.SaveText = "อนุมัติ";
+        $scope.RejectText = 'ไม่อนุมัติ'
         $scope.showColumnLines = true;
         $scope.showRowLines = true;
         $scope.showBorders = true;
@@ -170,6 +171,40 @@
                 window.location = '#/PurchaseOrder/ListPOApprove';
             });
         };
-
+        $scope.RejectDocuments = function () {
+            swal({
+                title: "ยืนยันไม่อนุมัติเอกสาร",
+                text: "ไม่อนุมัติรายการสั่งซื้อ!",
+                icon: "info",
+                buttons: true,
+                dangerMode: false,
+            })
+                .then((willSave) => {
+                    console.log(willSave)
+                    if (willSave) {
+                        var Header = {
+                            "Document_Id": $stateParams.id,
+                            //"Document_Depid": $scope.Document_Depid,
+                            "Document_CreateUser": localStorage.getItem('StaffID'),
+                        };
+                        console.log(Header);
+                        $http.post("api/PO/RejectPOData?", Header).then(function successCallback(response) {
+                            console.log(response);
+                            if (response.data.StatusCode > 1) {
+                                swal({
+                                    title: 'Information',
+                                    text: response.data.Messages,
+                                    type: "info",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#6EAA6F",
+                                    confirmButtonText: 'OK'
+                                })
+                            }
+                            else { window.location = '#/PurchaseOrder/ListPOApprove'; }
+                            //
+                        });
+                    }
+                });
+        };
     }
 ])

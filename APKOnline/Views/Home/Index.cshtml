@@ -253,7 +253,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a ui-sref="/ReportBudget"><i class="fa fa-circle-o"></i> รายงานงบประมาณ</a></li>
-                            <li g-show="DepartmentID == 99" ><a ui-sref="/PurchaseRequestReport"><i class="fa fa-circle-o"></i> รายงานข้อมูลการขอนุมัติงบประมาณ</a></li>
+                            <li ng-show=" DepartmentID == 99" ><a ui-sref="/PurchaseRequestReport"><i class="fa fa-circle-o"></i> รายงานข้อมูลการขอนุมัติงบประมาณ</a></li>
                         </ul>
                     </li>
                     <li class="treeview" ng-show="DepartmentID == 99">

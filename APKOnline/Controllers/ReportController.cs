@@ -13,5 +13,9 @@ namespace APKOnline.Controllers
         {
             return View();
         }
+        public ActionResult PurchaseRequestReport()
+        {
+            return View();
+        }
     }
 }

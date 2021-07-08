@@ -128,5 +128,62 @@ namespace APKOnline.Controllers.Api.Report
             resData.Results = ds;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
+
+        [HttpGet]
+        [ActionName("PrepareReportPR")]
+        public HttpResponseMessage GETPrepareReportPR()
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+
+            dt = Reportrepository.GetDEP();
+            ds.Tables.Add(dt);
+            DataTable dtstatus = Reportrepository.GetPRStatus();
+            ds.Tables.Add(dtstatus);
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+        [HttpGet]
+        [ActionName("ReportPR")]
+        public HttpResponseMessage GETReportPR(DateTime startdate, DateTime finishdate, int dep, int status)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+
+            DataTable dtHeaderData = Reportrepository.GetPRReport(startdate, finishdate, dep, status, ref errMsg);
+
+            ds.Tables.Add(dtHeaderData);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
     }
 }

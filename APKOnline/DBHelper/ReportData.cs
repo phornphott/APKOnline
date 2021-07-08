@@ -16,6 +16,9 @@ namespace APKOnline.DBHelper
         DataSet GetDashBroadData(int id, ref string errMsg);
         DataSet GetDashBroadByDepartment(int id, ref string errMsg);
         int getdepid(string dep);
+        DataTable GetDEP();
+        DataTable GetPRStatus();
+        DataTable GetPRReport(DateTime startdate, DateTime finishdate, int dep, int status, ref string errMsg);
     }
 
     public class ReportData: IReportData
@@ -185,6 +188,85 @@ DataTable poDepAmount = DBHelper.List(sql);
             }
 
             return depid;
+        }
+
+        public DataTable GetDEP()
+        {
+            string sql = "Select DEPid AS ID,DEPdescT AS Name from Department";
+            DataTable dt = DBHelper.List(sql);
+            dt.TableName = "Department";
+            return dt;
+        }
+        public DataTable GetPRStatus()
+        {
+            string sql = "Select  0 AS ID,'รออนุมัติ' AS Name  ";
+            DataTable dt = DBHelper.List(sql);
+
+
+            DataRow drow = dt.NewRow();
+            drow[0] = 1;
+            drow[1] = "รับทราบ";
+            dt.Rows.Add(drow);
+            drow = dt.NewRow();
+            drow[0] = 2;
+            drow[1] = "อนุมัติ";
+            dt.Rows.Add(drow);
+            drow = dt.NewRow();
+            drow[0] = 3;
+            drow[1] = "สร้างเอกสารสั่งซื้อ";
+            dt.Rows.Add(drow);
+            drow = dt.NewRow();
+            drow[0] = 4;
+            drow[1] = "อนุมัติเอกสารสั่งซื้อ";
+            dt.Rows.Add(drow);
+            drow = dt.NewRow();
+            drow[0] = 9;
+            drow[1] = "ไม่อนุมัติ";
+            dt.Rows.Add(drow);
+
+            dt.TableName = "Status";
+            return dt;
+        }
+        public DataTable GetPRReport(DateTime startdate, DateTime finishdate, int dep, int status, ref string errMsg)
+        {
+            DataTable dt = new DataTable();
+            string tablename = "DocumentPR_Header";
+
+            try
+            {
+                string strSQL = "";
+
+                strSQL = "\r\n  " +
+                " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
+                ",CASE WHEN p.Document_Status = 0 THEN 'รออนุมัติ' WHEN p.Document_Status = 1 THEN 'รับทราบ' WHEN p.Document_Status = 2 THEN 'อนุมัติ' " +
+                " WHEN p.Document_Status = 3 THEN 'สร้างเอกสารสั่งซื้อ' WHEN p.Document_Status = 4 THEN 'อนุมัติเอกสารสั่งซื้อ' ELSE 'ไม่อนุมัติ' END AS DocStatus" +
+                " FROM " + tablename + " p " +
+                " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+
+                " where Document_Date BETWEEN '"+startdate + "' AND  DATEADD(day,1,'" + finishdate + "')";
+
+
+                if (dep > 0 )
+                {
+                    strSQL += " AND p.Document_Dep=" + dep;
+                }
+                if (status >= 0)
+                {
+                    strSQL += " AND p.Document_Status=" + status;
+                }
+                dt = DBHelper.List(strSQL);
+            }
+            catch (Exception e)
+            {
+                errMsg = e.Message;
+            }
+
+            dt.TableName = "PRReport";
+
+            return dt;
         }
     }
 }

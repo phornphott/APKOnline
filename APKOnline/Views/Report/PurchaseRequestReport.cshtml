@@ -1,0 +1,78 @@
+﻿<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    @*<div class="pull-right">
+                            <button type="button" class="btn btn-block btn-primary btn-sm" style="width:60px;">New</button>
+                        </div>*@
+                    <h3 class="box-title">รายงานข้อมูลการขอนุมัติงบประมาณ</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">ช่วงเวลา : </label>
+                                <div class="col-sm-3">
+
+                                    <div class="form-group">
+
+                                        <div dx-date-box="dateBox.dateStart"></div>
+                                    </div>
+                                </div>
+                                <label class="col-sm-1 control-label">ถึง : </label>
+                                <div class="col-sm-3">
+
+                                    <div class="form-group">
+
+                                        <div dx-date-box="dateBox.dateFinish"></div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label for="Dept" class="col-sm-3 control-label">แผนก : <a style="color:red">*</a></label>
+                                <div class="col-sm-8">
+                                    <div class="col-xs-10" id="Dept" style="height: 32px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label for="Dept" class="col-sm-3 control-label">สถานะ : <a style="color:red">*</a></label>
+                                <div class="col-sm-8">
+                                    <div class="col-xs-10" id="Status" style="height: 32px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+
+                            <button type="submit" class="btn btn-success" ng-click="getReport()"><i class="fa fa-search"></i> ค้นหา</button>
+
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="gridContainer" dx-data-grid="dataGridOptions"></div>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    #gridContainer {
+        height: 100%;
+    }
+</style>

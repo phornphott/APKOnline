@@ -163,6 +163,7 @@
     <Content Include="Scripts\src\PurchaseOrder\EditPreviewPO.js" />
     <Content Include="Scripts\src\PurchaseRequest\EditPurchaseRequest.js" />
     <Content Include="Scripts\src\PurchaseRequest\ListPreview.js" />
+    <Content Include="Scripts\src\Report\PurchaseRequestReport.js" />
     <Content Include="UploadPage\popupUploadfile.aspx" />
     <Content Include="Reports\PrintPreview.aspx" />
     <Content Include="Scripts\angular-ui-router.js" />
@@ -7451,6 +7452,7 @@
     <Content Include="Views\PurchaseRequest\ListPreviewPurchaseRequest.cshtml" />
     <Content Include="Views\PurchaseOrder\EditPreviewPO.cshtml" />
     <Content Include="Views\ManageStaff\ManageBudgetDep.cshtml" />
+    <Content Include="Views\Report\PurchaseRequestReport.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

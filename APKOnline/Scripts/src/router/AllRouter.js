@@ -349,4 +349,20 @@
                 }]
             }
         })
+        .state('/PurchaseRequestReport', {
+            url: "/PurchaseRequestReport",
+            templateUrl: '\Report/PurchaseRequestReport',
+            controller: 'PurchaseRequestReportController',
+            resolve: {
+                lazyLoad: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([
+                        {
+                            name: 'AceApp',
+                            files: [
+                                'Scripts/src/Report/PurchaseRequestReport.js'
+                            ]
+                        }])
+                }]
+            }
+        })
 });

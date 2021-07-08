@@ -27,6 +27,7 @@ namespace APKOnline.DBHelper
         DataTable GetListPO(int id,ref string errMsg);
         DataTable GetPRDataForCreatePO(int DeptID, ref string errMsg);
         int ApprovePO(int Document_Id, int StaffID, int DeptID, ref string errMsg);
+        int RejectPO(int Document_Id, int StaffID, ref string errMsg);
         DataTable GetListPOForApprove(int id, ref string errMsg);
         DataTable GetPOHeaderData(int Document_id, int staffid, ref string errMsg);
         DataTable GetDetailData(int Document_Detail_Hid, ref string errMsg);
@@ -418,6 +419,7 @@ namespace APKOnline.DBHelper
             {
                 string strSQL = "\r\n  " +
                       " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                      ",CASE WHEN p.Document_Status = 0 THEN 'รออนุมัติ' WHEN p.Document_Status = 1 THEN 'รับทราบ' WHEN p.Document_Status = 2 THEN 'อนุมัติ' ELSE 'ไม่อนุมัติ' END AS DocStatus" +
                       ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff " +
                       " ,g.GroupName AS 'Group', Objective_Name AS Objective,Category_Name AS Category" +
                       " FROM " + tablename + " p " +
@@ -945,6 +947,61 @@ namespace APKOnline.DBHelper
 
             return document_id;
 
+        }
+        public int RejectPO(int Document_Id, int StaffID, ref string errMsg)
+        {
+            int document_id = 0;
+            string sqlQuery = "";
+            SqlCommand cmd = new SqlCommand();
+            SqlParameter shipperIdParam = null;
+
+            decimal budget = 0;
+            decimal doc_cog = 0;
+            int docLevel = 0;
+            int ApproveLevel = 0;
+            try
+            {
+
+                SqlConnection conn = DBHelper.sqlConnection();
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                cmd = conn.CreateCommand();
+                //myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
+                cmd.Connection = conn;
+
+                sqlQuery = "INSERT INTO ApprovePO (Approve_Documen_Id,Approve_Create_Level,Approve_Current_Level,Approve_Status,Approve_Order,Approve_By) VALUES" +
+            " (@Approve_Documen_Id,@Approve_Create_Level,@Approve_Current_Level,9,0,@Approve_By  )";
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@Approve_Documen_Id", Document_Id);
+                cmd.Parameters.AddWithValue("@Approve_Create_Level", docLevel);
+                cmd.Parameters.AddWithValue("@Approve_Current_Level", ApproveLevel);
+                cmd.Parameters.AddWithValue("@Approve_By", StaffID);
+                cmd.ExecuteNonQuery();
+
+                sqlQuery = "Update DocumentPO_Header SET " +
+                            "Document_EditUser = @Document_EditUser,Document_EditDate=GETDATE(),Document_Status =9 WHERE Document_Id = @Document_Id";
+                cmd.CommandText = sqlQuery;
+                cmd.CommandTimeout = 30;
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("@Document_Id", Document_Id);
+                cmd.Parameters.AddWithValue("@Document_EditUser", StaffID);
+                cmd.ExecuteNonQuery();
+
+
+
+                //document_id = (int)shipperIdParam.Value;
+
+            }
+            catch (Exception ex)
+            {
+                errMsg = ex.Message;
+            }
+
+            return document_id;
         }
         public DataTable GeneratePONo(int id, ref string errMsg)
         {

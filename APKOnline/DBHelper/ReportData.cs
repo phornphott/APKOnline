@@ -39,10 +39,10 @@ namespace APKOnline.DBHelper
                 if (StaffCode != 0)
                 {
                     //Addition += " AND s.StaffCode=" + StaffCode;
-                    Addition += " AND p.Document_CreateUser=" + StaffCode;
+                    if (StaffCode != 1) Addition += " AND p.Document_CreateUser=" + StaffCode;
                 }
                 //if (DEPcode != null && StaffCode != "undefined")
-                if (DEPcode != 0)
+                if ((DEPcode != 0) && (DEPcode != 99))
                 {
                     Addition += " AND p.Document_Dep=" + DEPcode;
                 }
@@ -75,7 +75,9 @@ namespace APKOnline.DBHelper
             string date = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).ToString("yyyy-MM-dd", new CultureInfo("en-US"));
             int LastdayofMonth = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month);
             string todate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, LastdayofMonth).ToString("yyyy-MM-dd", new CultureInfo("en-US"));
-
+            int Imonth = DateTime.Today.Month;
+            int Iyear = DateTime.Today.Year;
+            string Monthname = "DEPmonth" + Imonth.ToString();
             //date = "2020-04-01";
             //todate = "2020-04-30";
 
@@ -91,8 +93,8 @@ namespace APKOnline.DBHelper
             }
             try
             {
-                sql = " select SUM(Document_NetSUM) AS Amount,Document_Dep  ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,REPLACE(REPLACE(CAST(DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
-                      " from DocumentPO_Header h " +
+                sql = " select SUM(Document_NetSUM) AS Amount,Document_Dep  ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,'งบประมาณที่ใช้ : ' + REPLACE(REPLACE(CAST(DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
+                      " from DocumentPR_Header h " +
                       " left join Department d on h.Document_Dep = d.DEPid " +
                       " where Document_Date between  '" + date + "'  and '" + todate + "' ";
                 if (depid != 99)
@@ -102,8 +104,27 @@ namespace APKOnline.DBHelper
                 }
                 sql +=   " group by Document_Dep,CAST(DEPcode as NVARCHAR(max)),CAST(DEPdescT as NVARCHAR(max))";
                 errMsg = sql;
-DataTable poDepAmount = DBHelper.List(sql);
+                DataTable poDepAmount = DBHelper.List(sql);
                 poDepAmount.TableName = "DepAmount";
+
+                //Sum of Month
+                if (id != 1)
+                {
+                    sql = " select h." + Monthname + " AS Amount,h.DEPid as Document_Dep ,CAST(d.DEPcode as NVARCHAR(max)) As DEPCode,'งบประมาณทั้งหมด : ' + REPLACE(REPLACE(CAST(d.DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
+                    " from BudgetOfYearByDepartment h " +
+                    " left join Department d on h.DEPid = d.DEPid " +
+                    " where BudgetYear = " + Iyear + "";
+                    if (depid != 999)
+                    {
+                        sql += " and h.DEPid = " + depid + "";
+                    }
+                    DataTable AllDepAmount = DBHelper.List(sql);
+                    if (AllDepAmount.Rows.Count > 0)
+                        poDepAmount.ImportRow(AllDepAmount.Rows[0]);
+                }
+                
+
+
                 ds.Tables.Add(poDepAmount);
             }
 

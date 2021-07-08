@@ -88,13 +88,20 @@
                     dataField: "Staff",
                     caption: "พนักงาน"
                 }, {
+                    dataField: "DocStatus",
+                    alignment: "center",
+                    caption: "สถานะ",
+                    editorOptions: {
+                        disabled: true
+                    }
+                }, {
                     dataField: "Document_Status",
                     caption: "พิมพ์",
                     cellTemplate: function (container, item) {
                         var data = item.data,
+                            markup = "<a ></a>";
+                        if ((data.Document_Status == 2)) {
                             markup = "<a > พิมพ์เอกสาร </a>";
-                        if (data.Document_Status < 2) {
-                            markup = "<a > </a>";
                         }
                         container.append(markup);
                     },
@@ -190,7 +197,7 @@
                 }, 700);
 
             }
-            if (e.column.dataField === "Document_Status") {
+            if ((e.column.dataField === "Document_Status") && ((e.data.Document_Status == 2)))  {
                 setTimeout(function () {
                     window.open('/Reports/PrintPreview.aspx?Parameter=' + e.data.Document_Id, '_blank');
                 }, 700);

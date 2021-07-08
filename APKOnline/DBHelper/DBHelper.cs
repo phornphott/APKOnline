@@ -14,7 +14,7 @@ namespace APKOnline.DBHelper
         //private static string szDbUser = "sa";
         //private static string szDbPassword = "dawn0200";
 
-        private static SqlConnection SqlConnectionDb()
+        public static SqlConnection SqlConnectionDb()
         {
             string connStrFmt = "Data Source={0}; Initial Catalog={1};User ID={2}; Password={3};";
             connStrFmt = string.Format(connStrFmt, ConfigurationManager.AppSettings["DBServer"]

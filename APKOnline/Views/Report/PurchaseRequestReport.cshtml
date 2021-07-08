@@ -11,10 +11,17 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <div class="row">
+                    <div class="row">                       
                         <div class="col-sm-8">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">ช่วงเวลา : </label>
+                                <label class="col-sm-2 control-label">ช่วงเวลา : </label>                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-group">                               
+                                <label class="col-sm-1 control-label">จาก : </label>
                                 <div class="col-sm-3">
 
                                     <div class="form-group">
@@ -22,6 +29,14 @@
                                         <div dx-date-box="dateBox.dateStart"></div>
                                     </div>
                                 </div>
+                            </div>                          
+                        </div>
+
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-group">
                                 <label class="col-sm-1 control-label">ถึง : </label>
                                 <div class="col-sm-3">
 
@@ -35,6 +50,8 @@
                             </div>
 
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-5">
                             <div class="form-group">
                                 <label for="Dept" class="col-sm-3 control-label">แผนก : <a style="color:red">*</a></label>
@@ -43,6 +60,8 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-5">
                             <div class="form-group">
                                 <label for="Dept" class="col-sm-3 control-label">สถานะ : <a style="color:red">*</a></label>
@@ -62,10 +81,11 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div id="gridContainer" dx-data-grid="dataGridOptions"></div>
                     </div>
-                </div>
+                    </div>
                 </div>
         </div>
     </div>

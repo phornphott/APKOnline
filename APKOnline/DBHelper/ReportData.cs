@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -267,7 +268,8 @@ namespace APKOnline.DBHelper
                 " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
                 " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
 
-                " where Document_Date BETWEEN '"+startdate + "' AND  DATEADD(day,1,'" + finishdate + "')";
+                //" where Document_Date BETWEEN '"+startdate + "' AND  DATEADD(day,1,'" + finishdate + "')";
+                " where Document_Date BETWEEN @startdate AND @finishdate";
 
 
                 if (dep > 0 )
@@ -278,7 +280,12 @@ namespace APKOnline.DBHelper
                 {
                     strSQL += " AND p.Document_Status=" + status;
                 }
-                dt = DBHelper.List(strSQL);
+                SqlConnection conn = DBHelper.SqlConnectionDb();
+                var dataAdapter = new SqlDataAdapter(strSQL, conn);
+                dataAdapter.SelectCommand.Parameters.Clear();
+                dataAdapter.SelectCommand.Parameters.Add("@startdate", SqlDbType.DateTime).Value = startdate;
+                dataAdapter.SelectCommand.Parameters.Add("@finishdate", SqlDbType.DateTime).Value = finishdate;              
+                dataAdapter.Fill(dt);            
             }
             catch (Exception e)
             {

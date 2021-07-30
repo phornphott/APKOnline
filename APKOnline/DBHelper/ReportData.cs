@@ -284,7 +284,7 @@ namespace APKOnline.DBHelper
                 var dataAdapter = new SqlDataAdapter(strSQL, conn);
                 dataAdapter.SelectCommand.Parameters.Clear();
                 dataAdapter.SelectCommand.Parameters.Add("@startdate", SqlDbType.DateTime).Value = startdate;
-                dataAdapter.SelectCommand.Parameters.Add("@finishdate", SqlDbType.DateTime).Value = finishdate;              
+                dataAdapter.SelectCommand.Parameters.Add("@finishdate", SqlDbType.DateTime).Value = finishdate.AddDays(1);              
                 dataAdapter.Fill(dt);            
             }
             catch (Exception e)

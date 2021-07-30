@@ -75,6 +75,8 @@ angular.module('ApkApp').controller('IndexController', function ($scope, $rootSc
     $scope.LastName = localStorage.getItem('StaffLastName');
     $scope.PictureFile = localStorage.getItem('StaffImage');
     $scope.DepartmentID = localStorage.getItem('StaffDepartmentID');
+    $scope.StaffLevel = localStorage.getItem('StaffLevel');
+
     $scope.LoadNotification();
     setInterval(function () {
         $scope.LoadNotification();

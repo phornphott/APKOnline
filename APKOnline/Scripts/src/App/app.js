@@ -51,6 +51,15 @@ angular.module('ApkApp').controller('IndexController', function ($scope, $rootSc
 
 
         });
+        $http.post("api/Staffs/GetNotiPOCreate/" + localStorage.getItem("StaffDepartmentID") + "?").then(function (data) {
+            $scope.data = data;
+            console.log($scope.data);
+
+            $scope.Noti3 = $scope.data.data.Results;
+
+
+        });
+        
         $http.post("api/Staffs/GetNotiPreview/" + localStorage.getItem("StaffID") + "?").then(function (data) {
             $scope.data = data;
             console.log($scope.data);
@@ -75,6 +84,7 @@ angular.module('ApkApp').controller('IndexController', function ($scope, $rootSc
     $scope.LastName = localStorage.getItem('StaffLastName');
     $scope.PictureFile = localStorage.getItem('StaffImage');
     $scope.DepartmentID = localStorage.getItem('StaffDepartmentID');
+    $scope.DepartmentName = localStorage.getItem('StaffDepartmentName');
     $scope.StaffLevel = localStorage.getItem('StaffLevel');
 
     $scope.LoadNotification();

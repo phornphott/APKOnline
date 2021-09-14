@@ -775,6 +775,28 @@ namespace APKOnline.Controllers
             resData.Results = po;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
+        [HttpPost]
+        [ActionName("GetNotiPOCreate")]
+        public async Task<HttpResponseMessage> GetNotiPOCreate(int id)
+        {
+            Result resData = new Result();
+
+            int po = await repository.GetListPOForCreate(id);
+
+            if ((id == 11) || (id == 99))
+            {
+            }
+            else
+            {
+                po = 0;
+            }
+
+            resData.StatusCode = (int)(StatusCodes.Succuss);
+            resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+
+            resData.Results = po;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
         #endregion
     }
 }

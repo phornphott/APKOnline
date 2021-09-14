@@ -42,6 +42,7 @@
                 }
             }
         };
+        $scope.isapprove = false;
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
         $http.get("api/PR/PreparePageData/0?type=0").then(function (data) {
@@ -51,7 +52,7 @@
             $rootScope.JOB = data.data.Results.JOB;
             $rootScope.Account = data.data.Results.Account;
             $rootScope.DEP = data.data.Results.DEP;
-            
+
 
             var Detail = data.data.Results.Detail;
             $rootScope.DEP.splice(0, 0, {
@@ -599,8 +600,8 @@
                     "Document_CreateUser": localStorage.getItem('StaffID'),
                     "folderUpload": $scope.tmpfolder,
                     "Document_Term": $scope.Document_Term,
-                    "Document_Project": $scope.ProjectSelect
-
+                    "Document_Project": $scope.ProjectSelect,
+                    "Document_ApproveDirect": $scope.isapprove
                 };
                 console.log(Header);
                 $http.post("api/PR/SavePRData?", Header).then(function successCallback(response) {
@@ -743,6 +744,12 @@
             }, function errorCallback(response) {
             });
         }
-       
+        $scope.checkapprove = {
+            value: $scope.isapprove,
+            text: "Preview",
+            onValueChanged: function (e) {
+                $scope.isapprove = e.value;
+            }
+        };
     }
 ])

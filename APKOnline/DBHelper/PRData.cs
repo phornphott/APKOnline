@@ -393,6 +393,7 @@ namespace APKOnline.DBHelper
                             //  " left join (SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
                             //  " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level ="+ staffLevel;
 
+                            //ตามแผนก
                             string strSQL = "\r\n  SELECT distinct * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevel ELSE a.Current_Level END AS Document_Level FROM  (" +
                               "(SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
                               ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
@@ -401,7 +402,7 @@ namespace APKOnline.DBHelper
                               " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
                               " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
                               " where Document_Delete=0 AND Document_Status<2 " +
-                              " AND Document_Cog <=" + Dep_Budget + " And p.Document_Dep = '" + Depin + "'" +
+                              " AND Document_Cog <=" + Dep_Budget + " And p.Document_Dep = '" + Depin + "' And (p.Document_ApproveDirect = 0 or p.Document_ApproveDirect is null)" +
                               ") UNION ALL (" +
                               " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
                               ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT" +
@@ -411,10 +412,10 @@ namespace APKOnline.DBHelper
                               " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
                               " LEFT JOIN ApprovePROverBudget a on a.Approve_Documen_Id=p.Document_Id " +
                               " where Document_Delete=0 AND Document_Status < 2 AND a.Approve_Status = 2" +
-                              " AND Document_Cog > " + Dep_Budget + " And p.Document_Dep in ( " + Depin + ")" + ")) aa  " +
+                              " AND Document_Cog > " + Dep_Budget + " And p.Document_Dep in ( " + Depin + ")" + " And (p.Document_ApproveDirect = 0 or p.Document_ApproveDirect is null))) aa  " +
                               " left join (SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
                               " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel;
-
+                              
 
                             dt = DBHelper.List(strSQL);
 
@@ -423,6 +424,38 @@ namespace APKOnline.DBHelper
                                 dtPR = new DataTable("ListPRData");
                                 dtPR = dt.Clone();
                             }
+
+                            if (dt.Rows.Count > 0)
+                            {
+                                foreach (DataRow drw in dt.Rows)
+                                {
+                                    dtPR.ImportRow(drw);
+                                }
+                            }
+
+                            //ตามสายงาน
+                            strSQL = "\r\n  SELECT distinct * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevel ELSE a.Current_Level END AS Document_Level FROM  (" +
+                              "(SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                              ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
+                              " FROM " + tablename + " p " +
+                              " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                              " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                              " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+                              " where Document_Delete=0 AND Document_Status<2 " +
+                              " AND Document_Cog <=" + Dep_Budget + " And s.StaffDepartmentID = '" + Depin + "' And (p.Document_ApproveDirect = 1)" +
+                              ") UNION ALL (" +
+                              " SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
+                              ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT" +
+                              " FROM " + tablename + " p " +
+                              " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                              " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
+                              " LEFT JOIN Department d on d.DEPid=p.Document_Dep" +
+                              " LEFT JOIN ApprovePROverBudget a on a.Approve_Documen_Id=p.Document_Id " +
+                              " where Document_Delete=0 AND Document_Status < 2 AND a.Approve_Status = 2" +
+                              " AND Document_Cog > " + Dep_Budget + " And s.StaffDepartmentID in ( " + Depin + ")" + " And (p.Document_ApproveDirect = 1))) aa  " +
+                              " left join (SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
+                              " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel;
+                            dt = DBHelper.List(strSQL);
 
                             if (dt.Rows.Count > 0)
                             {
@@ -613,11 +646,11 @@ namespace APKOnline.DBHelper
                     string sqlQuery = "INSERT INTO DocumentPR_Header(Document_Group,Document_ExpenseType,Document_Category,Document_Objective " +
                                           ",Document_Vnos,Document_Date ,Document_Means,Document_Expect,Document_Cus,Document_Job,Document_Depid,Document_Dep,Document_Per" +
                                           ",Document_Doc,Document_Mec,Document_Desc,Document_Nolist,Document_Cog,Document_VatSUM,Document_VatPer" +
-                                          " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete,Document_Term,Document_Project) VALUES " +
+                                          " ,Document_NetSUM,Document_Status,Document_Tel,Document_CreateUser,Document_CreateDate,Document_Delete,Document_Term,Document_Project,Document_ApproveDirect) VALUES " +
                                           " (@Document_Group,@Document_ExpenseType,@Document_Category,@Document_Objective " +
                                           ",dbo.GeneratePRID(@Document_Group),GETDATE() ,@Document_Means,@Document_Expect,@Document_Cus,@Document_Job,@Document_Depid,@Document_Dep,@Document_Per" +
                                           ",@Document_Doc,@Document_Mec,@Document_Desc,@Document_Nolist,@Document_Cog,@Document_VatSUM,@Document_VatPer" +
-                                          " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0,@Document_Term,@Document_Project) SET @Document_Id=SCOPE_IDENTITY()";
+                                          " ,@Document_NetSUM,@Document_Status,@Document_Tel,@Document_CreateUser,GETDATE(),0,@Document_Term,@Document_Project,@Document_ApproveDirect) SET @Document_Id=SCOPE_IDENTITY()";
                     cmd.CommandText = sqlQuery;
                     cmd.CommandTimeout = 30;
                     cmd.CommandType = CommandType.Text;
@@ -651,7 +684,7 @@ namespace APKOnline.DBHelper
                     cmd.Parameters.AddWithValue("@Document_CreateUser", Header.Document_CreateUser);
                     cmd.Parameters.AddWithValue("@Document_Term", Header.Document_Term);
                     cmd.Parameters.AddWithValue("@Document_Project", Header.Document_Project);
-
+                    cmd.Parameters.AddWithValue("@Document_ApproveDirect", Header.Document_ApproveDirect);
                     cmd.Transaction = myTran;
                     cmd.ExecuteNonQuery();
 

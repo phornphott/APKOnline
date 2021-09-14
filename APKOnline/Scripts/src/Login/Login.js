@@ -35,6 +35,7 @@
                         localStorage.setItem('StaffFirstName', $scope.login.StaffFirstName);
                         localStorage.setItem('StaffLastName', $scope.login.StaffLastName);
                         localStorage.setItem('StaffDepartmentID', $scope.login.StaffDepartmentID);
+                        localStorage.setItem('StaffDepartmentName', $scope.login.DepartmentName);
                         localStorage.setItem('StaffLevelID', $scope.login.StaffLevelID);
                         localStorage.setItem('StaffLevel', $scope.login.StaffLevel);
                         localStorage.setItem('isPreview', $scope.login.isPreview);

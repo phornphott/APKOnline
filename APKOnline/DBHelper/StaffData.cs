@@ -54,6 +54,8 @@ namespace APKOnline.DBHelper
         Task<int> GetListPreview(int StaffID);
         Task<int> GetListPOForApprove(int id);
 
+        Task<int> GetListPOForCreate(int id);
+
         Task<DataTable> GetBudgetByDep(int id);
         bool SetBudget(BudgetByDep item);
     }
@@ -68,9 +70,10 @@ namespace APKOnline.DBHelper
 
             try
             {
-                strSQL = "\r\n SELECT s.*, isPreview " +
+                strSQL = "\r\n SELECT s.*, isPreview, ISNULL(d.DEPdescT,'Administrator') as DepartmentName " +
                          "\r\n FROM Staffs s " +
                          "\r\n Left join StaffAuthorize a on a.StaffID = s.StaffID" +
+                         "\r\n Left join Department d on s.StaffDepartmentID = d.DEPid" +
                          "\r\n WHERE s.StaffLogin='" + username + "'" +
                          "\r\n AND s.StaffPassword='" + Base64Encode(password) + "'" +
                          "\r\n AND s.Deleted=0;";
@@ -772,6 +775,23 @@ namespace APKOnline.DBHelper
             {
                 new SqlParameter() {ParameterName = "@StaffLevel", SqlDbType = SqlDbType.Int, Value = staffLevel},
 
+            };
+
+            result = result + await DBHelper.ExecuteStoreProcedure(strSQL, sp);
+
+
+            return result;
+        }
+
+        public async Task<int> GetListPOForCreate(int id)
+        {       
+            int result = 0;
+            int staffid = id;
+
+            string strSQL = "GetNotiPOCreate";
+            List<SqlParameter> sp = new List<SqlParameter>()
+            {
+                new SqlParameter() {ParameterName = "@StaffDepartmentID", SqlDbType = SqlDbType.Int, Value = staffid},
             };
 
             result = result + await DBHelper.ExecuteStoreProcedure(strSQL, sp);

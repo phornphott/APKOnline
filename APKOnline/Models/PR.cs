@@ -41,6 +41,7 @@ namespace APKOnline.Models
         public int Document_Term { get; set; }
         public string Document_Project { get; set; }
         public bool isPreview { get; set; }
+        public bool Document_ApproveDirect { get; set; }
     }
 
     public class PRDetailModels

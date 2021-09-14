@@ -15,6 +15,7 @@
         $scope.detailorg = [];
         $scope.listupdate = [];
         $scope.listfiledelete = [];
+        $scope.isapprove = false;
         $scope.tmpfolder = Math.floor(Math.random() * 1000000);
         var d = new Date()
         $scope.DocDate = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();

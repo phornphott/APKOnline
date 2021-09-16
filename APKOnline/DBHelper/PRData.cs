@@ -240,8 +240,9 @@ namespace APKOnline.DBHelper
                       " SELECT distinct p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
                       " ,CAST(d.DEPdescT as NVARCHAR(max)) AS Dep,CAST(j.JOBdescT as NVARCHAR(max)) As Job ,g.GroupName AS 'Group'" +
                       " ,CAST(Objective_Name as NVARCHAR(max)) AS Objective,CAST(Category_Name as NVARCHAR(max)) AS Category" +
-                      " ,'อนุมัติ' AS SaveText,0 AS isPreview" +
-                      " FROM "+ tablename + " p LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
+                      " ,'อนุมัติ' AS SaveText,0 AS isPreview,s.StaffDepartmentID" +
+                      " FROM "+ tablename + " p " +
+                      "LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                       " LEFT JOIN JOB j on j.JOBcode = p.Document_Job" +
                       " LEFT JOIN Department d on d.DEPid = p.Document_Dep" +
                       " LEFT JOIN Category c on c.Category_Id = p.Document_Category" +
@@ -255,7 +256,14 @@ namespace APKOnline.DBHelper
                 {
                     foreach (DataRow dr in dt.Rows)
                     {
-                        DEPid = Convert.ToInt32(dr["Document_Depid"]);
+                        if (Convert.ToInt32(dr["Document_ApproveDirect"]) == 1)
+                        {
+                            DEPid = Convert.ToInt32(dr["StaffDepartmentID"]);
+                        }
+                        else
+                        {
+                            DEPid = Convert.ToInt32(dr["Document_Depid"]);
+                        }
                         DocCog = Convert.ToDecimal(dr["Document_Cog"]);
                     }
 

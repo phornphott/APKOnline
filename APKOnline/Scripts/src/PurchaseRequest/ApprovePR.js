@@ -22,6 +22,7 @@
         $http.get("api/PR/ViewPRData/" + $scope.Document_ID + "?staffid=" + localStorage.getItem('StaffID') ).then(function (data) {
             console.log(data);
             $scope.Header = data.data.Results.Header[0];
+            var FileUpload = data.data.Results.FileUpload; 
             $scope.SaveText = data.data.Results.Header[0].SaveText;
             if ($scope.SaveText == "อนุมัติ")
                 $scope.showpreview = data.data.Results.Header[0].isPreview;
@@ -205,6 +206,45 @@
                 },
                 //},
             };
+
+            console.log(FileUpload);
+            $scope.datafileGridOptions = {
+                dataSource: data.data.Results.FileUpload,
+                loadPanel: {
+                    enabled: false
+                },
+                scrolling: {
+                    mode: "infinite"
+                },
+                sorting: {
+                    mode: "multiple"
+                },
+                searchPanel: {
+                    visible: false,
+                    width: 200,
+                    placeholder: "Search..."
+                },
+                onCellClick: onCellClickViewFile,
+
+                bindingOptions: {
+                    showColumnLines: "showColumnLines",
+                    showRowLines: "showRowLines",
+                    showBorders: "showBorders",
+                    rowAlternationEnabled: "rowAlternationEnabled"
+                },
+                columnAutoWidth: true,
+                columns: [{
+                    dataField: "filename",
+                    caption: "ไฟล์",
+                    cellTemplate: function (container, item) {
+                        var data = item.data,
+                            markup = "<a >" + data.filename + "</a>";
+                        container.append(markup);
+                    },
+
+                }],
+
+            };
         });
         $scope.ListFilePR = [{}];
         $scope.checkpreview = {
@@ -304,5 +344,9 @@
         var formatNumber = function (num) {
             return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
         }
+        var onCellClickViewFile = function (e) {
+            window.open("/Upload/" + e.data.path, "popup", "width=800,height=600,left=300,top=200");
+        };
+
     }
 ])

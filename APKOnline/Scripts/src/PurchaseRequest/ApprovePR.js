@@ -30,6 +30,9 @@
                 $scope.showpreview = false;
             }
             $scope.Document_Depid = data.data.Results.Header[0].Document_Depid;
+            if (data.data.Results.Header[0].Document_ApproveDirect) {
+                $scope.Document_Depid = data.data.Results.Header[0].StaffDepartmentID;
+            }
             console.log($scope.Document_Depid);
             var Detail = data.data.Results.Detail;
             $rootScope.Account = data.data.Results.Account;
@@ -268,6 +271,7 @@
             })
                 .then((willSave) => {
                     console.log(willSave)
+                    //var depid = 
                     if (willSave) {
                         var Header = {
                             "Document_Id": $scope.Document_ID,

@@ -94,7 +94,7 @@ namespace APKOnline.DBHelper
             }
             try
             {
-                sql = " select SUM(Document_NetSUM) AS Amount,Document_Dep  ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,'งบประมาณที่ใช้ : ' + REPLACE(REPLACE(CAST(DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
+                sql = " select SUM(Document_Cog) AS Amount,Document_Dep  ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,'งบประมาณที่ใช้ : ' + REPLACE(REPLACE(CAST(DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
                       " from DocumentPR_Header h " +
                       " left join Department d on h.Document_Dep = d.DEPid " +
                       " where Document_Date between  '" + date + "'  and '" + todate + "' ";
@@ -111,7 +111,7 @@ namespace APKOnline.DBHelper
                 //Sum of Month
                 if (id != 1)
                 {
-                    sql = " select h." + Monthname + " AS Amount,h.DEPid as Document_Dep ,CAST(d.DEPcode as NVARCHAR(max)) As DEPCode,'งบประมาณทั้งหมด : ' + REPLACE(REPLACE(CAST(d.DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
+                    sql = " select h." + Monthname + " AS Amount,h.DEPid as Document_Dep ,CAST(d.DEPcode as NVARCHAR(max)) As DEPCode,'งบประมาณคงเหลือ : ' + REPLACE(REPLACE(CAST(d.DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
                     " from BudgetOfYearByDepartment h " +
                     " left join Department d on h.DEPid = d.DEPid " +
                     " where BudgetYear = " + Iyear + "";
@@ -121,7 +121,15 @@ namespace APKOnline.DBHelper
                     }
                     DataTable AllDepAmount = DBHelper.List(sql);
                     if (AllDepAmount.Rows.Count > 0)
+                    {   foreach (DataRow dr in AllDepAmount.Rows)
+                        {
+                            if(poDepAmount.Rows.Count > 0)
+                            {
+                                dr["Amount"] = Convert.ToDecimal(dr["Amount"]) - Convert.ToDecimal(poDepAmount.Rows[0]["Amount"]);
+                            }
+                        }
                         poDepAmount.ImportRow(AllDepAmount.Rows[0]);
+                    }
                 }
                 
 

@@ -141,21 +141,49 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
                 dataSource: $scope.ListReportBudgets,
                 series: [
                     {
-                        argumentField: "DEP",
+                        argumentField: "LabelDesc",
                         valueField: "Amount",
                         label: {
                             visible: true,
+                            font: {
+                                size: 16
+                            },
                             connector: {
                                 visible: true,
-                                width: 1,
-                                format: {
-                                    type: 'currency'
-                                }
+                                width: 1
+                            },
+                            position: "columns",
+                            customizeText: function (arg) {
+                                console.log(arg);
+                                return arg.valueText + " (" + arg.argument + ")";
                             }
                         }
                     }
                 ],
-                title: "Sum Amount by Department [" + String($scope.MONTHDATE.getMonth() + 1) + "/" + String($scope.MONTHDATE.getFullYear()) + "]" ,
+                customizePoint: function (e) {
+                    console.log(e);
+                    if (e.argument == "งบประมาณที่อนุมัติ") {
+                        return {
+                            color: "green"
+                        }
+                    }
+                    else if (e.argument == "งบประมาณที่รออนุมัติ") {
+                        return {
+                            color: "blue"
+                        }
+                    }
+                    else if (e.argument == "งบประมาณที่ไม่อนุมัติ") {
+                        return {
+                            color: "red"
+                        }
+                    }
+                    else if (e.argument == "งบประมาณคงเหลือ") {
+                        return {
+                            color: "Gold"
+                        }
+                    }
+                },
+                title: "Sum Amount by Department " + localStorage.getItem("StaffDepartmentName")+" [" + String($scope.MONTHDATE.getMonth() + 1) + "/" + String($scope.MONTHDATE.getFullYear()) + "]" ,
                 "export": {
                     enabled: true
                 },

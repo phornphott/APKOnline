@@ -120,6 +120,8 @@ namespace APKOnline.DBHelper
 
             return (i > 0) ? i : 0;
         }
+
+
         /// <summary>
         /// Get max id function for insert data.
         /// </summary>

@@ -80,8 +80,8 @@ namespace APKOnline.DBHelper
             int Imonth = DateTime.Today.Month;
             int Iyear = DateTime.Today.Year;
             string Monthname = "DEPmonth" + Imonth.ToString();
-            //date = "2020-04-01";
-            //todate = "2020-04-30";
+            //date = "2021-01-01";
+            //todate = "2022-01-01";
 
             string sql = "";
             int depid = 0;
@@ -96,7 +96,7 @@ namespace APKOnline.DBHelper
             try
             {
                 sql = " select SUM(Document_Cog) AS Amount,Document_Dep ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,'งบประมาณที่อนุมัติ : ' + REPLACE(REPLACE(CAST(DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
-                      ",'งบประมาณที่อนุมัติ' AS LabelDesc from DocumentPR_Header h " +
+                      ",'งบประมาณที่อนุมัติ' AS LabelDesc ,0 as status  from DocumentPR_Header h " +
                       " left join Department d on h.Document_Dep = d.DEPid " +
                       " where Document_Date between  '" + date + "'  and '" + todate + "' and Document_Status in (2)";
                 if (depid != 99)
@@ -108,7 +108,7 @@ namespace APKOnline.DBHelper
                 sql += " UNION ";
 
                 sql += " select SUM(Document_Cog) AS Amount,Document_Dep ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,'งบประมาณที่รออนุมัติ : ' + REPLACE(REPLACE(CAST(DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
-                      " ,'งบประมาณที่รออนุมัติ' AS LabelDesc from DocumentPR_Header h " +
+                      " ,'งบประมาณที่รออนุมัติ' AS LabelDesc ,1 as status from DocumentPR_Header h " +
                       " left join Department d on h.Document_Dep = d.DEPid " +
                       " where Document_Date between  '" + date + "'  and '" + todate + "' and Document_Status in (0,1)";
                 if (depid != 99)
@@ -120,7 +120,7 @@ namespace APKOnline.DBHelper
                 sql += " UNION ";
 
                 sql += " select SUM(Document_Cog) AS Amount,Document_Dep ,CAST(DEPcode as NVARCHAR(max)) As DEPCode,'งบประมาณที่ไม่อนุมัติ : ' + REPLACE(REPLACE(CAST(DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
-                      ",'งบประมาณที่ไม่อนุมัติ' AS LabelDesc from DocumentPR_Header h " +
+                      ",'งบประมาณที่ไม่อนุมัติ' AS LabelDesc ,2 as status from DocumentPR_Header h " +
                       " left join Department d on h.Document_Dep = d.DEPid " +
                       " where Document_Date between  '" + date + "'  and '" + todate + "' and Document_Status in (9) ";
                 if (depid != 99)
@@ -139,27 +139,45 @@ namespace APKOnline.DBHelper
                 if (id != 1)
                 {
                     sql = " select h." + Monthname + " AS Amount,h.DEPid as Document_Dep ,CAST(d.DEPcode as NVARCHAR(max)) As DEPCode,'งบประมาณคงเหลือ : ' + REPLACE(REPLACE(CAST(d.DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
-                    ",'งบประมาณคงเหลือ' AS LabelDesc from BudgetOfYearByDepartment h " +
+                    ",'งบประมาณคงเหลือ' AS LabelDesc ,3 as status from BudgetOfYearByDepartment h " +
                     " left join Department d on h.DEPid = d.DEPid " +
                     " where BudgetYear = " + Iyear + "";
                     if (depid != 999)
                     {
                         sql += " and h.DEPid = " + depid + "";
                     }
+
+                    sql += " UNION ";
+
+                    sql += " select h." + Monthname + " AS Amount,h.DEPid as Document_Dep ,CAST(d.DEPcode as NVARCHAR(max)) As DEPCode,'งบประมาณทั้งหมด : ' + REPLACE(REPLACE(CAST(d.DEPdescT as NVARCHAR(max)), CHAR(13), ''), CHAR(10), '') As DEP " +
+                    ",'งบประมาณทั้งหมด' AS LabelDesc ,4 as status from BudgetOfYearByDepartment h " +
+                    " left join Department d on h.DEPid = d.DEPid " +
+                    " where BudgetYear = " + Iyear + "";
+                    if (depid != 999)
+                    {
+                        sql += " and h.DEPid = " + depid + "";
+                    }
+
                     DataTable AllDepAmount = DBHelper.List(sql);
                     if (AllDepAmount.Rows.Count > 0)
                     {   foreach (DataRow dr in AllDepAmount.Rows)
                         {
-                            if(poDepAmount.Rows.Count > 0)
+                            if(poDepAmount.Rows.Count > 0 && dr["status"].ToString() == "3")
                             {
+                                decimal useBudget = 0;
                                 foreach (DataRow drow in poDepAmount.Rows)
                                 {
-                                    if (drow["DEP"].ToString().Contains("งบประมาณที่อนุมัติ"))
-                                        dr["Amount"] = Convert.ToDecimal(dr["Amount"]) - Convert.ToDecimal(poDepAmount.Rows[0]["Amount"]);
+                                    if (drow["status"].ToString() == "0")
+                                    {
+                                        useBudget += Convert.ToDecimal(drow["Amount"]);
+                                    }  
                                 }
+
+                                dr["Amount"] = Convert.ToDecimal(dr["Amount"]) - useBudget;
                             }
+                            poDepAmount.ImportRow(dr);
+
                         }
-                        poDepAmount.ImportRow(AllDepAmount.Rows[0]);
                     }
                 }
                 

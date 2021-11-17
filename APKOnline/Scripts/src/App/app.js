@@ -164,22 +164,29 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
                     console.log(e);
                     if (e.argument == "งบประมาณที่อนุมัติ") {
                         return {
-                            color: "green"
+                            color: "#2ECC71"
                         }
                     }
                     else if (e.argument == "งบประมาณที่รออนุมัติ") {
                         return {
-                            color: "blue"
+                            color: "#2874A6"
                         }
                     }
                     else if (e.argument == "งบประมาณที่ไม่อนุมัติ") {
                         return {
-                            color: "red"
+                            color: "#CD6155"
+                            
                         }
                     }
                     else if (e.argument == "งบประมาณคงเหลือ") {
                         return {
-                            color: "Gold"
+                            color: "#FFF176",
+                            forecolor: "#000000",
+                        }
+                    }
+                    else if (e.argument == "งบประมาณทั้งหมด") {
+                        return {
+                            color: "#40E0D0"
                         }
                     }
                 },

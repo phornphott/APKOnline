@@ -393,12 +393,17 @@
             if ($scope.listfiledelete.length > 0 || $scope.listupdate.length > 0) {
                 swal({
                     title: 'Information',
-                    text: "มีการแก้ไขข้อมูลที่ยังไม่ได้บันทึก ๖้องการยกเลิกการแก้ไขข้อมูล",
-                    type: "info",
-                    showCancelButton: false,
-                    confirmButtonColor: "#6EAA6F",
-                    confirmButtonText: 'OK'
+                    text: "มีการแก้ไขข้อมูลที่ยังไม่ได้บันทึก ต้องการยกเลิกการแก้ไขข้อมูล",
+                    icon: "info",
+                    buttons: true,
+                    dangerMode: false,
                 })
+                    .then((willSave) => {
+                        console.log(willSave)
+                        if (willSave) {
+                            window.location = '#/PurchaseRequest/ListPurchaseRequest';
+                        }
+                    });
             }
             else {
                 window.location = '#/PurchaseRequest/ListPurchaseRequest';
@@ -441,11 +446,11 @@
                             });
                             if ($scope.listupdate.length > 0) {
                                 $http.post("api/PR/UpdateEditPRDetail?", $scope.listupdate).then(function successCallback(response) {
-
+                                    console.log(response);
                                     if (response.data.StatusCode > 1) {
                                         swal({
                                             title: 'Information',
-                                            text: data.Messages,
+                                            text: response.data.Messages,
                                             type: "info",
                                             showCancelButton: false,
                                             confirmButtonColor: "#6EAA6F",
@@ -464,7 +469,7 @@
                                             if (data.data.StatusCode > 1) {
                                                 swal({
                                                     title: 'Information',
-                                                    text: data.Messages,
+                                                    text: response.data.Messages,
                                                     type: "info",
                                                     showCancelButton: false,
                                                     confirmButtonColor: "#6EAA6F",

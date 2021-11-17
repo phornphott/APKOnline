@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -615,13 +616,13 @@ namespace APKOnline.DBHelper
                 da.Fill(tmp);
                 foreach (DataRow dr in tmp.Rows)
                 {
-                    amount = Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
-                    amount =Math.Round(amount, 2);
+                    amount += Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
                 }
 
                 string fristDate = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString("00") + "-01";
-                string LastDate = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString("00") + "-" + DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month).ToString("00");
-                sql = "Select SUM(Document_Cog) From DocumentPR_header  where Document_Date between '"+ fristDate + "'and  '"+ LastDate + "' and Document_Depid ="+Header.Document_Dep+" and Document_Delete=0";
+                int LastdayofMonth = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month);
+                string LastDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, LastdayofMonth).AddDays(1).ToString("yyyy-MM-dd", new CultureInfo("en-US"));
+                sql = "Select SUM(Document_Cog) From DocumentPR_header  where Document_Date between '"+ fristDate + "'and  '"+ LastDate + "' and Document_Depid ="+Header.Document_Dep+ " and Document_Delete=0 and Document_Status in (2)";
                  da = new SqlDataAdapter(sql, conn);
                 da.SelectCommand.Transaction = myTran;
                 tmp = new DataTable();
@@ -631,11 +632,11 @@ namespace APKOnline.DBHelper
                 foreach (DataRow dr in tmp.Rows)
                 {
                     dep_amount = dep_amount + Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
-                    dep_amount = Math.Round(dep_amount, 2);
+                    
                 }
 
                 dep_amount += amount;
-
+                dep_amount = Math.Round(dep_amount, 2);
                 if (Dep_Budget < dep_amount)
                 {
                     errMsg = "ไม่สามารถบันทึกได้เนื่องจากยอดรวมมากกว่างบประมาณอนุมัติของแผนกในเดือนปัจจุบัน.";
@@ -1312,6 +1313,7 @@ namespace APKOnline.DBHelper
         {
             bool ret = false;
             string sqlQuery = "";
+            string sql = "";
             SqlCommand cmd = new SqlCommand();
             SqlTransaction myTran = null;
             SqlConnection conn = DBHelper.sqlConnection();
@@ -1320,62 +1322,143 @@ namespace APKOnline.DBHelper
             cmd = conn.CreateCommand();
             myTran = conn.BeginTransaction(IsolationLevel.ReadCommitted);
             cmd.Connection = conn;
-
+            decimal amount = 0;
             try
             {
-
+                int hid = 0;
+                decimal Dep_Budget = 0;
+                int dep = 0;
+                int year = DateTime.Now.Year;
+                string detailid = "";
                 foreach (PRDetailModels detail in list)
                 {
+                    amount += detail.Document_Detail_UnitPrice * detail.Document_Detail_Quan;
+                    detailid += "," + detail.Document_Detail_Id;
+                    hid = detail.Document_Detail_Hid;
+                }
 
-                    sqlQuery = "UPDATE DocumentPR_Detail SET " +
-                                "Document_Detail_UnitPrice=@Document_Detail_UnitPrice" +
-                                 ",Document_Detail_Acc=@Document_Detail_Acc,Document_Detail_Acc_Desc=@Document_Detail_Acc_Desc" +
-                                ",Document_Detail_Quan=@Document_Detail_Quan,Document_Detail_Cog=@Document_Detail_Cog" +
-                                ",Document_Detail_Vat=@Document_Detail_Vat,Document_Detail_Sum=@Document_Detail_Sum WHERE Document_Detail_Id=@Document_Detail_Id";
+                sql = "Select * from DocumentPR_Header WHERE  Document_Id = " + hid;
+                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+                da.SelectCommand.Transaction = myTran;
+                DataTable docheader = new DataTable();
+                da.Fill(docheader);
+                foreach (DataRow hdrow in docheader.Rows) {
+                    dep = Convert.ToInt32(hdrow["Document_Depid"]);
+                }
+
+
+
+                sql = "Select * from BudgetOfYearByDepartment WHERE  BudgetYear = " + year + " AND DEPid = " + dep;
+                da = new SqlDataAdapter(sql, conn);
+                da.SelectCommand.Transaction = myTran;
+                DataTable depbudget = new DataTable();
+                da.Fill(depbudget);
+                if (depbudget.Rows.Count > 0)
+                {
+
+                    string monthcol = "DEPmonth" + DateTime.Now.Month.ToString();
+                    foreach (DataRow dr in depbudget.Rows)
+                    {
+                        Dep_Budget = Convert.ToDecimal(dr[monthcol]);
+                    }
+                }
+
+                //sql = "Select * from BudgetOfYearByDepartment WHERE  BudgetYear = " + year + " AND DEPid = " + dep;
+                //da = new SqlDataAdapter(sql, conn);
+                //da.SelectCommand.Transaction = myTran;
+                //DataTable detaillist = new DataTable();
+                //da.Fill(detaillist);
+
+               
+
+                sql = "Select SUM(Document_Detail_Cog) From DocumentPR_Detail WHERE Document_Detail_Hid = " + hid + " AND Document_Detail_Id not in ("+ detailid.Substring(1) + ")";
+                da = new SqlDataAdapter(sql, conn);
+                da.SelectCommand.Transaction = myTran;
+                DataTable tmp = new DataTable();
+                da.Fill(tmp);
+                foreach (DataRow dr in tmp.Rows)
+                {
+                    amount += Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
+                }
+
+                string fristDate = DateTime.Now.Year.ToString() + "-" + DateTime.Now.Month.ToString("00") + "-01";
+                int LastdayofMonth = DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month);
+                string LastDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, LastdayofMonth).AddDays(1).ToString("yyyy-MM-dd", new CultureInfo("en-US"));
+                sql = "Select SUM(Document_Cog) From DocumentPR_header  where Document_Date between '" + fristDate + "'and  '" + LastDate + "' and Document_Depid =" + dep +
+                    " and Document_Delete=0 and Document_Status in (2) and Document_Id not in ("+ hid + ")";
+                da = new SqlDataAdapter(sql, conn);
+                da.SelectCommand.Transaction = myTran;
+                tmp = new DataTable();
+                da.Fill(tmp);
+
+                decimal dep_amount = 0;
+                foreach (DataRow dr in tmp.Rows)
+                {
+                    dep_amount = Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
+                    
+                }
+
+                dep_amount += amount;
+                dep_amount = Math.Round(dep_amount, 2);
+                if (Dep_Budget < dep_amount)
+                {
+                    errMsg = "ไม่สามารถบันทึกได้เนื่องจากยอดรวมมากกว่างบประมาณอนุมัติของแผนกในเดือนปัจจุบัน.";
+                }
+                else
+                {
+                    foreach (PRDetailModels detail in list)
+                    {
+
+                        sqlQuery = "UPDATE DocumentPR_Detail SET " +
+                                    "Document_Detail_UnitPrice=@Document_Detail_UnitPrice" +
+                                     ",Document_Detail_Acc=@Document_Detail_Acc,Document_Detail_Acc_Desc=@Document_Detail_Acc_Desc" +
+                                    ",Document_Detail_Quan=@Document_Detail_Quan,Document_Detail_Cog=@Document_Detail_Cog" +
+                                    ",Document_Detail_Vat=@Document_Detail_Vat,Document_Detail_Sum=@Document_Detail_Sum WHERE Document_Detail_Id=@Document_Detail_Id";
+                        cmd.CommandText = sqlQuery;
+                        cmd.CommandTimeout = 30;
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@Document_Detail_Id", detail.Document_Detail_Id);
+                        cmd.Parameters.AddWithValue("@Document_Detail_Acc", detail.Document_Detail_Acc);
+                        cmd.Parameters.AddWithValue("@Document_Detail_Acc_Desc", detail.Document_Detail_Acc_Desc);
+                        cmd.Parameters.AddWithValue("@Document_Detail_Quan", Math.Round(detail.Document_Detail_Quan, 2));
+                        cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", Math.Round(detail.Document_Detail_UnitPrice, 2));
+                        cmd.Parameters.AddWithValue("@Document_Detail_Cog", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice, 2));
+
+                        cmd.Parameters.AddWithValue("@Document_Detail_Vat", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)0.07, 2));
+                        cmd.Parameters.AddWithValue("@Document_Detail_Sum", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07, 2));
+                        cmd.Transaction = myTran;
+                        cmd.ExecuteNonQuery();
+                    }
+                     sql = "Select SUM(Document_Detail_Cog) From DocumentPR_Detail WHERE Document_Detail_Hid = " + list[0].Document_Detail_Hid;
+                     da = new SqlDataAdapter(sql, conn);
+
+                     tmp = new DataTable();
+                    da.SelectCommand.Transaction = myTran;
+                    da.Fill(tmp);
+                     amount = 0;
+                    foreach (DataRow dr in tmp.Rows)
+                    {
+                        amount = Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
+                        Math.Round(amount, 2);
+                    }
+
+                    sqlQuery = "Update DocumentPR_Header SET Document_Cog=@Document_Cog,Document_VatSUM=@Document_VatSUM,Document_NetSUM=@Document_NetSUM WHERE Document_Id=@Document_Detail_Hid";
                     cmd.CommandText = sqlQuery;
                     cmd.CommandTimeout = 30;
                     cmd.CommandType = CommandType.Text;
                     cmd.Parameters.Clear();
-                    cmd.Parameters.AddWithValue("@Document_Detail_Id", detail.Document_Detail_Id);
-                    cmd.Parameters.AddWithValue("@Document_Detail_Acc", detail.Document_Detail_Acc);
-                    cmd.Parameters.AddWithValue("@Document_Detail_Acc_Desc", detail.Document_Detail_Acc_Desc);
-                    cmd.Parameters.AddWithValue("@Document_Detail_Quan", Math.Round(detail.Document_Detail_Quan, 2));
-                    cmd.Parameters.AddWithValue("@Document_Detail_UnitPrice", Math.Round(detail.Document_Detail_UnitPrice, 2));
-                    cmd.Parameters.AddWithValue("@Document_Detail_Cog", Math.Round(detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice, 2));
+                    cmd.Parameters.AddWithValue("@Document_Detail_Hid", list[0].Document_Detail_Hid);
 
-                    cmd.Parameters.AddWithValue("@Document_Detail_Vat", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)0.07, 2));
-                    cmd.Parameters.AddWithValue("@Document_Detail_Sum", Math.Round((detail.Document_Detail_Quan * detail.Document_Detail_UnitPrice) * (decimal)1.07, 2));
+                    cmd.Parameters.AddWithValue("@Document_Cog", Math.Round(amount, 2));
+                    cmd.Parameters.AddWithValue("@Document_VatSUM", Math.Round(amount * (decimal)0.07, 2));//()
+                    cmd.Parameters.AddWithValue("@Document_NetSUM", Math.Round(amount * (decimal)1.07, 2));//
                     cmd.Transaction = myTran;
+
                     cmd.ExecuteNonQuery();
+
+                    myTran.Commit();
                 }
-                string sql = "Select SUM(Document_Detail_Cog) From DocumentPR_Detail WHERE Document_Detail_Hid = " + list[0].Document_Detail_Hid;
-                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-
-                DataTable tmp = new DataTable();
-                da.SelectCommand.Transaction = myTran;
-                da.Fill(tmp);
-                decimal amount = 0;
-                foreach (DataRow dr in tmp.Rows)
-                {
-                    amount = Convert.ToDecimal(dr[0] == DBNull.Value ? 0 : dr[0]);
-                    Math.Round(amount, 2);
-                }
-
-                sqlQuery = "Update DocumentPR_Header SET Document_Cog=@Document_Cog,Document_VatSUM=@Document_VatSUM,Document_NetSUM=@Document_NetSUM WHERE Document_Id=@Document_Detail_Hid";
-                cmd.CommandText = sqlQuery;
-                cmd.CommandTimeout = 30;
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Clear();
-                cmd.Parameters.AddWithValue("@Document_Detail_Hid", list[0].Document_Detail_Hid);
-
-                cmd.Parameters.AddWithValue("@Document_Cog", Math.Round(amount, 2));
-                cmd.Parameters.AddWithValue("@Document_VatSUM", Math.Round(amount * (decimal)0.07, 2));//()
-                cmd.Parameters.AddWithValue("@Document_NetSUM", Math.Round(amount * (decimal)1.07, 2));//
-                cmd.Transaction = myTran;
-
-                cmd.ExecuteNonQuery();
-
-                myTran.Commit();
 
             }
             catch (Exception ex)

@@ -139,6 +139,15 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
                 AutoWidth: true,
                 palette: "bright",
                 dataSource: $scope.ListReportBudgets,
+                margin: {
+                    bottom: 20,
+                },
+                legend: {
+                    visible: false,
+                },
+                animation: {
+                    enabled: true,
+                },
                 series: [
                     {
                         argumentField: "LabelDesc",
@@ -155,7 +164,7 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
                             position: "columns",
                             customizeText: function (arg) {
                                 console.log(arg);
-                                return arg.valueText + " (" + arg.argument + ")";
+                                return formatNumber(parseFloat(arg.value).toFixed(2)) + " (" + arg.argument + ")";
                             }
                         }
                     }
@@ -193,6 +202,9 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
                 title: "Sum Amount by Department " + localStorage.getItem("StaffDepartmentName")+" [" + String($scope.MONTHDATE.getMonth() + 1) + "/" + String($scope.MONTHDATE.getFullYear()) + "]" ,
                 "export": {
                     enabled: true
+                },
+                bindingOptions: {
+                    resolveLabelOverlapping: 'shift',
                 },
                 //onPointClick: function (e) {
 
@@ -286,7 +298,9 @@ angular.module('ApkApp').controller('DashboardController', function ($scope, $ro
 
         
     };
-
+    var formatNumber = function (num) {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
 
     function toggleVisibility(item) {
         if (item.isVisible()) {

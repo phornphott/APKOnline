@@ -495,7 +495,7 @@ namespace APKOnline
             repository.UpdatePRDetail(detail, ref errMsg);
             //}
             //ds.Tables.Add(dtDocumentVnos);
-            if (errMsg != "")
+            if (errMsg != "" && errMsg != "ยอดรวมมากกว่างบประมาณอนุมัติของแผนกในเดือนปัจจุบัน")
             {
                 resData.StatusCode = (int)(StatusCodes.Error);
                 resData.Messages = errMsg;
@@ -503,7 +503,7 @@ namespace APKOnline
             else
             {
                 resData.StatusCode = (int)(StatusCodes.Succuss);
-                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+                resData.Messages = errMsg;//(String)EnumString.GetStringValue(StatusCodes.Succuss);
             }
 
             resData.Results = ds;
@@ -523,7 +523,7 @@ namespace APKOnline
             int id = repository.InsertHeader(Header, ref errMsg);
 
             //ds.Tables.Add(dtDocumentVnos);
-            if (errMsg != "")
+            if (errMsg != "" && errMsg!= "ยอดรวมมากกว่างบประมาณอนุมัติของแผนกในเดือนปัจจุบัน")
             {
                 resData.StatusCode = (int)(StatusCodes.Error);
                 resData.Messages = errMsg;
@@ -986,6 +986,73 @@ namespace APKOnline
             }
 
             resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+
+        [HttpGet]
+        [ActionName("GETDetailAccountByDep")]
+        public HttpResponseMessage GETDetailAccountByDep(string id)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+            DataTable dtPRdetail = new DataTable();
+
+
+            //if (type == 0)
+            //{
+            //    id = repository.InsertHeader(ref errMsg);
+            //}
+
+
+
+
+            DataTable dtAccount = repository.GetAccountData(id,ref errMsg);
+
+
+            ds.Tables.Add(dtAccount);
+
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = ds;
+            return Request.CreateResponse(HttpStatusCode.OK, resData);
+        }
+
+        [HttpGet]
+        [ActionName("CheckAccountBudget")]
+        public HttpResponseMessage CheckAccountBudget(string ACCCode, string depcode, string depid)
+        {
+            string errMsg = "";
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            Result resData = new Result();
+
+
+            bool result = repository.CheckAccountBudget(ACCCode, depcode, depid, ref errMsg);
+
+            if (errMsg != "")
+            {
+                resData.StatusCode = (int)(StatusCodes.Error);
+                resData.Messages = errMsg;
+            }
+            else
+            {
+                resData.StatusCode = (int)(StatusCodes.Succuss);
+                resData.Messages = (String)EnumString.GetStringValue(StatusCodes.Succuss);
+            }
+
+            resData.Results = result;
             return Request.CreateResponse(HttpStatusCode.OK, resData);
         }
     }

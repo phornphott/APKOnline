@@ -10,7 +10,7 @@
         $scope.showBorders = true;
         $scope.rowAlternationEnabled = true;
         $scope.detailCount = 0;
-        $scope.Document_Dep = 0;
+        $scope.Document_Dep = localStorage.getItem('StaffDepartmentID');
         $scope.Document_DepCode = "";
         $scope.Document_Job = 0;
         $scope.Document_Category = 0;

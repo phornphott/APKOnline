@@ -63,7 +63,7 @@
                     caption: "รหัสสินค้า",
                     lookup: {
                         dataSource: $rootScope.STK,
-                        displayExpr: "Code",
+                        displayExpr: "Name",
                         valueExpr: "Code"
                     }
                 }, {

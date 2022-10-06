@@ -206,7 +206,8 @@ namespace APKOnline.DBHelper
             try
             {
                 strSQL = "\r\n  " +
-                    " SELECT STKcode AS Code, STKdescT1 AS Name " +
+                    //" SELECT STKcode AS Code, STKdescT1 AS Name " +
+                    "SELECT STKcode AS Code, CONCAT(STKcode, ' : ', STKdescT1) AS Name " +
                     " FROM STK ";
 
 

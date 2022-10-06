@@ -436,7 +436,8 @@ namespace APKOnline.DBHelper
                             //ตามแผนก
                             string strSQL = "\r\n  SELECT distinct * FROM (SELECT aa.*, CASE WHEN  a.Current_Level IS NULL THEN aa.StaffLevel ELSE a.Current_Level END AS Document_Level FROM  (" +
                               "(SELECT p.*,convert(nvarchar(MAX), Document_Date, 105) AS DocDate" +
-                              ", CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel,CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
+                              ",CONCAT(s.StaffFirstName,' ',StaffLastName)  AS Staff,s.StaffLevel," +
+                              "CAST(d.DEPdescT as NVARCHAR(max)) AS DEPdescT,CAST(j.JOBdescT as NVARCHAR(max)) As JOBdescT " +
                               " FROM " + tablename + " p " +
                               " LEFT JOIN Staffs s on s.StaffID=p.Document_CreateUser " +
                               " LEFT JOIN JOB j on j.JOBcode=p.Document_Job " +
@@ -454,7 +455,7 @@ namespace APKOnline.DBHelper
                               " where Document_Delete=0 AND Document_Status < 2 AND a.Approve_Status = 2" +
                               " AND Document_Cog > " + Dep_Budget + " And p.Document_Dep in ( " + Depin + ")" + " And (p.Document_ApproveDirect = 0 or p.Document_ApproveDirect is null))) aa  " +
                               " left join (SELECT Approve_Documen_Id, MAX(Approve_Current_Level) AS Current_Level" +
-                              " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + staffLevel;
+                              " FROM ApprovePR GROUP BY Approve_Documen_Id) a on aa.Document_Id = a.Approve_Documen_Id) bb WHERE Document_Level =" + (staffLevel);
 
 
                             dt = DBHelper.List(strSQL);
@@ -998,13 +999,13 @@ namespace APKOnline.DBHelper
                 foreach (DataRow drow in PRdetialdata.Rows)
                 {
                     string refmsg = "";
-                    if (CheckAccountBudget(drow["Document_Detail_Acc"].ToString(), depcode, DeptID.ToString(), ref refmsg)) {
+                    if (!CheckAccountBudget(drow["Document_Detail_Acc"].ToString(), depcode, DeptID.ToString(), ref refmsg)) {
                         msgReturn = drow["Document_Detail_Acc"].ToString() + " ,";
                     }
                 }
 
                 if (msgReturn != "") {
-                    errMsg = "ไม่สามารถ Approve/รับทราบได้ เนื่องจาก  Account  " + msgReturn.Substring(0, msgReturn.Length - 2) + " อนุมัติเกิบกำหนดของงบประมาณเดือนนี้ไปแล้ว";
+                    errMsg = "ไม่สามารถ Approve/รับทราบได้ เนื่องจาก  Account  " + msgReturn.Substring(0, msgReturn.Length - 2) + " อนุมัติเกินกำหนดของงบประมาณเดือนนี้ไปแล้ว";
                 }
                 else
                 {
@@ -1015,18 +1016,18 @@ namespace APKOnline.DBHelper
                     foreach (DataRow dr in staffauth.Rows)
                     {
                         budget = Convert.ToDecimal(dr["PositionLimit"]);
-                        //ApproveLevel = Convert.ToInt32(dr["PositionPermissionId"]);
+                        ApproveLevel = Convert.ToInt32(dr["AuthorizeLevel"]);
                     }
 
-                    string sql = "Select * from Staffs WHERE StaffID = " + StaffID;
-                    DataTable staff = DBHelper.List(sql);
-                    if (staff.Rows.Count > 0)
-                    {
-                        foreach (DataRow dr in staff.Rows)
-                        {
-                            ApproveLevel = Convert.ToInt32(dr["StaffLevel"]);
-                        }
-                    }
+                    //string sql = "Select * from Staffs WHERE StaffID = " + StaffID;
+                    //DataTable staff = DBHelper.List(sql);
+                    //if (staff.Rows.Count > 0)
+                    //{
+                    //    foreach (DataRow dr in staff.Rows)
+                    //    {
+                    //        ApproveLevel = Convert.ToInt32(dr["StaffLevel"]);
+                    //    }
+                    //}
 
                     strSQL = "\r\n  " +
                   " SELECT * " +
@@ -1602,13 +1603,17 @@ namespace APKOnline.DBHelper
                 //dep_amount += amount;
                 //dep_amount = Math.Round(dep_amount, 2);
                 //bool overbudget = false;
+                //if (Dep_Budget < dep_amount)
                 if (Dep_Budget < dep_amount)
                 {
                     errMsg = "ยอดรวมมากกว่างบประมาณอนุมัติของแผนกในเดือนปัจจุบัน";
-                    //result = true;
+                    result = false;
                 }
-
-                result = true;
+                else
+                {
+                    result = true;
+                }
+                
 
 
             }
